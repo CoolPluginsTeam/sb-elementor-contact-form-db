@@ -15,6 +15,7 @@ if(!class_exists('FDBGP_Loader')) {
         private static $instance = null;
     
         private function __construct() {
+
             $this->plugin_name = 'formsdb-elementor-google-sheets-posttype';
             $this->version = FDBGP_PLUGIN_VERSION;
     

@@ -7,8 +7,9 @@ class FDBGP_Dashboard {
     private $parent_slug = 'elementor';
     private $capability = 'manage_options';
     private $version;
+    private $plugin_name;
     private static $allowed_pages = array(
-        'formsdb',
+        'FomrsDB',
         'fdbgp-entries'
     );
     private static $instance = null;
@@ -25,30 +26,23 @@ class FDBGP_Dashboard {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
-        $dashboard_pages = array(
-            // 'cool-formkit' => array(
-            //     'title' => 'Cool FormKit Entries',
-            //     'position' => 45,
-            //     'slug' => 'fdbgp-entries',
-            // ),
-            'fdbgp-entries' => array(
-                'title' => '↳ Entries',
-                'position' => 46,
-                // 'slug' => 'edit.php?post_type=fdbgp-entries', // Retained the original slug with post-new.php?post_type=
-                'slug' => 'fdbgp-entries', // Retained the original slug with post-new.php?post_type=
-            )
-        );
-
-        $dashboard_pages = apply_filters('fdbgp_dashboard_pages', $dashboard_pages);
-
-        foreach (self::$allowed_pages as $page) {
-            if (isset($dashboard_pages[$page]['slug']) && isset($dashboard_pages[$page]['title']) && isset($dashboard_pages[$page]['position'])) {
-                $this->add_menu_page($dashboard_pages[$page]['slug'], $dashboard_pages[$page]['title'], isset($dashboard_pages[$page]['callback']) ? $dashboard_pages[$page]['callback'] : [$this, 'render_page'], $dashboard_pages[$page]['position']);
-            }
-        }
-
         add_action('elementor/admin-top-bar/is-active', [$this, 'hide_elementor_top_bar']);
         add_action('admin_print_scripts', [$this, 'hide_unrelated_notices']);
+    }
+
+    public function add_menu_page($slug, $title, $callback, $position = 99)
+    {
+        add_action('admin_menu', function () use ($slug, $title, $callback, $position) {
+            add_submenu_page(
+                $this->parent_slug,
+                str_replace('↳ ', '', $title),
+                esc_html($title),
+                $this->capability,
+                $slug,
+                $callback,
+                $position
+            );
+        }, 999);
     }
 
 
@@ -65,6 +59,7 @@ class FDBGP_Dashboard {
 
     public function hide_unrelated_notices()
     { // phpcs:ignore Generic.Metrics.CyclomaticComplexity.MaxExceeded, Generic.Metrics.NestingLevel.MaxExceeded
+        
         $fdbgp_pages = false;
         foreach (self::$allowed_pages as $page) {
 
@@ -73,6 +68,7 @@ class FDBGP_Dashboard {
                 break;
             }
         }
+
 
         if ($fdbgp_pages) {
             global $wp_filter;
@@ -107,13 +103,15 @@ class FDBGP_Dashboard {
 
                         $class = ! empty($arr['function'][0]) && is_object($arr['function'][0]) ? strtolower(get_class($arr['function'][0])) : '';
 
+
                         // Remove all callbacks except WPForms notices.
-                        if ($remove_all_filters && strpos($class, 'wpforms') === false) {
-                            unset($wp_filter[$notice_type]->callbacks[$priority][$name]);
-                            continue;
-                        }
+                        // if ($remove_all_filters && strpos($class, 'wpforms') === false) {
+                        //     unset($wp_filter[$notice_type]->callbacks[$priority][$name]);
+                        //     continue;
+                        // }
 
                         $cb = is_array($arr['function']) ? $arr['function'][1] : $arr['function'];
+                        
 
                         // Remove a specific callback.
                         if (! $remove_all_filters) {
@@ -175,14 +173,14 @@ class FDBGP_Dashboard {
         ?>
         <div class="fdbgp-header">
                 <div class="fdbgp-header-logo">
-                    <a href="?page=cool-formkit">
-                        <!-- <img src="<?php echo esc_url(fdbgp_PLUGIN_URL . 'assets/images/logo-cool-formkit.png'); ?>" alt="Cool FormKit Logo"> -->
+                    <a href="?page=FormsDB">
+                        <!-- <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/logo-cool-formkit.png'); ?>" alt="Cool FormKit Logo"> -->
                     </a>
                 </div>
                 <div class="fdbgp-header-buttons">
-                    <p><?php esc_html_e('Advanced Elementor Form Builder.', 'cool-formkit'); ?></p>
-                    <a href="https://docs.coolplugins.net/plugin/cool-formkit-for-elementor-form/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_header" class="button" target="_blank"><?php esc_html_e('Check Docs', 'cool-formkit'); ?></a>
-                    <a href="https://coolformkit.com/features/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('View Form Demos', 'cool-formkit'); ?></a>
+                    <p><?php esc_html_e('Advanced Elementor Form Builder.', 'elementor-contact-form-db'); ?></p>
+                    <a href="https://docs.coolplugins.net/plugin/cool-formkit-for-elementor-form/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_header" class="button" target="_blank"><?php esc_html_e('Check Docs', 'elementor-contact-form-db'); ?></a>
+                    <a href="https://coolformkit.com/features/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('View Form Demos', 'elementor-contact-form-db'); ?></a>
                 </div>
             </div>
         <?php
@@ -194,11 +192,11 @@ class FDBGP_Dashboard {
         if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
             ?>
             <p>
-                <?php esc_html_e( 'Form submissions submitted through', 'cool-formkit' ); ?> 
-                <strong><?php esc_html_e( 'Elementor Pro Form Widget', 'cool-formkit' ); ?></strong> 
-                <?php esc_html_e( 'are not shown here. You can view them in the', 'cool-formkit' ); ?>
+                <?php esc_html_e( 'Form submissions submitted through', 'elementor-contact-form-db' ); ?> 
+                <strong><?php esc_html_e( 'Elementor Pro Form Widget', 'elementor-contact-form-db' ); ?></strong> 
+                <?php esc_html_e( 'are not shown here. You can view them in the', 'elementor-contact-form-db' ); ?>
                 <a href="<?php echo esc_url( admin_url( 'admin.php?page=e-form-submissions' ) ); ?>" target="_blank" rel="noopener noreferrer">
-                    <?php esc_html_e( 'Elementor Form Submissions section', 'cool-formkit' ); ?>
+                    <?php esc_html_e( 'Elementor Form Submissions section', 'elementor-contact-form-db' ); ?>
                 </a>.
             </p>
             <?php
@@ -236,17 +234,12 @@ class FDBGP_Dashboard {
             array(
                 'title' => 'Form Elements',
                 'position' => 1,
-                'slug' => 'cool-formkit',
+                'slug' => 'formsdb',
             ),
             array(
                 'title' => 'Settings',
                 'position' => 3,
-                'slug' => 'cool-formkit&tab=settings',
-            ),
-            array(
-                'title' => 'License',
-                'position' => 4,
-                'slug' => 'cool-formkit&tab=license',
+                'slug' => 'formsdb&tab=settings',
             ),
         );
 

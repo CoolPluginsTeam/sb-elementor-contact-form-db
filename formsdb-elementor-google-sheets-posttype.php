@@ -56,16 +56,67 @@ if(!class_exists('FDBGP_Main')) {
 				return false;
 			}
 
-			var_dump("fsklsdf");
-			
 			static $autoloader_registered = false;
 
 			if ( ! $autoloader_registered ) {
 				$autoloader_registered = spl_autoload_register( [ $this, 'autoload' ] );
 			}
 
+			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
+			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
+
+
 			$this->includes();
 			
+		}
+
+		public function setting_redirect(){
+			// Get site domain and redirect URI
+			$site_url = parse_url(site_url(), PHP_URL_HOST);
+			$site_domain = str_replace('www.', '', $site_url);
+			$redirect_uri = admin_url('admin.php?page=FomrsDB&tab=settings');
+
+			// Handle OAuth callback
+			if (isset($_GET['code']) && !empty($_GET['code'])) {
+				// Get Google settings
+				$google_settings = get_option('fdbgp_google_settings', array(
+					'client_id' => '',
+					'client_secret' => '',
+					'client_token' => ''
+				));
+
+				$code = sanitize_text_field($_GET['code']);
+				$google_settings['client_token'] = $code;
+				update_option('fdbgp_google_settings', $google_settings);
+
+				$redirect_url = remove_query_arg('code');
+				$redirect_uri = preg_replace('&code='.$code, '', $redirect_uri);
+				$redirect_url = preg_replace('/&scope=[^&]*/', '', $redirect_url);
+
+				// Remove code from URL and redirect
+				wp_redirect($redirect_url);
+				exit;
+			}
+		}
+
+		public function FDBGP_plugins_loaded() {
+			// Add plugin dashboard link
+			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'FDBGP_plugin_dashboard_link' ) );
+
+			// Get the loader instance
+			\FDBGP_Loader::get_instance();
+
+		}
+
+		function FDBGP_plugin_dashboard_link( $links ) {
+		$settings_link = '<a href="' . admin_url( 'admin.php?page=FormsDB' ) . '">Settings</a>';
+		array_unshift( $links, $settings_link );
+		return $links;
+	}
+
+		private function includes() {
+
+			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-loader.php';
 		}
 
 		public function autoload( $class_name ) {
@@ -105,10 +156,6 @@ if(!class_exists('FDBGP_Main')) {
 			if ( $has_class_alias ) {
 				class_alias( $class_alias_name, $class_name );
 			}
-		}
-
-		private function includes() {
-			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-loader.php';
 		}
 
 
