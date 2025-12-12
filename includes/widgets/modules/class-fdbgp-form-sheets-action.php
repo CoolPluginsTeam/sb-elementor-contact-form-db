@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH')) {
+    die;
+}
 /**
  * Custom elementor form action after submit to add a records to
  * Google Spreadsheet
@@ -134,7 +137,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	public function register_settings_section( $widget ) {
 		// if ( current_user_can( 'edit_wpsyncsheets_elementor_lite_form_settings' ) ) {
 			$instance_api           = new FDBGP_Google_API_Functions();
-			$wpssle_google_settings = $instance_api->wpssle_option( 'wpsse_google_settings' );
+			$wpssle_google_settings = $instance_api->get_google_creds();
 			global $wpssle_headers, $wpssle_exclude_headertype;
 			global $wpssle_spreadsheetid, $wpssle_sheetname, $wpssle_sheet_headers, $wpssle_sheetheaders, $existincurrentpage, $wpssle_sheetheaders_new, $wpssle_form_fields;
 			$existincurrentpage        = 'no';
@@ -212,9 +215,9 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			if ( ! is_array( $wpssle_sheetheaders ) ) {
 				$wpssle_sheetheaders = array();
 			}
-			if ( empty( $wpssle_google_settings[2] ) ) {
+			if ( empty( $wpssle_google_settings['client_token'] ) ) {
 				$wpssle_html = sprintf(
-					'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=wpsyncsheets-elementor"> <strong>%2$s</strong></a>.</div>',
+					'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
 					esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'wpsse' ),
 					esc_html__( 'Click Here', 'wpsse' )
 				);
@@ -235,11 +238,11 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					)
 				);
 				$widget->end_controls_section();
-			} elseif ( ! empty( $wpssle_google_settings[2] ) && ! $instance_api->checkcredenatials() ) {
+			} elseif ( ! empty( $wpssle_google_settings['client_token'] ) && ! $instance_api->checkcredenatials() ) {
 				$wpssle_error = $instance_api->getClient( 1 );
 				if ( 'Invalid token format' === (string) $wpssle_error || 'invalid_grant' === (string) $wpssle_error ) {
 					$wpssle_html = sprintf(
-						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=wpsyncsheets-elementor"> <strong>%2$s</strong></a>.</div>',
+						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
 						esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'wpsse' ),
 						esc_html__( 'Click Here', 'wpsse' )
 					);

@@ -1,4 +1,12 @@
 <?php
+if (!defined('ABSPATH')) {
+    die;
+}
+use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions;
+
+
+$instance_api = new FDBGP_Google_API_Functions();
+
 // Get Google settings
 $google_settings = get_option('fdbgp_google_settings', array(
     'client_id' => '',
@@ -9,9 +17,7 @@ $google_settings = get_option('fdbgp_google_settings', array(
 // Get site domain and redirect URI
 $site_url = parse_url(site_url(), PHP_URL_HOST);
 $site_domain = str_replace('www.', '', $site_url);
-$redirect_uri = admin_url('admin.php?page=FomrsDB&tab=settings');
-
-
+$redirect_uri = admin_url('admin.php?page=formsdb');
 
 // Process form submission
 $success_message = '';
@@ -54,24 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
     } else {
         $error_message = __('Security check failed. Please try again.', 'elementor-contact-form-db');
     }
-}
-
-// Get Google Auth URL
-function get_google_auth_url($client_id) {
-    if (empty($client_id)) {
-        return '#';
-    }
-    
-    $params = array(
-        'client_id' => $client_id,
-        'redirect_uri' => admin_url('admin.php?page=FomrsDB&tab=settings'),
-        'response_type' => 'code',
-        'scope' => 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file',
-        'access_type' => 'offline',
-        'prompt' => 'consent',
-    );
-
-    return 'https://accounts.google.com/o/oauth2/auth?' . http_build_query($params);
 }
 
 ?>
@@ -158,7 +146,7 @@ function get_google_auth_url($client_id) {
                         </th>
                         <td class="cool-formkit-table-td">
                             <?php if (empty($google_settings['client_token']) && !isset($_GET['code'])) : ?>
-                                <?php $auth_url = get_google_auth_url($google_settings['client_id']); ?>
+                                <?php $auth_url = $instance_api->getClient(); ?>
                                 <div id="authbtn" style="margin-bottom: 10px;">
                                     <a href="<?php echo esc_url($auth_url); ?>" id="authlink" target="_blank" class="button button-secondary">
                                         <?php esc_html_e('Generate Authentication Token', 'elementor-contact-form-db'); ?>
@@ -176,7 +164,7 @@ function get_google_auth_url($client_id) {
                                     <?php echo !empty($google_settings['client_token']) ? 'readonly' : ''; ?> />
                                 <?php if (!empty($google_settings['client_token'])) : ?>
                                     <p class="description">
-                                        <span class="dashicons dashicons-yes-alt" style="color: #46b450;"></span> 
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="#11ec38" d="M10 2c-4.42 0-8 3.58-8 8s3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8m-.615 12.66h-1.34l-3.24-4.54l1.341-1.25l2.569 2.4l5.141-5.931l1.34.94z"/></svg>
                                         <?php esc_html_e('Token is configured', 'elementor-contact-form-db'); ?>
                                     </p>
                                 <?php endif; ?>
@@ -220,14 +208,11 @@ function get_google_auth_url($client_id) {
                 </div>
 
                 <hr>
-
                 <div class="cool-formkit-submit">
                     <?php wp_nonce_field('fdbgp_settings_action', 'fdbgp_settings_nonce'); ?>
-                    
                     <button type="submit" name="save_google_settings" class="button button-primary">
                         <?php esc_html_e('Save Settings', 'elementor-contact-form-db'); ?>
                     </button>
-                    
                     <?php if (!empty($google_settings['client_id']) || !empty($google_settings['client_secret'])) : ?>
                         <button type="submit" name="reset_google_settings" class="button button-secondary" 
                                 onclick="return confirm('<?php esc_attr_e('Are you sure you want to reset all Google API settings?', 'elementor-contact-form-db'); ?>');">

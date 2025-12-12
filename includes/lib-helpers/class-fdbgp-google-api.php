@@ -1,4 +1,9 @@
 <?php
+namespace Formsdb_Elementor_Forms\Lib_Helpers;
+
+if (!defined('ABSPATH')) {
+    die;
+}
 /**
  * Google API Base Class
  *
@@ -8,7 +13,6 @@
  * @since 1.0.0
  */
 
-namespace Formsdb_Elementor_Forms\Lib_Helpers;
 
 abstract class FDBGP_Google_API {
 

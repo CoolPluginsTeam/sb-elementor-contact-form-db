@@ -1,6 +1,10 @@
 <?php
 namespace Formsdb_Elementor_Forms\Lib_Helpers;
 
+if (!defined('ABSPATH')) {
+    die;
+}
+
 use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API;
 
 /**
@@ -112,10 +116,10 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return boolean
 	 */
 	public function checkcredenatials() {
-		$wpssle_google_settings_value = self::wpssle_option( 'wpsse_google_settings' );
-		$clientid                     = isset( $wpssle_google_settings_value[0] ) ? $wpssle_google_settings_value[0] : '';
-		$clientsecert                 = isset( $wpssle_google_settings_value[1] ) ? $wpssle_google_settings_value[1] : '';
-		$auth_token                   = isset( $wpssle_google_settings_value[2] ) ? $wpssle_google_settings_value[2] : '';
+		$wpssle_google_settings_value = $this->get_google_creds();
+		$clientid                     = isset( $wpssle_google_settings_value['client_id'] ) ? $wpssle_google_settings_value['client_id'] : '';
+		$clientsecert                 = isset( $wpssle_google_settings_value['client_secret'] ) ? $wpssle_google_settings_value['client_secret'] : '';
+		$auth_token                   = isset( $wpssle_google_settings_value['client_token'] ) ? $wpssle_google_settings_value['client_token'] : '';
 		if ( empty( $clientid ) || empty( $clientsecert ) || empty( $auth_token ) ) {
 			return false;
 		} else {
@@ -131,6 +135,13 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		}
 	}
 
+	public function get_google_creds(){
+		return get_option('fdbgp_google_settings', array(
+			'client_id' => '',
+			'client_secret' => '',
+			'client_token' => ''
+		));
+	}
 	/**
 	 * Get meta vlaue.
 	 *
@@ -209,11 +220,10 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	public function getClient( $flag = 0 ) {
 
 		$this->wpssle_load_library();
-		$wpssle_google_settings_value = self::wpssle_option( 'wpsse_google_settings' );
-
-		$clientid     = $wpssle_google_settings_value[0] ? $wpssle_google_settings_value[0] : '';
-		$clientsecert = $wpssle_google_settings_value[1] ? $wpssle_google_settings_value[1] : '';
-		$auth_token   = $wpssle_google_settings_value[2] ? $wpssle_google_settings_value[2] : '';
+		$wpssle_google_settings_value = $this->get_google_creds();
+		$clientid                     = isset( $wpssle_google_settings_value['client_id'] ) ? $wpssle_google_settings_value['client_id'] : '';
+		$clientsecert                 = isset( $wpssle_google_settings_value['client_secret'] ) ? $wpssle_google_settings_value['client_secret'] : '';
+		$auth_token                   = isset( $wpssle_google_settings_value['client_token'] ) ? $wpssle_google_settings_value['client_token'] : '';
 		$client       = new \Google_Client();
 		$client->setApplicationName( 'WPSyncSheets For Elementor - Elementor Google Spreadsheet Addon' );
 		$client->setScopes( \Google_Service_Sheets::SPREADSHEETS_READONLY );
@@ -221,7 +231,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		$client->addScope( \Google_Service_Sheets::SPREADSHEETS );
 		$client->setClientId( $clientid );
 		$client->setClientSecret( $clientsecert );
-		$client->setRedirectUri( esc_html( admin_url( 'admin.php?page=wpsyncsheets-elementor' ) ) );
+		$client->setRedirectUri( esc_html( admin_url( 'admin.php?page=formsdb' ) ) );
 		$client->setAccessType( 'offline' );
 		$client->setPrompt('consent');
 		// Load previously authorized credentials from a database.
@@ -230,7 +240,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 				$auth_url = $client->createAuthUrl();
 				return $auth_url;
 			}
-			$wpssle_accesstoken = parent::wpssle_option( 'wpsse_google_accessToken' );
+			$wpssle_accesstoken = get_option( 'fdbgp_google_access_token' );
 
 			if ( ! empty( $wpssle_accesstoken ) ) {
 				$accesstoken = json_decode( $wpssle_accesstoken, true );
@@ -246,7 +256,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 						$accesstoken['refresh_token'] = $client->getRefreshToken();
 					}
 					// Store the credentials to disk.
-					parent::wpssle_update_option( 'wpsse_google_accessToken', wp_json_encode( $accesstoken ) );
+					update_option( 'fdbgp_google_access_token', wp_json_encode( $accesstoken ) );
 				}
 			}
 
@@ -287,7 +297,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 					$accesstokenupdated['refresh_token'] = $refreshtokensaved;
 				}
 				// Set the new access token.
-				parent::wpssle_update_option( 'wpsse_google_accessToken', wp_json_encode( $accesstokenupdated ) );
+				update_option( 'fdbgp_google_access_token', wp_json_encode( $accesstokenupdated ) );
 				$accesstoken = json_decode( wp_json_encode( $accesstokenupdated ), true );
 				$client->setAccessToken( $accesstoken );
 			}

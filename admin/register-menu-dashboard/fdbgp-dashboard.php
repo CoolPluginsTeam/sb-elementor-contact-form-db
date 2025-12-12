@@ -1,6 +1,9 @@
 <?php
-
 namespace Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard;
+
+if (!defined('ABSPATH')) {
+    die;
+}
 
 class FDBGP_Dashboard {
 
@@ -9,7 +12,7 @@ class FDBGP_Dashboard {
     private $version;
     private $plugin_name;
     private static $allowed_pages = array(
-        'FomrsDB',
+        'formsdb',
         'fdbgp-entries'
     );
     private static $instance = null;
@@ -173,7 +176,7 @@ class FDBGP_Dashboard {
         ?>
         <div class="fdbgp-header">
                 <div class="fdbgp-header-logo">
-                    <a href="?page=FormsDB">
+                    <a href="?page=formsdb">
                         <!-- <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/logo-cool-formkit.png'); ?>" alt="Cool FormKit Logo"> -->
                     </a>
                 </div>

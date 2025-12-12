@@ -74,7 +74,7 @@ if(!class_exists('FDBGP_Main')) {
 			// Get site domain and redirect URI
 			$site_url = parse_url(site_url(), PHP_URL_HOST);
 			$site_domain = str_replace('www.', '', $site_url);
-			$redirect_uri = admin_url('admin.php?page=FomrsDB&tab=settings');
+			$redirect_uri = admin_url('admin.php?page=formsdb');
 
 			// Handle OAuth callback
 			if (isset($_GET['code']) && !empty($_GET['code'])) {
@@ -109,7 +109,7 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		function FDBGP_plugin_dashboard_link( $links ) {
-		$settings_link = '<a href="' . admin_url( 'admin.php?page=FormsDB' ) . '">Settings</a>';
+		$settings_link = '<a href="' . admin_url( 'admin.php?page=formsdb' ) . '">Settings</a>';
 		array_unshift( $links, $settings_link );
 		return $links;
 	}
