@@ -13,7 +13,7 @@
  * Elementor Pro tested up to: 3.33.2
  */
 
-namespace Formsdb_Google_Sheets_Posttype;
+namespace Formsdb_Elementor_Forms;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die;

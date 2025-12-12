@@ -1,6 +1,6 @@
 <?php
 
-namespace Formsdb_Google_Sheets_Posttype\Admin\Register_Menu_Dashboard;
+namespace Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard;
 
 class FDBGP_Dashboard {
 
