@@ -106,6 +106,7 @@ public function render_editor_script() {
 	 * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler Ajax handler.
 	 */
 	public function run( $record, $ajax_handler ) {
+
 		$wpssle_settings = $record->get( 'form_settings' );
 		// Get sumitetd Form data.
 		$wpssle_raw_fields = $record->get( 'fields' );
@@ -304,6 +305,7 @@ public function render_editor_script() {
 	 * @param \Elementor\Widget_Base $widget settings.
 	 */
 	public function register_settings_section( $widget ) {
+
 		// if ( current_user_can( 'edit_wpsyncsheets_elementor_lite_form_settings' ) ) {
 			$instance_api           = new FDBGP_Google_API_Functions();
 			$wpssle_google_settings = $instance_api->get_google_creds();
@@ -320,86 +322,86 @@ public function render_editor_script() {
 			$wpssle_sheetheaders       = array();
 			$wpssle_sheetheaders_new   = array();
 			$wpssle_form_fields        = array();
-			$wpssle_document           = Plugin::elementor()->documents->get( get_the_ID() );
+			// $wpssle_document           = Plugin::elementor()->documents->get( get_the_ID() );
 			
-			if ( $wpssle_document ) {
-				$wpssle_data        = $wpssle_document->get_elements_data();
-				$wpssle_data_global = $wpssle_data;
-				global $wpssle_type;
-				$wpssle_type = '';
+			// if ( $wpssle_document ) {
+			// 	$wpssle_data        = $wpssle_document->get_elements_data();
+			// 	$wpssle_data_global = $wpssle_data;
+			// 	global $wpssle_type;
+			// 	$wpssle_type = '';
 				
-				$widget_id = $widget->get_id();
+			// 	$widget_id = $widget->get_id();
 				
-				$wpssle_data = Plugin::elementor()->db->iterate_data(
-					$wpssle_data,
-					function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype, $widget_id ) {
-						if ( isset( $element['widgetType'] ) && 'form' === (string) $element['widgetType'] ) {
-							// Strict check removed for debugging/fallback. 
-							// We will try to match ID if present, but if we are arguably the only form or ID is glitchy, we take what we find.
-							/*
-							if ( ! empty( $element['id'] ) && (string)$widget_id !== (string)$element['id'] ) {
-								return $element;
-							}
-							*/
-							// Also check if this element HAS the settings we need. If not, don't overwrite local vars with emptiness.
+				// $wpssle_data = Plugin::elementor()->db->iterate_data(
+				// 	$wpssle_data,
+				// 	function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype, $widget_id ) {
+				// 		if ( isset( $element['widgetType'] ) && 'form' === (string) $element['widgetType'] ) {
+				// 			// Strict check removed for debugging/fallback. 
+				// 			// We will try to match ID if present, but if we are arguably the only form or ID is glitchy, we take what we find.
+				// 			/*
+				// 			if ( ! empty( $element['id'] ) && (string)$widget_id !== (string)$element['id'] ) {
+				// 				return $element;
+				// 			}
+				// 			*/
+				// 			// Also check if this element HAS the settings we need. If not, don't overwrite local vars with emptiness.
 							
-							if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
-								$local_spreadsheet_id = $element['settings'][$this->add_prefix('spreadsheetid')];
-							}
-							if ( isset( $element['settings'][$this->add_prefix('sheet_list')] ) ) {
-								$local_sheet_name = $element['settings'][$this->add_prefix('sheet_list')];
-							} elseif ( isset( $element['settings'][$this->add_prefix('sheet_name')] ) ) {
-								$local_sheet_name = $element['settings'][$this->add_prefix('sheet_name')];
-							}
-							if ( isset( $element['settings'][$this->add_prefix('sheet_headers')] ) ) {
-								$local_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
-							}
-							foreach ( $element['settings']['form_fields'] as $formdata ) {
-								if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
-									$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
-								}
-							}
-							return $element;
-						}
-					}
-				);
+				// 			if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
+				// 				$local_spreadsheet_id = $element['settings'][$this->add_prefix('spreadsheetid')];
+				// 			}
+				// 			if ( isset( $element['settings'][$this->add_prefix('sheet_list')] ) ) {
+				// 				$local_sheet_name = $element['settings'][$this->add_prefix('sheet_list')];
+				// 			} elseif ( isset( $element['settings'][$this->add_prefix('sheet_name')] ) ) {
+				// 				$local_sheet_name = $element['settings'][$this->add_prefix('sheet_name')];
+				// 			}
+				// 			if ( isset( $element['settings'][$this->add_prefix('sheet_headers')] ) ) {
+				// 				$local_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
+				// 			}
+				// 			foreach ( $element['settings']['form_fields'] as $formdata ) {
+				// 				if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
+				// 					$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+				// 				}
+				// 			}
+				// 			return $element;
+				// 		}
+				// 	}
+				// );
 				
-				if ( empty( $local_headers ) ) {
-					Plugin::elementor()->db->iterate_data(
-						$wpssle_data_global,
-						function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype ) {
-							if ( isset( $element['widgetType'] ) && 'global' === (string) $element['widgetType'] ) {
-								if ( ! empty( $element['templateID'] ) ) {
-									$global_form      = get_post_meta( $element['templateID'], '_elementor_data', true );
-									$global_form_meta = json_decode( $global_form, true );
-									if ( $global_form_meta ) {
+				// if ( empty( $local_headers ) ) {
+				// 	Plugin::elementor()->db->iterate_data(
+				// 		$wpssle_data_global,
+				// 		function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype ) {
+				// 			if ( isset( $element['widgetType'] ) && 'global' === (string) $element['widgetType'] ) {
+				// 				if ( ! empty( $element['templateID'] ) ) {
+				// 					$global_form      = get_post_meta( $element['templateID'], '_elementor_data', true );
+				// 					$global_form_meta = json_decode( $global_form, true );
+				// 					if ( $global_form_meta ) {
 										
-										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')] ) ) {
-											$local_spreadsheet_id = $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')];
-										}
-										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')] ) ) {
-											$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')];
-										} elseif ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')] ) ) {
-											$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')];
-										}
-										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')] ) ) {
-											$local_sheet_headers = $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')];
-										}
-										if ( is_array( $global_form_meta[0]['settings']['form_fields'] ) ) {
-											foreach ( $global_form_meta[0]['settings']['form_fields'] as $formdata ) {
-												if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
-													$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
-												}
-											}
-										}
-										return $element;
-									}
-								}
-							}
-						}
-					);
-				}
-			}
+				// 						if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')] ) ) {
+				// 							$local_spreadsheet_id = $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')];
+				// 						}
+				// 						if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')] ) ) {
+				// 							$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')];
+				// 						} elseif ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')] ) ) {
+				// 							$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')];
+				// 						}
+				// 						if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')] ) ) {
+				// 							$local_sheet_headers = $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')];
+				// 						}
+				// 						if ( is_array( $global_form_meta[0]['settings']['form_fields'] ) ) {
+				// 							foreach ( $global_form_meta[0]['settings']['form_fields'] as $formdata ) {
+				// 								if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
+				// 									$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+				// 								}
+				// 							}
+				// 						}
+				// 						return $element;
+				// 					}
+				// 				}
+				// 			}
+				// 		}
+				// 	);
+				// }
+			// }
 			  $wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html', 'step' ); // Added 'step'
 
 			if ( ! is_array( $wpssle_sheetheaders ) ) {
@@ -575,24 +577,24 @@ public function render_editor_script() {
 				}
 				
 				// Fallback: Ensure saved headers are present in options to prevent them from disappearing
-				if ( ! empty( $local_sheet_headers ) && is_array( $local_sheet_headers ) ) {
-					$available_keys = array_keys( $local_headers ); // e.g. ['name', 'email']
-					$available_labels = array_values( $local_headers ); // e.g. ['Name', 'Email']
+				// if ( ! empty( $local_sheet_headers ) && is_array( $local_sheet_headers ) ) {
+				// 	$available_keys = array_keys( $local_headers ); // e.g. ['name', 'email']
+				// 	$available_labels = array_values( $local_headers ); // e.g. ['Name', 'Email']
 					
-					foreach ( $local_sheet_headers as $saved_header ) {
-						if ( ! isset( $local_headers[ $saved_header ] ) ) {
-							// If the saved header is numeric (legacy index), try to map it to current fields by position
-							if ( is_numeric( $saved_header ) && isset( $available_labels[ (int)$saved_header ] ) ) {
-								$mapped_label = $available_labels[ (int)$saved_header ];
-								// Remove the default 'placeholder' if it exists (index 0 might conflict if array was empty, but here keys are IDs)
-								$local_headers[ $saved_header ] = $mapped_label . ' (Legacy)';
-							} else {
-								// Standard fallback for unknown IDs
-								$local_headers[ $saved_header ] = $saved_header . ' (Saved)';
-							}
-						}
-					}
-				}
+				// 	foreach ( $local_sheet_headers as $saved_header ) {
+				// 		if ( ! isset( $local_headers[ $saved_header ] ) ) {
+				// 			// If the saved header is numeric (legacy index), try to map it to current fields by position
+				// 			if ( is_numeric( $saved_header ) && isset( $available_labels[ (int)$saved_header ] ) ) {
+				// 				$mapped_label = $available_labels[ (int)$saved_header ];
+				// 				// Remove the default 'placeholder' if it exists (index 0 might conflict if array was empty, but here keys are IDs)
+				// 				$local_headers[ $saved_header ] = $mapped_label . ' (Legacy)';
+				// 			} else {
+				// 				// Standard fallback for unknown IDs
+				// 				$local_headers[ $saved_header ] = $saved_header . ' (Saved)';
+				// 			}
+				// 		}
+				// 	}
+				// }
 
 				$widget->add_control(
 					$this->add_prefix('sheet_headers'),
@@ -736,44 +738,44 @@ public function render_editor_script() {
 	 *
 	 * @access public
 	 */
-	public function ajax_get_headers() {
-		// Check nonce and permissions
-		check_ajax_referer( 'elementor_ajax', '_nonce' );
+	// public function ajax_get_headers() {
+	// 	// Check nonce and permissions
+	// 	check_ajax_referer( 'elementor_ajax', '_nonce' );
 		
-		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
-		}
+	// 	if ( ! current_user_can( 'edit_posts' ) ) {
+	// 		wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+	// 	}
 		
-		$spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
-		$sheet_name = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
+	// 	$spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
+	// 	$sheet_name = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
 		
-		if ( empty( $spreadsheet_id ) || empty( $sheet_name ) ) {
-			wp_send_json_error( array( 'message' => 'Spreadsheet ID and Sheet Name are required' ) );
-		}
+	// 	if ( empty( $spreadsheet_id ) || empty( $sheet_name ) ) {
+	// 		wp_send_json_error( array( 'message' => 'Spreadsheet ID and Sheet Name are required' ) );
+	// 	}
 		
-		try {
-			$instance_api = new FDBGP_Google_API_Functions();
+	// 	try {
+	// 		$instance_api = new FDBGP_Google_API_Functions();
 			
-			if ( ! $instance_api->checkcredenatials() ) {
-				wp_send_json_error( array( 'message' => 'Google API credentials not configured' ) );
-			}
+	// 		if ( ! $instance_api->checkcredenatials() ) {
+	// 			wp_send_json_error( array( 'message' => 'Google API credentials not configured' ) );
+	// 		}
 			
-			$param = array(
-				'spreadsheetid' => $spreadsheet_id,
-				'sheetname'     => "'" . $sheet_name . "'!A1:Z1", // Quote sheet name to handle spaces
-			);
+	// 		$param = array(
+	// 			'spreadsheetid' => $spreadsheet_id,
+	// 			'sheetname'     => "'" . $sheet_name . "'!A1:Z1", // Quote sheet name to handle spaces
+	// 		);
 			
-			$response = $instance_api->get_values( $instance_api->get_client_object(), $param );
-			$values = $response->getValues();
-			// Log logic for debugging if needed
-			$headers = isset( $values[0] ) ? $values[0] : array();
+	// 		$response = $instance_api->get_values( $instance_api->get_client_object(), $param );
+	// 		$values = $response->getValues();
+	// 		// Log logic for debugging if needed
+	// 		$headers = isset( $values[0] ) ? $values[0] : array();
 			
-			wp_send_json_success( array( 'headers' => $headers ) );
+	// 		wp_send_json_success( array( 'headers' => $headers ) );
 			
-		} catch ( Exception $e ) {
-			wp_send_json_error( array( 'message' => 'Error: ' . $e->getMessage() ) );
-		}
-	}
+	// 	} catch ( Exception $e ) {
+	// 		wp_send_json_error( array( 'message' => 'Error: ' . $e->getMessage() ) );
+	// 	}
+	// }
 	
 	/**
 	 * Update Spreadsheet ID in Elementor Data
