@@ -58,7 +58,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @since 1.0.0
 	 */
 	public function wpssle_load_library() {
-		if ( ! class_exists( 'ComposerAutoloaderInita672e4231f706419bd66ef535c4ab40e' ) ) {
+		if ( ! class_exists( 'ComposerAutoloaderInit7069485509ab5fae88aff156e01db0be' ) ) {
 			require_once FDBGP_PLUGIN_DIR . 'vendor/autoload.php';
 		}
 	}
@@ -225,7 +225,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		$clientsecert                 = isset( $wpssle_google_settings_value['client_secret'] ) ? $wpssle_google_settings_value['client_secret'] : '';
 		$auth_token                   = isset( $wpssle_google_settings_value['client_token'] ) ? $wpssle_google_settings_value['client_token'] : '';
 		$client       = new \Google_Client();
-		$client->setApplicationName( 'WPSyncSheets For Elementor - Elementor Google Spreadsheet Addon' );
+		$client->setApplicationName( 'FormsDB - Elementor Google Spreadsheet Addon' );
 		$client->setScopes( \Google_Service_Sheets::SPREADSHEETS_READONLY );
 		$client->setScopes( \Google_Service_Drive::DRIVE_METADATA_READONLY );
 		$client->addScope( \Google_Service_Sheets::SPREADSHEETS );

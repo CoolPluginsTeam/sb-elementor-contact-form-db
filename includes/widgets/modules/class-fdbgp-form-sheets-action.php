@@ -60,70 +60,72 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	 * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler Ajax handler.
 	 */
 	public function run( $record, $ajax_handler ) {
-		$wpssle_settings = $record->get( 'form_settings' );
+		$fdbgp_settings = $record->get( 'form_settings' );
 		// Get sumitetd Form data.
-		$wpssle_raw_fields = $record->get( 'fields' );
+		$fdbgp_raw_fields = $record->get( 'fields' );
 		$instance_api      = new FDBGP_Google_API_Functions();
 		if ( ! $instance_api->checkcredenatials() ) {
 			return;
 		}
-		if ( isset( $wpssle_settings['submit_actions'] ) && in_array( $this->get_name(), $wpssle_settings['submit_actions'], true ) ) {
-			$wpssle_spreadsheetid = $wpssle_settings[$this->add_prefix('spreadsheetid')];
-			$wpssle_sheetname     = $wpssle_settings[$this->add_prefix('sheet_name')];
-			$wpssle_sheetarray    = $instance_api->get_spreadsheet_listing();
-			if ( ! empty( $wpssle_spreadsheetid ) && ! array_key_exists( $wpssle_spreadsheetid, $wpssle_sheetarray ) ) {
+		if ( isset( $fdbgp_settings['submit_actions'] ) && in_array( $this->get_name(), $fdbgp_settings['submit_actions'], true ) ) {
+			$fdbgp_spreadsheetid = $fdbgp_settings[$this->add_prefix('spreadsheetid')];
+			$fdbgp_sheetname     = $fdbgp_settings[$this->add_prefix('sheet_name')];
+			$fdbgp_sheetarray    = $instance_api->get_spreadsheet_listing();
+			if ( ! empty( $fdbgp_spreadsheetid ) && ! array_key_exists( $fdbgp_spreadsheetid, $fdbgp_sheetarray ) ) {
 				return;
-			} elseif ( ! empty( $wpssle_spreadsheetid ) ) {
-				$response = $instance_api->get_sheet_listing( $wpssle_spreadsheetid );
-				foreach ( $response->getSheets() as $s ) {
-					$wpssle_sheets[] = $s['properties']['title'];
+			} elseif ( ! empty( $fdbgp_spreadsheetid ) ) {
+				if($fdbgp_spreadsheetid !== 'new'){
+					$response = $instance_api->get_sheet_listing( $fdbgp_spreadsheetid );
+					foreach ( $response->getSheets() as $s ) {
+						$fdbgp_sheets[] = $s['properties']['title'];
+					}
 				}
-				if ( ! empty( $wpssle_sheetname ) && ! in_array( $wpssle_sheetname, $wpssle_sheets, true ) ) {
+				if ( ! empty( $fdbgp_sheetname ) && ! in_array( $fdbgp_sheetname, $fdbgp_sheets, true ) ) {
 					return;
 				}
 			}
-			if ( empty( $wpssle_spreadsheetid ) || empty( $wpssle_sheetname ) ) {
+			if ( empty( $fdbgp_spreadsheetid ) || empty( $fdbgp_sheetname ) ) {
 				return;
 			}
 			// Normalize the Form Data.
-			$wpssle_fields = array();
-			foreach ( $wpssle_raw_fields as $id => $field ) {
-				$wpssle_fields[ $id ] = $field['value'];
+			$fdbgp_fields = array();
+			foreach ( $fdbgp_raw_fields as $id => $field ) {
+				$fdbgp_fields[ $id ] = $field['value'];
 			}
 			try {
-				$wpssle_headers    = $wpssle_settings[$this->add_prefix('sheet_headers')];
-				$wpssle_value_data = array();
-				foreach ( $wpssle_headers as $wpssle_fieldvalue ) {
-					if ( array_key_exists( $wpssle_fieldvalue, $wpssle_fields ) ) {
-						if ( is_array( $wpssle_fields[ $wpssle_fieldvalue ] ) ) {
-							$wpssle_value_data[] = implode( ',', $wpssle_fields[ $wpssle_fieldvalue ] );
+				$fdbgp_headers    = $fdbgp_settings[$this->add_prefix('sheet_headers')];
+				$fdbgp_value_data = array();
+				foreach ( $fdbgp_headers as $fdbgp_fieldvalue ) {
+					if ( array_key_exists( $fdbgp_fieldvalue, $fdbgp_fields ) ) {
+						if ( is_array( $fdbgp_fields[ $fdbgp_fieldvalue ] ) ) {
+							$fdbgp_value_data[] = implode( ',', $fdbgp_fields[ $fdbgp_fieldvalue ] );
 						} else {
-							$wpssle_value_data[] = $wpssle_fields[ $wpssle_fieldvalue ];
+							$fdbgp_value_data[] = $fdbgp_fields[ $fdbgp_fieldvalue ];
 						}
 					} else {
-						$wpssle_value_data[] = '';
+						$fdbgp_value_data[] = '';
 					}
 				}
-				$wpssle_sheet         = "'" . $wpssle_sheetname . "'!A:A";
-				$wpssle_allentry      = $instance_api->get_row_list( $wpssle_spreadsheetid, $wpssle_sheet );
-				$wpssle_data          = $wpssle_allentry->getValues();
-				$wpssle_data          = array_map(
-					function ( $wpssle_element ) {
-						if ( isset( $wpssle_element['0'] ) ) {
-							return $wpssle_element['0'];
+				$fdbgp_sheet         = "'" . $fdbgp_sheetname . "'!A:A";
+				$fdbgp_allentry      = $instance_api->get_row_list( $fdbgp_spreadsheetid, $fdbgp_sheet );
+				$fdbgp_data          = $fdbgp_allentry->getValues();
+				$fdbgp_data          = array_map(
+					function ( $fdbgp_element ) {
+						if ( isset( $fdbgp_element['0'] ) ) {
+							return $fdbgp_element['0'];
 						} else {
 							return '';
 						}
 					},
-					$wpssle_data
+					$fdbgp_data
 				);
-				$wpssle_rangetoupdate = $wpssle_sheetname . '!A' . ( count( $wpssle_data ) + 1 );
-				$wpssle_requestbody   = $instance_api->valuerangeobject( array( $wpssle_value_data ) );
-				$wpssle_params        = FDBGP_Google_API_Functions::get_row_format();
-				$param                = $instance_api->setparamater( $wpssle_spreadsheetid, $wpssle_rangetoupdate, $wpssle_requestbody, $wpssle_params );
+				$fdbgp_rangetoupdate = $fdbgp_sheetname . '!A' . ( count( $fdbgp_data ) + 1 );
+				$fdbgp_requestbody   = $instance_api->valuerangeobject( array( $fdbgp_value_data ) );
+				$fdbgp_params        = FDBGP_Google_API_Functions::get_row_format();
+				$param                = $instance_api->setparamater( $fdbgp_spreadsheetid, $fdbgp_rangetoupdate, $fdbgp_requestbody, $fdbgp_params );
 				$instance_api->updateentry( $param );
 			} catch ( Exception $e ) {
-				$ajax_handler->add_admin_error_message( 'WPSyncSheets ' . $e->getMessage() );
+				$ajax_handler->add_admin_error_message($e->getMessage() );
 			}
 		}
 	}
@@ -137,74 +139,74 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	public function register_settings_section( $widget ) {
 		// if ( current_user_can( 'edit_wpsyncsheets_elementor_lite_form_settings' ) ) {
 			$instance_api           = new FDBGP_Google_API_Functions();
-			$wpssle_google_settings = $instance_api->get_google_creds();
-			global $wpssle_headers, $wpssle_exclude_headertype;
-			global $wpssle_spreadsheetid, $wpssle_sheetname, $wpssle_sheet_headers, $wpssle_sheetheaders, $existincurrentpage, $wpssle_sheetheaders_new, $wpssle_form_fields;
+			$fdbgp_google_settings = $instance_api->get_google_creds();
+			global $fdbgp_headers, $fdbgp_exclude_headertype;
+			global $fdbgp_spreadsheetid, $fdbgp_sheetname, $fdbgp_sheet_headers, $fdbgp_sheetheaders, $existincurrentpage, $fdbgp_sheetheaders_new, $fdbgp_form_fields;
 			$existincurrentpage        = 'no';
-			$wpssle_sheetheaders       = array();
-			$wpssle_sheetheaders_new   = array();
-			$wpssle_form_fields        = array();
-			$wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
-			$wpssle_document           = Plugin::elementor()->documents->get( get_the_ID() );
-			if ( $wpssle_document ) {
-				$wpssle_data        = $wpssle_document->get_elements_data();
-				$wpssle_data_global = $wpssle_data;
-				global $wpssle_type;
-				$wpssle_type = '';
-				$wpssle_data = Plugin::elementor()->db->iterate_data(
-					$wpssle_data,
+			$fdbgp_sheetheaders       = array();
+			$fdbgp_sheetheaders_new   = array();
+			$fdbgp_form_fields        = array();
+			$fdbgp_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
+			$fdbgp_document           = Plugin::elementor()->documents->get( get_the_ID() );
+			if ( $fdbgp_document ) {
+				$fdbgp_data        = $fdbgp_document->get_elements_data();
+				$fdbgp_data_global = $fdbgp_data;
+				global $fdbgp_type;
+				$fdbgp_type = '';
+				$fdbgp_data = Plugin::elementor()->db->iterate_data(
+					$fdbgp_data,
 					function( $element ) use ( &$do_update ) {
 						if ( isset( $element['widgetType'] ) && 'form' === (string) $element['widgetType'] ) {
-							global $wpssle_headers, $wpssle_exclude_headertype;
-							global $wpssle_spreadsheetid , $wpssle_sheetname, $wpssle_sheet_headers;
-							$wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
+							global $fdbgp_headers, $fdbgp_exclude_headertype;
+							global $fdbgp_spreadsheetid , $fdbgp_sheetname, $fdbgp_sheet_headers;
+							$fdbgp_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
 							if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
-								$wpssle_spreadsheetid = $element['settings'][$this->add_prefix('spreadsheetid')];
+								$fdbgp_spreadsheetid = $element['settings'][$this->add_prefix('spreadsheetid')];
 							}
 							if ( isset( $element['settings'][$this->add_prefix('sheet_name')] ) ) {
-								$wpssle_sheetname = $element['settings'][$this->add_prefix('sheet_name')];
+								$fdbgp_sheetname = $element['settings'][$this->add_prefix('sheet_name')];
 							}
 							if ( isset( $element['settings'][$this->add_prefix('sheet_headers')] ) ) {
-								$wpssle_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
+								$fdbgp_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
 							}
 							foreach ( $element['settings']['form_fields'] as $formdata ) {
-								if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
-									$wpssle_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+								if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $fdbgp_exclude_headertype, true ) ) ) {
+									$fdbgp_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
 								}
 							}
-							return $wpssle_headers;
+							return $fdbgp_headers;
 						}
 					}
 				);
-				if ( empty( $wpssle_headers ) ) {
+				if ( empty( $fdbgp_headers ) ) {
 					Plugin::elementor()->db->iterate_data(
-						$wpssle_data_global,
+						$fdbgp_data_global,
 						function( $element ) use ( &$do_update ) {
 							if ( isset( $element['widgetType'] ) && 'global' === (string) $element['widgetType'] ) {
 								if ( ! empty( $element['templateID'] ) ) {
 									$global_form      = get_post_meta( $element['templateID'], '_elementor_data', true );
 									$global_form_meta = json_decode( $global_form, true );
 									if ( $global_form_meta ) {
-										global $wpssle_headers, $wpssle_exclude_headertype;
-										global $wpssle_spreadsheetid , $wpssle_sheetname, $wpssle_sheet_headers;
-										$wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
+										global $fdbgp_headers, $fdbgp_exclude_headertype;
+										global $fdbgp_spreadsheetid , $fdbgp_sheetname, $fdbgp_sheet_headers;
+										$fdbgp_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
 										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')] ) ) {
-											$wpssle_spreadsheetid = $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')];
+											$fdbgp_spreadsheetid = $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')];
 										}
 										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')] ) ) {
-											$wpssle_sheetname = $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')];
+											$fdbgp_sheetname = $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')];
 										}
 										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')] ) ) {
-											$wpssle_sheet_headers = $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')];
+											$fdbgp_sheet_headers = $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')];
 										}
 										if ( is_array( $global_form_meta[0]['settings']['form_fields'] ) ) {
 											foreach ( $global_form_meta[0]['settings']['form_fields'] as $formdata ) {
-												if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
-													$wpssle_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+												if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $fdbgp_exclude_headertype, true ) ) ) {
+													$fdbgp_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
 												}
 											}
 										}
-										return $wpssle_headers;
+										return $fdbgp_headers;
 									}
 								}
 							}
@@ -212,11 +214,11 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					);
 				}
 			}
-			if ( ! is_array( $wpssle_sheetheaders ) ) {
-				$wpssle_sheetheaders = array();
+			if ( ! is_array( $fdbgp_sheetheaders ) ) {
+				$fdbgp_sheetheaders = array();
 			}
-			if ( empty( $wpssle_google_settings['client_token'] ) ) {
-				$wpssle_html = sprintf(
+			if ( empty( $fdbgp_google_settings['client_token'] ) ) {
+				$fdbgp_html = sprintf(
 					'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
 					esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'wpsse' ),
 					esc_html__( 'Click Here', 'wpsse' )
@@ -234,22 +236,22 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					$this->add_prefix('setup_clientidsecret'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw'  => $wpssle_html,
+						'raw'  => $fdbgp_html,
 					)
 				);
 				$widget->end_controls_section();
-			} elseif ( ! empty( $wpssle_google_settings['client_token'] ) && ! $instance_api->checkcredenatials() ) {
-				$wpssle_error = $instance_api->getClient( 1 );
-				if ( 'Invalid token format' === (string) $wpssle_error || 'invalid_grant' === (string) $wpssle_error ) {
-					$wpssle_html = sprintf(
+			} elseif ( ! empty( $fdbgp_google_settings['client_token'] ) && ! $instance_api->checkcredenatials() ) {
+				$fdbgp_error = $instance_api->getClient( 1 );
+				if ( 'Invalid token format' === (string) $fdbgp_error || 'invalid_grant' === (string) $fdbgp_error ) {
+					$fdbgp_html = sprintf(
 						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
 						esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'wpsse' ),
 						esc_html__( 'Click Here', 'wpsse' )
 					);
 				} else {
-					$wpssle_html = sprintf(
+					$fdbgp_html = sprintf(
 						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s</div>',
-						'Error: ' . $wpssle_error
+						'Error: ' . $fdbgp_error
 					);
 				}
 				$widget->start_controls_section(
@@ -265,17 +267,19 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					$this->add_prefix('setup_clientidsecret'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw'  => $wpssle_html,
+						'raw'  => $fdbgp_html,
 					)
 				);
 				$widget->end_controls_section();
 			} else {
-				$wpssle_spreadsheets = $instance_api->get_spreadsheet_listing();
-				$wpssle_sheets       = array();
-				if ( ! empty( $wpssle_spreadsheetid ) && array_key_exists( $wpssle_spreadsheetid, $wpssle_spreadsheets ) ) {
-					$response = $instance_api->get_sheet_listing( $wpssle_spreadsheetid );
-					foreach ( $response->getSheets() as $s ) {
-						$wpssle_sheets[] = $s['properties']['title'];
+				$fdbgp_spreadsheets = $instance_api->get_spreadsheet_listing();
+				$fdbgp_sheets       = array();
+				if ( ! empty( $fdbgp_spreadsheetid ) && array_key_exists( $fdbgp_spreadsheetid, $fdbgp_spreadsheets ) ) {
+					if($fdbgp_spreadsheetid !== 'new'){
+						$response = $instance_api->get_sheet_listing( $fdbgp_spreadsheetid );
+						foreach ( $response->getSheets() as $s ) {
+							$fdbgp_sheets[] = $s['properties']['title'];
+						}
 					}
 				}
 				$widget->start_controls_section(
@@ -292,7 +296,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					array(
 						'label'       => esc_attr__( 'Select Spreadsheet', 'wpsse' ),
 						'type'        => Controls_Manager::SELECT,
-						'options'     => $wpssle_spreadsheets,
+						'options'     => $fdbgp_spreadsheets,
 						'label_block' => true,
 						'separator'   => 'before',
 					)
@@ -322,7 +326,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						'label'       => esc_attr__( 'Select Sheet Name', 'wpsse' ),
 						'type'        => Controls_Manager::SELECT,
 						'label_block' => true,
-						'options'     => $wpssle_sheets,
+						'options'     => $fdbgp_sheets,
 					)
 				);
 				$widget->add_control(
@@ -331,7 +335,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
 						'type'        => Controls_Manager::SELECT2,
 						'multiple'    => true,
-						'options'     => $wpssle_headers,
+						'options'     => $fdbgp_headers,
 						'label_block' => true,
 					)
 				);

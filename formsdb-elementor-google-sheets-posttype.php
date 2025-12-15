@@ -59,7 +59,7 @@ if(!class_exists('FDBGP_Main')) {
 			static $autoloader_registered = false;
 
 			if ( ! $autoloader_registered ) {
-				$autoloader_registered = spl_autoload_register( [ $this, 'autoload' ] );
+				// $autoloader_registered = spl_autoload_register( [ $this, 'autoload' ] );
 			}
 
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
@@ -102,10 +102,6 @@ if(!class_exists('FDBGP_Main')) {
 		public function FDBGP_plugins_loaded() {
 			// Add plugin dashboard link
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'FDBGP_plugin_dashboard_link' ) );
-
-			// Get the loader instance
-			\FDBGP_Loader::get_instance();
-
 		}
 
 		function FDBGP_plugin_dashboard_link( $links ) {
@@ -116,7 +112,9 @@ if(!class_exists('FDBGP_Main')) {
 
 		private function includes() {
 
-			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-loader.php';
+			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-loader.php';			
+			// Get the loader instance
+			\FDBGP_Loader::get_instance();
 		}
 
 		public function autoload( $class_name ) {
