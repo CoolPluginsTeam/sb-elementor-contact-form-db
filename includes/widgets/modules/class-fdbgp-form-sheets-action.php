@@ -823,5 +823,13 @@ public function render_editor_script() {
 		
 		return false;
 	}
-	
+	/**
+	 * On Export
+	 * Clears form settings on export
+	 *
+	 * @access public
+	 * @param array $element_sheets clear settings.
+	 */
+	public function on_export( $element_sheets ) {
+	}
 }
