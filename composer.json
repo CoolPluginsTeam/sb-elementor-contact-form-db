@@ -1,0 +1,12 @@
+{
+    "require": {
+        "google/apiclient": "^2.15",
+        "google/apiclient-services": "^0.423.0"
+    },
+    "extra": {
+        "google/apiclient-services": [
+            "Sheets",
+            "Drive"
+        ]
+    }
+}
