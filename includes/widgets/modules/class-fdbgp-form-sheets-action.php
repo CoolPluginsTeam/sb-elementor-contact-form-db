@@ -1086,14 +1086,6 @@ public function render_editor_script() {
 			setTimeout(function() { window.fdbgpScanning = false; }, 1000);
 		}
 
-
-		// Trigger on various interactions with throttling
-		// jQuery("body").on("mouseenter", ".elementor-control-fdbgp_sheet_headers", function() {
-		// 	if (window.fdbgpScanning) return;
-		// 	window.fdbgpScanning = true;
-		// 	fdbgpPopulateHeaders();
-		// });
-		
 		</script>
 		<?php
 	}
