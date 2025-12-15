@@ -297,7 +297,7 @@
     //     setTimeout(function () { window.fdbgpScanning = false; }, 1000);
     // }
     // Wait for Elementor to fully initialize
-    $(window).on('elementor:init', function () {
+    $(window).on('load', function () {
 
         // Define the Custom Control Logic (Backbone.js)
         var FDBGP_DynamicSelect2 = elementor.modules.controls.BaseData.extend({
