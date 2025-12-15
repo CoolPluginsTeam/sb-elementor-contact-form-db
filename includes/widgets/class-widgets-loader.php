@@ -51,5 +51,9 @@ class FDBGP_Widgets_Loader {
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/modules/class-fdbgp-form-sheets-action.php';
         $fdbgp_action = new FDBGP_Form_Sheets_Action();
         Plugin::instance()->modules_manager->get_modules( 'forms' )->add_form_action( $fdbgp_action->get_name(), $fdbgp_action );
+
+        require_once FDBGP_PLUGIN_DIR . 'includes/widgets/modules/class-fdbgp-form-db-action.php';
+        $fdbgp_db_action = new FDBGP_Form_DB_Action();
+        Plugin::instance()->modules_manager->get_modules( 'forms' )->add_form_action( $fdbgp_db_action->get_name(), $fdbgp_db_action );
     }
 }

@@ -453,94 +453,92 @@ public function render_editor_script() {
 				
 				$widget_id = $widget->get_id();
 				
-				$wpssle_data = Plugin::elementor()->db->iterate_data(
-					$wpssle_data,
-					function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype, $widget_id ) {
-						if ( isset( $element['widgetType'] ) && 'form' === (string) $element['widgetType'] ) {
-							// Strict check removed for debugging/fallback. 
-							// We will try to match ID if present, but if we are arguably the only form or ID is glitchy, we take what we find.
-							/*
-							if ( ! empty( $element['id'] ) && (string)$widget_id !== (string)$element['id'] ) {
-								return $element;
-							}
-							*/
-							// Also check if this element HAS the settings we need. If not, don't overwrite local vars with emptiness.
+				// $wpssle_data = Plugin::elementor()->db->iterate_data(
+				// 	$wpssle_data,
+				// 	function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype, $widget_id ) {
+				// 		if ( isset( $element['widgetType'] ) && 'form' === (string) $element['widgetType'] ) {
+				// 			// Strict check removed for debugging/fallback. 
+				// 			// We will try to match ID if present, but if we are arguably the only form or ID is glitchy, we take what we find.
+				// 			/*
+				// 			if ( ! empty( $element['id'] ) && (string)$widget_id !== (string)$element['id'] ) {
+				// 				return $element;
+				// 			}
+				// 			*/
+				// 			// Also check if this element HAS the settings we need. If not, don't overwrite local vars with emptiness.
 							
-							if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
-								$local_spreadsheet_id = $element['settings'][$this->add_prefix('spreadsheetid')];
-							}
-							if ( isset( $element['settings'][$this->add_prefix('sheet_list')] ) ) {
-								$local_sheet_name = $element['settings'][$this->add_prefix('sheet_list')];
-							} elseif ( isset( $element['settings'][$this->add_prefix('sheet_name')] ) ) {
-								$local_sheet_name = $element['settings'][$this->add_prefix('sheet_name')];
-							}
-							if ( isset( $element['settings'][$this->add_prefix('sheet_headers')] ) ) {
-								$local_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
-							}
-							foreach ( $element['settings']['form_fields'] as $formdata ) {
-								if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
-									$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
-								}
-							}
-							return $element;
-						}
-					}
-				);
+				// 			if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
+				// 				$local_spreadsheet_id = $element['settings'][$this->add_prefix('spreadsheetid')];
+				// 			}
+				// 			if ( isset( $element['settings'][$this->add_prefix('sheet_list')] ) ) {
+				// 				$local_sheet_name = $element['settings'][$this->add_prefix('sheet_list')];
+				// 			} elseif ( isset( $element['settings'][$this->add_prefix('sheet_name')] ) ) {
+				// 				$local_sheet_name = $element['settings'][$this->add_prefix('sheet_name')];
+				// 			}
+				// 			if ( isset( $element['settings'][$this->add_prefix('sheet_headers')] ) ) {
+				// 				$local_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
+				// 			}
+				// 			foreach ( $element['settings']['form_fields'] as $formdata ) {
+				// 				if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
+				// 					$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+				// 				}
+				// 			}
+				// 			return $element;
+				// 		}
+				// 	}
+				// );
 				
-				if ( empty( $local_headers ) ) {
-					Plugin::elementor()->db->iterate_data(
-						$wpssle_data_global,
-						function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype ) {
-							if ( isset( $element['widgetType'] ) && 'global' === (string) $element['widgetType'] ) {
-								if ( ! empty( $element['templateID'] ) ) {
-									$global_form      = get_post_meta( $element['templateID'], '_elementor_data', true );
-									$global_form_meta = json_decode( $global_form, true );
-									if ( $global_form_meta ) {
+				// if ( empty( $local_headers ) ) {
+				// 	Plugin::elementor()->db->iterate_data(
+				// 		$wpssle_data_global,
+				// 		function( $element ) use ( &$do_update, &$local_headers, &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, $wpssle_exclude_headertype ) {
+				// 			if ( isset( $element['widgetType'] ) && 'global' === (string) $element['widgetType'] ) {
+				// 				if ( ! empty( $element['templateID'] ) ) {
+				// 					$global_form      = get_post_meta( $element['templateID'], '_elementor_data', true );
+				// 					$global_form_meta = json_decode( $global_form, true );
+				// 					if ( $global_form_meta ) {
 										
-										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')] ) ) {
-											$local_spreadsheet_id = $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')];
-										}
-										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')] ) ) {
-											$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')];
-										} elseif ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')] ) ) {
-											$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')];
-										}
-										if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')] ) ) {
-											$local_sheet_headers = $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')];
-										}
-										if ( is_array( $global_form_meta[0]['settings']['form_fields'] ) ) {
-											foreach ( $global_form_meta[0]['settings']['form_fields'] as $formdata ) {
-												if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
-													$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
-												}
-											}
-										}
-										return $element;
-									}
-								}
-							}
-						}
-					);
-				}
+				// 						if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')] ) ) {
+				// 							$local_spreadsheet_id = $global_form_meta[0]['settings'][$this->add_prefix('spreadsheetid')];
+				// 						}
+				// 						if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')] ) ) {
+				// 							$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_list')];
+				// 						} elseif ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')] ) ) {
+				// 							$local_sheet_name = $global_form_meta[0]['settings'][$this->add_prefix('sheet_name')];
+				// 						}
+				// 						if ( isset( $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')] ) ) {
+				// 							$local_sheet_headers = $global_form_meta[0]['settings'][$this->add_prefix('sheet_headers')];
+				// 						}
+				// 						if ( is_array( $global_form_meta[0]['settings']['form_fields'] ) ) {
+				// 							foreach ( $global_form_meta[0]['settings']['form_fields'] as $formdata ) {
+				// 								if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
+				// 									$local_headers[ $formdata['custom_id'] ] = $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+				// 								}
+				// 							}
+				// 						}
+				// 						return $element;
+				// 					}
+				// 				}
+				// 			}
+				// 		}
+				// 	);
+				// }
 			}
 			  $wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html', 'step' ); // Added 'step'
     // var_dump($settings['form_fields']);die();
-    /*
-    if ( ! empty( $settings['form_fields'] ) ) {
-        foreach ( $settings['form_fields'] as $field ) {
-            // Skip excluded types
-            if ( in_array( $field['field_type'], $wpssle_exclude_headertype ) ) {
-                continue;
-            }
+    // if ( ! empty( $settings['form_fields'] ) ) {
+    //     foreach ( $settings['form_fields'] as $field ) {
+    //         // Skip excluded types
+    //         if ( in_array( $field['field_type'], $wpssle_exclude_headertype ) ) {
+    //             continue;
+    //         }
             
-            $id = $field['custom_id'];
-            $label = ! empty( $field['field_label'] ) ? $field['field_label'] : ucfirst( $field['custom_id'] );
+    //         $id = $field['custom_id'];
+    //         $label = ! empty( $field['field_label'] ) ? $field['field_label'] : ucfirst( $field['custom_id'] );
             
-            // Populate the headers array
-            $local_headers[ $id ] = $label;
-        }
-    }
-    */
+    //         // Populate the headers array
+    //         $local_headers[ $id ] = $label;
+    //     }
+    // }
 			if ( ! is_array( $wpssle_sheetheaders ) ) {
 				$wpssle_sheetheaders = array();
 			}
@@ -709,50 +707,50 @@ public function render_editor_script() {
 				);
 
 				// Restore Sheet Headers Control
-				if ( empty( $local_headers ) ) {
-					$local_headers = array( '' => '-- No form fields found --' );
-				}
+				// if ( empty( $local_headers ) ) {
+				// 	$local_headers = array( '' => '-- No form fields found --' );
+				// }
 				
 				// Fallback: Ensure saved headers are present in options to prevent them from disappearing
-				if ( ! empty( $local_sheet_headers ) && is_array( $local_sheet_headers ) ) {
-					$available_keys = array_keys( $local_headers ); // e.g. ['name', 'email']
-					$available_labels = array_values( $local_headers ); // e.g. ['Name', 'Email']
+				// if ( ! empty( $local_sheet_headers ) && is_array( $local_sheet_headers ) ) {
+				// 	$available_keys = array_keys( $local_headers ); // e.g. ['name', 'email']
+				// 	$available_labels = array_values( $local_headers ); // e.g. ['Name', 'Email']
 					
-					foreach ( $local_sheet_headers as $saved_header ) {
-						if ( ! isset( $local_headers[ $saved_header ] ) ) {
-							// If the saved header is numeric (legacy index), try to map it to current fields by position
-							if ( is_numeric( $saved_header ) && isset( $available_labels[ (int)$saved_header ] ) ) {
-								$mapped_label = $available_labels[ (int)$saved_header ];
-								// Remove the default 'placeholder' if it exists (index 0 might conflict if array was empty, but here keys are IDs)
-								$local_headers[ $saved_header ] = $mapped_label . ' (Legacy)';
-							} else {
-								// Standard fallback for unknown IDs
-								$local_headers[ $saved_header ] = $saved_header . ' (Saved)';
-							}
-						}
-					}
-				}
+				// 	foreach ( $local_sheet_headers as $saved_header ) {
+				// 		if ( ! isset( $local_headers[ $saved_header ] ) ) {
+				// 			// If the saved header is numeric (legacy index), try to map it to current fields by position
+				// 			if ( is_numeric( $saved_header ) && isset( $available_labels[ (int)$saved_header ] ) ) {
+				// 				$mapped_label = $available_labels[ (int)$saved_header ];
+				// 				// Remove the default 'placeholder' if it exists (index 0 might conflict if array was empty, but here keys are IDs)
+				// 				$local_headers[ $saved_header ] = $mapped_label . ' (Legacy)';
+				// 			} else {
+				// 				// Standard fallback for unknown IDs
+				// 				$local_headers[ $saved_header ] = $saved_header . ' (Saved)';
+				// 			}
+				// 		}
+				// 	}
+				// }
 // var_dump($local_headers);
-			// $widget->add_control(
-			// 	$this->add_prefix('sheet_headers'),
-			// 	array(
-			// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
-			// 		'type'        => Controls_Manager::SELECT2,
-			// 		'multiple'    => true,
-			// 		'options'     => $local_headers,
-			// 		'label_block' => true,
-			// 		'description' => esc_attr__( 'Select which form fields to send to Google Sheets. If fields don\'t appear, click Update to save the page.', 'wpsse' ),
-			// 	)
-			// );
-				$widget->add_control(
-					$this->add_prefix('sheet_headers'),
-					array(
-						'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
-						'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
-						'label_block' => true,
-						'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
-					)
-				);
+			$widget->add_control(
+				$this->add_prefix('sheet_headers'),
+				array(
+					'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+					'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
+					'label_block' => true,
+					'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
+				)
+			);
+				// $widget->add_control(
+				// 	$this->add_prefix('sheet_headers'),
+				// 	array(
+				// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+				// 		'type'        => Controls_Manager::SELECT2,
+				// 		'multiple'    => true,
+				// 		'options'     => $local_headers,
+				// 		'label_block' => true,
+				// 		'description' => esc_attr__( 'Select which form fields to send to Google Sheets. If fields don\'t appear, click Update to save the page.', 'wpsse' ),
+				// 	)
+				// );
 
 				// Restore Freeze Header Control
 				$widget->add_control(
@@ -1085,7 +1083,6 @@ public function render_editor_script() {
 			// Reset flag after small delay
 			setTimeout(function() { window.fdbgpScanning = false; }, 1000);
 		}
-
 
 		// Trigger on various interactions with throttling
 		// jQuery("body").on("mouseenter", ".elementor-control-fdbgp_sheet_headers", function() {

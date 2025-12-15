@@ -34,6 +34,10 @@ if(!class_exists('FDBGP_Loader')) {
         private function load_dependencies() {
             require_once FDBGP_PLUGIN_DIR . 'admin/class-fdbgp-admin.php';
             FDBGP_Admin::get_instance($this->get_plugin_name(), $this->get_version());
+            
+            // require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-post-type.php';
+            // new FDBGP_Post_Type();
+
             require_once FDBGP_PLUGIN_DIR . 'includes/widgets/class-widgets-loader.php';
             new FDBGP_Widgets_Loader($this->get_plugin_name(), $this->get_version());
         }

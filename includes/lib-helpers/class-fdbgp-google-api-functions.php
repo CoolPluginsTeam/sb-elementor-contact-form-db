@@ -526,8 +526,10 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 					'title' => $spreadsheetname,
 				),
 				'sheets'     => array(
-					'properties' => array(
-						'title' => $sheetname,
+					array(
+						'properties' => array(
+							'title' => $sheetname,
+						),
 					),
 				),
 			)
