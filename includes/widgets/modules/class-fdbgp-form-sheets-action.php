@@ -46,6 +46,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 		// Register AJAX actions
 		add_action( 'wp_ajax_fdbgp_get_sheets', array( $this, 'ajax_get_sheets' ) );
 		add_action( 'wp_ajax_fdbgp_create_spreadsheet', array( $this, 'ajax_create_spreadsheet' ) );
+		add_action( 'wp_ajax_fdbgp_update_sheet_headers', array( $this, 'ajax_update_sheet_headers' ) );
 
 		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'render_editor_script' ] );
 		
@@ -180,15 +181,15 @@ public function render_editor_script() {
 						$instance_api->updateentry( $header_param );
 						
 						// Freeze header row if enabled
-						$wpssle_freeze_header = isset( $wpssle_settings[$this->add_prefix('freeze_header')] ) ? $wpssle_settings[$this->add_prefix('freeze_header')] : '';
-						if ( $wpssle_freeze_header === 'yes' ) {
+						// $wpssle_freeze_header = isset( $wpssle_settings[$this->add_prefix('freeze_header')] ) ? $wpssle_settings[$this->add_prefix('freeze_header')] : '';
+						// if ( $wpssle_freeze_header === 'yes' ) {
 							$freeze_object = $instance_api->freezeobject( $sheet_id, 1 );
 							$freeze_param = array(
 								'spreadsheetid' => $wpssle_spreadsheetid,
 								'requestbody' => $freeze_object
 							);
 							$instance_api->formatsheet( $freeze_param );
-						}
+						// }
 					}
 					
 					// Update the form settings to save the new spreadsheet ID
@@ -221,6 +222,81 @@ public function render_editor_script() {
 					$response = $instance_api->get_sheet_listing( $wpssle_spreadsheetid );
 					foreach ( $response->getSheets() as $s ) {
 						$wpssle_sheets[] = $s['properties']['title'];
+					}
+					
+					// Handle "Create New Tab" Logic
+					if ( 'create_new_tab' === $wpssle_sheetname ) {
+						$wpssle_new_tab_name = isset( $wpssle_settings[$this->add_prefix('new_sheet_tab_name')] ) ? $wpssle_settings[$this->add_prefix('new_sheet_tab_name')] : '';
+						
+						if ( ! empty( $wpssle_new_tab_name ) ) {
+							// Update the main sheetname variable
+							$wpssle_sheetname = $wpssle_new_tab_name;
+							
+							// Check if it exists
+							if ( ! in_array( $wpssle_sheetname, $wpssle_sheets, true ) ) {
+								try {
+									// Create the new sheet
+									$sheet_req_obj = $instance_api->createsheetobject( $wpssle_sheetname );
+									$sheet_param = array(
+										'spreadsheetid' => $wpssle_spreadsheetid,
+										'requestbody'   => $sheet_req_obj
+									);
+									$sheet_response = $instance_api->formatsheet( $sheet_param );
+									
+									// Get new sheet ID (needed for freezing rows)
+									// The response structure depends on BatchUpdate response
+									// Usually: $response->getReplies()[0]->getAddSheet()->getProperties()->getSheetId()
+									$new_sheet_id = 0;
+									if ( method_exists( $sheet_response, 'getReplies' ) ) {
+										$replies = $sheet_response->getReplies();
+										if ( isset( $replies[0] ) ) {
+											$addSheet = $replies[0]->getAddSheet();
+											if ( $addSheet ) {
+												$new_sheet_id = $addSheet->getProperties()->getSheetId();
+											}
+										}
+									}
+
+									// Add Headers
+									$wpssle_headers_data = $wpssle_settings[$this->add_prefix('sheet_headers')];
+									if ( is_array( $wpssle_headers_data ) && ! empty( $wpssle_headers_data ) ) {
+										$wpssle_header_labels = array();
+										// Map fields to labels
+										// Note: $record->get('fields') is what we have access to
+										$fields_refs = $record->get( 'fields' );
+										foreach ( $wpssle_headers_data as $field_id ) {
+											if ( isset( $fields_refs[ $field_id ] ) ) {
+												$wpssle_header_labels[] = $fields_refs[ $field_id ]['title'];
+											} else {
+												$wpssle_header_labels[] = ucfirst( str_replace( '_', ' ', $field_id ) );
+											}
+										}
+										
+										// Add header row
+										$wpssle_header_range = $wpssle_sheetname . '!A1';
+										$wpssle_header_body = $instance_api->valuerangeobject( array( $wpssle_header_labels ) );
+										$wpssle_header_params = FDBGP_Google_API_Functions::get_row_format();
+										$header_param = $instance_api->setparamater( $wpssle_spreadsheetid, $wpssle_header_range, $wpssle_header_body, $wpssle_header_params );
+										$instance_api->updateentry( $header_param );
+										
+										// Freeze header row
+										$freeze_object = $instance_api->freezeobject( $new_sheet_id, 1 );
+										$freeze_param = array(
+											'spreadsheetid' => $wpssle_spreadsheetid,
+											'requestbody' => $freeze_object
+										);
+										$instance_api->formatsheet( $freeze_param );
+									}
+									
+									// Add to valid lists
+									$wpssle_sheets[] = $wpssle_sheetname;
+									
+								} catch ( Exception $e ) {
+									error_log( 'WPSyncSheets: Failed to create new tab: ' . $e->getMessage() );
+									// Fallback: Proceed, maybe it exists and we missed it, or it will fail on insert.
+								}
+							}
+						}
 					}
 					
 					// Fix for legacy settings: If sheet name is an index (e.g. "0"), try to resolve it to the actual name
@@ -516,6 +592,16 @@ public function render_editor_script() {
 						),
 					)
 				);
+				$widget->add_control(
+					$this->add_prefix('sheet_headers'),
+					array(
+						'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+						'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
+						'label_block' => true,
+						'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
+					)
+				);
+
 			
 				// Add Create Spreadsheet Now button using RAW_HTML
 				$widget->add_control(
@@ -535,6 +621,8 @@ public function render_editor_script() {
 
 			
 				$wpssle_sheets = array();
+				// Add 'Create New Tab' option first
+				$wpssle_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
 				
 				// Use local sheet ID to fetch sheets
 				if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
@@ -551,11 +639,12 @@ public function render_editor_script() {
 				
 				// Fallback: If we have a saved sheet name but the list is empty (e.g. API fail),
 				// add the saved name to the list so the dropdown isn't blank.
-				if ( ! empty( $local_sheet_name ) && ! isset( $wpssle_sheets[ $local_sheet_name ] ) ) {
+				// Careful not to overwrite if saved name is 'create_new_tab'
+				// Also, checking if it is already in the array keys (titles are keys here? No, in the loop above: $wpssle_sheets[ $title ] = $title;)
+				// So keys are titles.
+				if ( ! empty( $local_sheet_name ) && ! isset( $wpssle_sheets[ $local_sheet_name ] ) && $local_sheet_name !== 'create_new_tab' ) {
 					$wpssle_sheets[ $local_sheet_name ] = $local_sheet_name;
 				}
-
-
 
 				$widget->add_control(
 					$this->add_prefix('sheet_list'),
@@ -568,6 +657,34 @@ public function render_editor_script() {
 							$this->add_prefix('spreadsheetid') . '!' => 'new',
 						),
 						'render_type' => 'ui', // Ensure UI update triggers AJAX
+					)
+				);
+
+				$widget->add_control(
+					$this->add_prefix('new_sheet_tab_name'),
+					array(
+						'label'       => esc_attr__( 'New Sheet Tab Name', 'wpsse' ),
+						'type'        => Controls_Manager::TEXT,
+						'label_block' => true,
+						'condition'   => array(
+							$this->add_prefix('spreadsheetid') . '!' => 'new',
+							$this->add_prefix('sheet_list') => 'create_new_tab',
+						),
+						'placeholder' => 'e.g. Sheet2',
+					)
+				);
+
+				$widget->add_control(
+					$this->add_prefix('update_sheet_button'),
+					array(
+						'type' => Controls_Manager::RAW_HTML,
+						'raw' => '<button type="button" class="elementor-button elementor-button-warning" style="width:100%; margin-top:10px;" onclick="fdbgpUpdateSheetHeaders()">
+							<span class="elementor-button-text">Update Sheet</span>
+						</button>
+						<div id="fdbgp-update-message" style="margin-top:10px; padding:10px; border-radius:3px; display:none;"></div>',
+						'condition'   => array(
+							$this->add_prefix('spreadsheetid') . '!' => 'new',
+						),
 					)
 				);
 
@@ -596,27 +713,18 @@ public function render_editor_script() {
 				// 	}
 				// }
 
-				$widget->add_control(
-					$this->add_prefix('sheet_headers'),
-					array(
-						'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
-						'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
-						'label_block' => true,
-						'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
-					)
-				);
-
+				
 				// Restore Freeze Header Control
-				$widget->add_control(
-					$this->add_prefix('freeze_header'),
-					array(
-						'label'        => esc_attr__( 'Freeze Headers', 'wpsse' ),
-						'type'         => Controls_Manager::SWITCHER,
-						'label_off'    => 'No',
-						'label_on'     => 'Yes',
-						'return_value' => 'yes',
-					)
-				);
+				// $widget->add_control(
+				// 	$this->add_prefix('freeze_header'),
+				// 	array(
+				// 		'label'        => esc_attr__( 'Freeze Headers', 'wpsse' ),
+				// 		'type'         => Controls_Manager::SWITCHER,
+				// 		'label_off'    => 'No',
+				// 		'label_on'     => 'Yes',
+				// 		'return_value' => 'yes',
+				// 	)
+				// );
 				
 				// End of register_settings_section
 				$widget->end_controls_section();
@@ -721,8 +829,12 @@ public function render_editor_script() {
 			$response = $instance_api->get_sheet_listing( $spreadsheet_id );
 			$sheets = array();
 			
+			// Add Create New Tab option
+			$sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
+			
 			foreach ( $response->getSheets() as $s ) {
-				$sheets[] = $s['properties']['title'];
+				$title = $s['properties']['title'];
+				$sheets[ $title ] = $title;
 			}
 			
 			wp_send_json_success( array( 'sheets' => $sheets ) );
@@ -819,5 +931,83 @@ public function render_editor_script() {
 	 * @param array $element_sheets clear settings.
 	 */
 	public function on_export( $element_sheets ) {
+	}
+	public function ajax_update_sheet_headers() {
+		check_ajax_referer( 'elementor_ajax', '_nonce' );
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => 'Permission denied' ) );
+		}
+
+		$spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
+		$sheet_name = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
+		$new_sheet_name = isset( $_POST['new_sheet_name'] ) ? sanitize_text_field( $_POST['new_sheet_name'] ) : '';
+		$headers = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', $_POST['headers'] ) : array();
+
+		if ( empty( $spreadsheet_id ) ) {
+			wp_send_json_error( array( 'message' => 'Spreadsheet ID missing' ) );
+		}
+
+		try {
+			$api = new FDBGP_Google_API_Functions();
+			if ( ! $api->checkcredenatials() ) {
+				wp_send_json_error( array( 'message' => 'API Error' ) );
+			}
+
+			$target_sheet_name = $sheet_name;
+
+			// Handle Create New Tab
+			if ( 'create_new_tab' === $sheet_name ) {
+				if ( empty( $new_sheet_name ) ) {
+					wp_send_json_error( array( 'message' => 'New Sheet Name is required' ) );
+				}
+				$target_sheet_name = $new_sheet_name;
+
+				// Check existence
+				$existing_sheets = $api->get_sheet_listing( $spreadsheet_id );
+				$titles = array();
+				foreach ( $existing_sheets->getSheets() as $s ) {
+					$titles[] = $s['properties']['title'];
+				}
+
+				if ( ! in_array( $target_sheet_name, $titles, true ) ) {
+					// Create
+					$req = $api->createsheetobject( $target_sheet_name );
+					$api->formatsheet( array(
+						'spreadsheetid' => $spreadsheet_id,
+						'requestbody'   => $req,
+					) );
+				}
+			}
+
+			// Update Headers
+			if ( ! empty( $headers ) ) {
+				$range = $target_sheet_name . '!A1';
+				$body = $api->valuerangeobject( array( $headers ) );
+				$params = FDBGP_Google_API_Functions::get_row_format();
+				$api->updateentry( $api->setparamater( $spreadsheet_id, $range, $body, $params ) );
+
+				// Freeze
+				$sheet_id = 0;
+				$refresh = $api->get_sheet_listing( $spreadsheet_id );
+				foreach ( $refresh->getSheets() as $s ) {
+					if ( $s['properties']['title'] === $target_sheet_name ) {
+						$sheet_id = $s['properties']['sheetId'];
+						break;
+					}
+				}
+				$api->formatsheet( array(
+					'spreadsheetid' => $spreadsheet_id,
+					'requestbody'   => $api->freezeobject( $sheet_id, 1 ),
+				) );
+			}
+			
+			wp_send_json_success( array(
+				'message'    => 'Sheet Updated Successfully!',
+				'sheet_name' => $target_sheet_name,
+			) );
+
+		} catch ( Exception $e ) {
+			wp_send_json_error( array( 'message' => 'Error: ' . $e->getMessage() ) );
+		}
 	}
 }

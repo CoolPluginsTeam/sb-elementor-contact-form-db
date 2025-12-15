@@ -1,5 +1,108 @@
 (function ($) {
     // Expose function to global scope so onclick works
+    window.fdbgpUpdateSheetHeaders = function () {
+        var btn = event.target.closest("button");
+        var $btn = jQuery(btn);
+        var $text = $btn.find(".elementor-button-text");
+        var originalText = $text.text();
+        var $message = jQuery("#fdbgp-update-message");
+
+        $message.hide();
+
+        var settings = {};
+        try {
+            var $panel = jQuery(btn).closest(".elementor-panel");
+            $panel.find("input, select, textarea").each(function () {
+                var $input = jQuery(this);
+                var name = $input.attr("data-setting");
+                if (name) {
+                    settings[name] = $input.val();
+                }
+            });
+
+            var spreadsheetId = settings["fdbgp_spreadsheetid"] || "";
+            var sheetName = settings["fdbgp_sheet_list"] || "";
+            var newSheetName = settings["fdbgp_new_sheet_tab_name"] || "";
+            var sheetHeaders = settings["fdbgp_sheet_headers"] || [];
+
+        } catch (e) {
+            console.log(e);
+            return;
+        }
+
+        if (!spreadsheetId || spreadsheetId === 'new') {
+            $message.css({
+                "background-color": "#fff3cd",
+                "color": "#856404",
+                "border": "1px solid #ffeaa7"
+            }).html("⚠️ Please select a Spreadsheet first").show();
+            return;
+        }
+
+        if (sheetName === 'create_new_tab' && !newSheetName) {
+            $message.css({
+                "background-color": "#fff3cd",
+                "color": "#856404",
+                "border": "1px solid #ffeaa7"
+            }).html("⚠️ Please enter a New Sheet Name").show();
+            return;
+        }
+
+        $btn.prop("disabled", true);
+        $text.text("Updating...");
+
+        jQuery.ajax({
+            url: ajaxurl,
+            type: "POST",
+            data: {
+                action: "fdbgp_update_sheet_headers",
+                _nonce: elementorCommon.config.ajax.nonce,
+                spreadsheet_id: spreadsheetId,
+                sheet_name: sheetName,
+                new_sheet_name: newSheetName,
+                headers: sheetHeaders
+            },
+            success: function (response) {
+                if (response.success) {
+                    $message.css({
+                        "background-color": "#d4edda",
+                        "color": "#155724",
+                        "border": "1px solid #c3e6cb"
+                    }).html("✅ " + response.data.message).show();
+
+                    // If created new tab, trigger refresh of list?
+                    // Ideally we should switch the dropdown to the new sheet name
+                    if (sheetName === 'create_new_tab' && response.data.sheet_name) {
+                        // Trigger change on spreadsheet dropdown to refresh list
+                        var $sId = $panel.find("[data-setting='fdbgp_spreadsheetid']");
+                        // We can't easily auto-select the new one because it's async reload.
+                        // But we can suggest user to refresh or just reload the list.
+                        $sId.trigger('change');
+                    }
+
+                } else {
+                    $message.css({
+                        "background-color": "#f8d7da",
+                        "color": "#721c24",
+                        "border": "1px solid #f5c6cb"
+                    }).html("❌ " + (response.data.message || "Unknown error")).show();
+                }
+            },
+            error: function () {
+                $message.css({
+                    "background-color": "#f8d7da",
+                    "color": "#721c24",
+                    "border": "1px solid #f5c6cb"
+                }).html("❌ Server error").show();
+            },
+            complete: function () {
+                $btn.prop("disabled", false);
+                $text.text(originalText);
+            }
+        });
+    };
+
+    // Expose function to global scope so onclick works
     window.fdbgpCreateSpreadsheet = function () {
         var btn = event.target.closest("button");
         var $btn = jQuery(btn);
@@ -48,6 +151,15 @@
                 "color": "#856404",
                 "border": "1px solid #ffeaa7"
             }).html("⚠️ Please enter a Sheet Name").show();
+            return;
+        }
+
+        if (!sheetHeaders || sheetHeaders.length === 0) {
+            $message.css({
+                "background-color": "#fff3cd",
+                "color": "#856404",
+                "border": "1px solid #ffeaa7"
+            }).html("⚠️ Please select at least one Sheet Header").show();
             return;
         }
 
@@ -134,8 +246,8 @@
                 success: function (response) {
                     if (response.success && response.data.sheets) {
                         $sheetSelect.empty();
-                        $.each(response.data.sheets, function (index, sheetName) {
-                            $sheetSelect.append(new Option(sheetName, sheetName));
+                        $.each(response.data.sheets, function (key, text) {
+                            $sheetSelect.append(new Option(text, key));
                         });
                         $sheetSelect.trigger('change');
                     } else {
