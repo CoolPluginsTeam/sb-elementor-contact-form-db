@@ -47,6 +47,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 		add_action( 'wp_ajax_fdbgp_get_sheets', array( $this, 'ajax_get_sheets' ) );
 		add_action( 'wp_ajax_fdbgp_create_spreadsheet', array( $this, 'ajax_create_spreadsheet' ) );
 		add_action( 'wp_ajax_fdbgp_update_sheet_headers', array( $this, 'ajax_update_sheet_headers' ) );
+		add_action( 'wp_ajax_fdbgp_check_sheet_headers', array( $this, 'ajax_check_sheet_headers' ) );
 
 		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'render_editor_script' ] );
 		
@@ -400,6 +401,38 @@ public function render_editor_script() {
 			$wpssle_form_fields        = array();
 			
 			  $wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html', 'step' ); // Added 'step'
+			
+			// Retrieve saved settings from Elementor data
+			$wpssle_document = Plugin::elementor()->documents->get( get_the_ID() );
+			if ( $wpssle_document ) {
+				$wpssle_data = $wpssle_document->get_elements_data();
+				$widget_id = $widget->get_id();
+				
+				Plugin::elementor()->db->iterate_data(
+					$wpssle_data,
+					function( $element ) use ( &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, &$local_headers, $widget_id, $wpssle_exclude_headertype ) {
+						if ( isset( $element['id'] ) && (string)$widget_id === (string)$element['id'] ) {
+							if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
+								$local_spreadsheet_id = $element['settings'][$this->add_prefix('spreadsheetid')];
+							}
+							if ( isset( $element['settings'][$this->add_prefix('sheet_list')] ) ) {
+								$local_sheet_name = $element['settings'][$this->add_prefix('sheet_list')];
+							}
+							if ( isset( $element['settings'][$this->add_prefix('sheet_headers')] ) ) {
+								$local_sheet_headers = $element['settings'][$this->add_prefix('sheet_headers')];
+							}
+							if ( isset( $element['settings']['form_fields'] ) ) {
+								foreach ( $element['settings']['form_fields'] as $formdata ) {
+									if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
+										$local_headers[ $formdata['custom_id'] ] = isset($formdata['field_label']) && $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+									}
+								}
+							}
+						}
+						return $element;
+					}
+				);
+			}
 
 			if ( ! is_array( $wpssle_sheetheaders ) ) {
 				$wpssle_sheetheaders = array();
@@ -519,7 +552,7 @@ public function render_editor_script() {
 						'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
 						'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
 						'label_block' => true,
-						'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
+						// 'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
 					)
 				);
 
@@ -850,6 +883,46 @@ public function render_editor_script() {
 			) );
 
 		} catch ( Exception $e ) {
+			wp_send_json_error( array( 'message' => 'Error: ' . $e->getMessage() ) );
+		}
+	}
+	public function ajax_check_sheet_headers() {
+		check_ajax_referer( 'elementor_ajax', '_nonce' );
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => 'Permission denied' ) );
+		}
+
+		$spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
+		$sheet_name = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
+
+		if ( empty( $spreadsheet_id ) || empty( $sheet_name ) || 'create_new_tab' === $sheet_name ) {
+			wp_send_json_success( array( 'has_content' => false ) );
+			return; // Explicit return to avoid further processing
+		}
+
+		try {
+			$api = new FDBGP_Google_API_Functions();
+			if ( ! $api->checkcredenatials() ) {
+				wp_send_json_error( array( 'message' => 'API Error' ) );
+			}
+
+			// Quote sheet name to handle spaces
+			$check_range = "'" . $sheet_name . "'!A1:Z1";
+			$existing = $api->get_row_list( $spreadsheet_id, $check_range );
+			$rows = $existing->getValues();
+
+			if ( ! empty( $rows ) ) {
+				wp_send_json_success( array(
+					'has_content' => true,
+					'message'     => 'Warning: This sheet already includes content or headers. Do you want to update the sheet?',
+				) );
+			} else {
+				wp_send_json_success( array( 'has_content' => false ) );
+			}
+
+		} catch ( Exception $e ) {
+			// If sheet doesn't exist or other error, assume no content safe to overwrite? 
+			// Or return error.
 			wp_send_json_error( array( 'message' => 'Error: ' . $e->getMessage() ) );
 		}
 	}

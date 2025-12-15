@@ -257,6 +257,41 @@
     };
 
     jQuery(document).ready(function ($) {
+        // Check Sheet Content on Selection Change
+        $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
+            var $sheetSelect = $(this);
+            var sheetName = $sheetSelect.val();
+            var $panel = $sheetSelect.closest('.elementor-panel');
+            var spreadsheetId = $panel.find(".elementor-control-fdbgp_spreadsheetid select").val();
+
+            var $message = $panel.find("#fdbgp-update-message");
+            $message.hide();
+
+            if (!sheetName || sheetName === 'create_new_tab' || !spreadsheetId || spreadsheetId === 'new') {
+                return;
+            }
+
+            jQuery.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'fdbgp_check_sheet_headers',
+                    _nonce: elementorCommon.config.ajax.nonce,
+                    spreadsheet_id: spreadsheetId,
+                    sheet_name: sheetName
+                },
+                success: function (response) {
+                    if (response.success && response.data.has_content) {
+                        $message.css({
+                            "background-color": "#fff3cd",
+                            "color": "#856404",
+                            "border": "1px solid #ffeaa7"
+                        }).html("⚠️ " + (response.data.message || "Warning: Sheet has content.")).show();
+                    }
+                }
+            });
+        });
+
         $(document).on('change', '.elementor-control-fdbgp_spreadsheetid select', function () {
             var spreadsheetId = $(this).val();
             var $panel = $(this).closest('.elementor-panel');
@@ -354,5 +389,24 @@
 
         // Register the View so Elementor can render our custom control
         elementor.addControlView('fdbgp_dynamic_select2', FDBGP_DynamicSelect2);
+    });
+
+    $(window).on('elementor:init', function () {
+        // Ensure sheet list loads if spreadsheet is already selected (Initial Load Fix)
+        if (elementor && elementor.hooks) {
+            elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
+                setTimeout(function () {
+                    var $spreadsheetSelect = panel.$el.find("[data-setting='fdbgp_spreadsheetid']");
+                    var $sheetSelect = panel.$el.find("[data-setting='fdbgp_sheet_list']");
+
+                    if ($spreadsheetSelect.length && $spreadsheetSelect.val() && $spreadsheetSelect.val() !== 'new') {
+                        // If sheet list seems unpopulated (only minimal options), trigger reload
+                        if ($sheetSelect.find('option').length <= 2) {
+                            $spreadsheetSelect.trigger('change');
+                        }
+                    }
+                }, 1000); // 1 second delay to ensure complete rendering
+            });
+        }
     });
 })(jQuery);
