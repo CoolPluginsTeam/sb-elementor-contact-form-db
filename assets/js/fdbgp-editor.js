@@ -1,10 +1,14 @@
 (function ($) {
     // Expose function to global scope so onclick works
-    window.fdbgpUpdateSheetHeaders = function () {
-        var btn = event.target.closest("button");
+    window.fdbgpUpdateSheetHeaders = function (confirmOverwrite, btnContext) {
+        var btn = btnContext || (window.event && window.event.target ? window.event.target.closest("button") : null);
+        if (!btn) return;
+
         var $btn = jQuery(btn);
         var $text = $btn.find(".elementor-button-text");
-        var originalText = $text.text();
+        var originalText = $btn.data("original-text") || $text.text();
+        if (!$btn.data("original-text")) $btn.data("original-text", originalText);
+
         var $message = jQuery("#fdbgp-update-message");
 
         $message.hide();
@@ -60,26 +64,53 @@
                 spreadsheet_id: spreadsheetId,
                 sheet_name: sheetName,
                 new_sheet_name: newSheetName,
-                headers: sheetHeaders
+                headers: sheetHeaders,
+                confirm_overwrite: confirmOverwrite === true ? 'true' : 'false'
             },
             success: function (response) {
                 if (response.success) {
-                    $message.css({
-                        "background-color": "#d4edda",
-                        "color": "#155724",
-                        "border": "1px solid #c3e6cb"
-                    }).html("✅ " + response.data.message).show();
+                    if (response.data.confirm_needed) {
+                        if (confirm(response.data.message)) {
+                            fdbgpUpdateSheetHeaders(true, btn);
+                            return;
+                        } else {
+                            $message.css({
+                                "background-color": "#fff3cd",
+                                "color": "#856404",
+                                "border": "1px solid #ffeaa7"
+                            }).html("Cancelled.").show();
+                        }
+                    } else {
+                        $message.css({
+                            "background-color": "#d4edda",
+                            "color": "#155724",
+                            "border": "1px solid #c3e6cb"
+                        }).html("✅ " + response.data.message).show();
 
-                    // If created new tab, trigger refresh of list?
-                    // Ideally we should switch the dropdown to the new sheet name
-                    if (sheetName === 'create_new_tab' && response.data.sheet_name) {
-                        // Trigger change on spreadsheet dropdown to refresh list
-                        var $sId = $panel.find("[data-setting='fdbgp_spreadsheetid']");
-                        // We can't easily auto-select the new one because it's async reload.
-                        // But we can suggest user to refresh or just reload the list.
-                        $sId.trigger('change');
+                        if (sheetName === 'create_new_tab' && response.data.sheet_name) {
+                            var $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
+                            $sheetSelect.html('<option>Loading...</option>');
+
+                            jQuery.ajax({
+                                url: ajaxurl,
+                                type: 'POST',
+                                data: {
+                                    action: 'fdbgp_get_sheets',
+                                    _nonce: elementorCommon.config.ajax.nonce,
+                                    spreadsheet_id: spreadsheetId
+                                },
+                                success: function (res) {
+                                    if (res.success && res.data.sheets) {
+                                        $sheetSelect.empty();
+                                        jQuery.each(res.data.sheets, function (key, text) {
+                                            $sheetSelect.append(new Option(text, key));
+                                        });
+                                        $sheetSelect.val(response.data.sheet_name).trigger('change');
+                                    }
+                                }
+                            });
+                        }
                     }
-
                 } else {
                     $message.css({
                         "background-color": "#f8d7da",
