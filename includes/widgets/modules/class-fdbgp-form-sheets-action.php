@@ -48,7 +48,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 		add_action( 'wp_ajax_fdbgp_create_spreadsheet', array( $this, 'ajax_create_spreadsheet' ) );
 		
 		// Load scripts in editor
-		add_action( 'elementor/editor/footer', array( $this, 'fdbgp_admin_footer_scripts' ) );
+		// add_action( 'elementor/editor/footer', array( $this, 'fdbgp_admin_footer_scripts' ) );
 		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'render_editor_script' ] );
 		
 
@@ -88,9 +88,17 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 		return 'fdbgp_' . $id;
 	}
 public function render_editor_script() {
-    ob_start();
+
+	wp_enqueue_script( 
+        'fdbgp-editor-script', // Unique Handle
+        FDBGP_PLUGIN_URL. 'assets/js/fdbgp-editor.js', // Path to your new JS file
+        [ 'elementor-editor', 'jquery' ], // Dependencies: waits for Elementor & jQuery
+        '1.0.0', // Version
+        true // Load in footer
+    );
+    // ob_start();
     ?>
-    (function($) {
+    <!-- (function($) {
         // Wait for Elementor to fully initialize
         $(window).on('elementor:init', function() {
             
@@ -155,13 +163,13 @@ public function render_editor_script() {
             // Register the View so Elementor can render our custom control
             elementor.addControlView( 'fdbgp_dynamic_select2', FDBGP_DynamicSelect2 );
         });
-    })(jQuery);
+    })(jQuery); -->
     <?php
-    $script_content = ob_get_clean();
+    // $script_content = ob_get_clean();
 
-    // Attach this script specifically to 'elementor-editor'
-    // This guarantees jQuery is loaded first.
-    wp_add_inline_script( 'elementor-editor', $script_content );
+    // // Attach this script specifically to 'elementor-editor'
+    // // This guarantees jQuery is loaded first.
+    // wp_add_inline_script( 'elementor-editor', $script_content );
 }
 	public function render_edissstor_script() {
     // 1. Get the dynamic variables
@@ -786,10 +794,10 @@ public function render_editor_script() {
 	 *
 	 * @access public
 	 */
-	public function fdbgp_admin_footer_scripts() {
+	public function fdbgp_admin_footer_scrsssipts() {
 		?>
 		<script>
-		function fdbgpCreateSpreadsheet() {
+		function fdbgpCreateSpreadssssssheet() {
 			var btn = event.target.closest("button");
 			var $btn = jQuery(btn);
 			var $text = $btn.find(".elementor-button-text");
@@ -939,152 +947,152 @@ public function render_editor_script() {
 		});
 
 		// Scrape Form Fields from the Elementor Preview HTML (Real-time)
-		function fdbgpPopulateHeaders() {
-			try {
-				var $preview = window.elementor && window.elementor.$previewContents;
-				if (!$preview) return;
+		// function fdbgpPopulateHeaders() {
+		// 	try {
+		// 		var $preview = window.elementor && window.elementor.$previewContents;
+		// 		if (!$preview) return;
 
-				// Find the currently active form wrapper in preview
-				// We try to find the one associated with the currently open panel
-				// Best guess: The one with class .elementor-element-editable
-				var $formWrapper = $preview.find(".elementor-element-editable .elementor-form-fields-wrapper");
+		// 		// Find the currently active form wrapper in preview
+		// 		// We try to find the one associated with the currently open panel
+		// 		// Best guess: The one with class .elementor-element-editable
+		// 		var $formWrapper = $preview.find(".elementor-element-editable .elementor-form-fields-wrapper");
 				
-				// Fallback: If not found (maybe not active yet), find ANY form wrapper if only one exists
-				if ($formWrapper.length === 0) {
-					$formWrapper = $preview.find(".elementor-form-fields-wrapper").first();
-				}
+		// 		// Fallback: If not found (maybe not active yet), find ANY form wrapper if only one exists
+		// 		if ($formWrapper.length === 0) {
+		// 			$formWrapper = $preview.find(".elementor-form-fields-wrapper").first();
+		// 		}
 
-				if ($formWrapper.length === 0) return;
+		// 		if ($formWrapper.length === 0) return;
 
-				var fields = [];
-				$formWrapper.find(".elementor-field-group").each(function() {
-					var $group = jQuery(this);
-					var $label = $group.find(".elementor-field-label");
-					var $input = $group.find("input, textarea, select");
+		// 		var fields = [];
+		// 		$formWrapper.find(".elementor-field-group").each(function() {
+		// 			var $group = jQuery(this);
+		// 			var $label = $group.find(".elementor-field-label");
+		// 			var $input = $group.find("input, textarea, select");
 					
-					if ($input.length === 0) return;
+		// 			if ($input.length === 0) return;
 
-					var labelText = $label.text().trim();
-					var inputName = $input.attr("name"); 
-					var placeholder = $input.attr("placeholder");
+		// 			var labelText = $label.text().trim();
+		// 			var inputName = $input.attr("name"); 
+		// 			var placeholder = $input.attr("placeholder");
 					
-					if (!labelText && placeholder) labelText = placeholder;
-					if (!labelText) labelText = "Field " + (fields.length + 1);
+		// 			if (!labelText && placeholder) labelText = placeholder;
+		// 			if (!labelText) labelText = "Field " + (fields.length + 1);
 					
-					// Extract ID from name
-					var id = inputName;
-					if (id) {
-						if (id.indexOf("form_field_") === 0) {
-							id = id.replace("form_field_", "");
-						}
-						// Handle array inputs like form_fields[email]
-						if (id.indexOf("[") > -1) {
-							var matches = id.match(/\[(.*?)\]/);
-							if (matches) id = matches[1];
-						}
-					}
-					if (id) {
-						fields.push({ id: id, text: labelText });
-					}
-				});
+		// 			// Extract ID from name
+		// 			var id = inputName;
+		// 			if (id) {
+		// 				if (id.indexOf("form_field_") === 0) {
+		// 					id = id.replace("form_field_", "");
+		// 				}
+		// 				// Handle array inputs like form_fields[email]
+		// 				if (id.indexOf("[") > -1) {
+		// 					var matches = id.match(/\[(.*?)\]/);
+		// 					if (matches) id = matches[1];
+		// 				}
+		// 			}
+		// 			if (id) {
+		// 				fields.push({ id: id, text: labelText });
+		// 			}
+		// 		});
 
-				if (fields.length > 0) {
-					var $headerControl = jQuery(".elementor-control-fdbgp_sheet_headers select");
-					if ($headerControl.length > 0) {
-						// Keep existing selections
-						var currentVal = $headerControl.val() || [];
+		// 		if (fields.length > 0) {
+		// 			var $headerControl = jQuery(".elementor-control-fdbgp_sheet_headers select");
+		// 			if ($headerControl.length > 0) {
+		// 				// Keep existing selections
+		// 				var currentVal = $headerControl.val() || [];
 						
-						// Don't fully clear, just append new ones if missing
-						// Actually, Elementor rerenders the control on save, but for instant feedback we append options
-						var existingIds = [];
-						$headerControl.find("option").each(function() {
-							existingIds.push(jQuery(this).val());
-						});
+		// 				// Don't fully clear, just append new ones if missing
+		// 				// Actually, Elementor rerenders the control on save, but for instant feedback we append options
+		// 				var existingIds = [];
+		// 				$headerControl.find("option").each(function() {
+		// 					existingIds.push(jQuery(this).val());
+		// 				});
 						
-						var hasNew = false;
-						fields.forEach(function(f) {
-							if (existingIds.indexOf(f.id) === -1) {
-								var newOption = new Option(f.text, f.id, false, false);
-								$headerControl.append(newOption);
-								hasNew = true;
-							}
-						});
+		// 				var hasNew = false;
+		// 				fields.forEach(function(f) {
+		// 					if (existingIds.indexOf(f.id) === -1) {
+		// 						var newOption = new Option(f.text, f.id, false, false);
+		// 						$headerControl.append(newOption);
+		// 						hasNew = true;
+		// 					}
+		// 				});
 
-						if (hasNew) {
-							$headerControl.trigger("change.select2");
-							// Add a small notification
-							var $status = $headerControl.closest(".elementor-control").find(".fdbgp-status");
-							if ($status.length === 0) {
-								$headerControl.closest(".elementor-control").append("<div class='fdbgp-status' style='font-size:10px; color:green; margin-top:5px;'></div>");
-								$status = $headerControl.closest(".elementor-control").find(".fdbgp-status");
-							}
-							$status.text("Fields synced from preview.").fadeOut(3000);
-						}
+		// 				if (hasNew) {
+		// 					$headerControl.trigger("change.select2");
+		// 					// Add a small notification
+		// 					var $status = $headerControl.closest(".elementor-control").find(".fdbgp-status");
+		// 					if ($status.length === 0) {
+		// 						$headerControl.closest(".elementor-control").append("<div class='fdbgp-status' style='font-size:10px; color:green; margin-top:5px;'></div>");
+		// 						$status = $headerControl.closest(".elementor-control").find(".fdbgp-status");
+		// 					}
+		// 					$status.text("Fields synced from preview.").fadeOut(3000);
+		// 				}
 
-						// Auto-Migrate Legacy Numeric Selections
-						var legacyUpdates = false;
-						var currentVal = $headerControl.val() || [];
-						if (!Array.isArray(currentVal)) currentVal = [currentVal];
+		// 				// Auto-Migrate Legacy Numeric Selections
+		// 				var legacyUpdates = false;
+		// 				var currentVal = $headerControl.val() || [];
+		// 				if (!Array.isArray(currentVal)) currentVal = [currentVal];
 
-						var newVal = currentVal.slice();
-						var madeChanges = false;
+		// 				var newVal = currentVal.slice();
+		// 				var madeChanges = false;
 
-						for (var i = 0; i < currentVal.length; i++) {
-							var val = currentVal[i];
-							// Check if numeric (legacy) and simple integer
-							if (val == parseInt(val, 10)) {
-								var idx = parseInt(val, 10);
-								// Check if fields exist at this index
-								if (fields[idx]) {
-									var startId = fields[idx].id;
+		// 				for (var i = 0; i < currentVal.length; i++) {
+		// 					var val = currentVal[i];
+		// 					// Check if numeric (legacy) and simple integer
+		// 					if (val == parseInt(val, 10)) {
+		// 						var idx = parseInt(val, 10);
+		// 						// Check if fields exist at this index
+		// 						if (fields[idx]) {
+		// 							var startId = fields[idx].id;
 									
-									// If the NEW ID option exists
-									if ($headerControl.find("option[value='" + startId + "']").length > 0) {
-										// Remove legacy from value list
-										var removeIdx = newVal.indexOf(val);
-										if (removeIdx > -1) {
-											newVal.splice(removeIdx, 1);
-											madeChanges = true;
-										}
+		// 							// If the NEW ID option exists
+		// 							if ($headerControl.find("option[value='" + startId + "']").length > 0) {
+		// 								// Remove legacy from value list
+		// 								var removeIdx = newVal.indexOf(val);
+		// 								if (removeIdx > -1) {
+		// 									newVal.splice(removeIdx, 1);
+		// 									madeChanges = true;
+		// 								}
 										
-										// Add new ID to value list (if not present)
-										if (newVal.indexOf(startId) === -1) {
-											newVal.push(startId);
-											madeChanges = true;
-										}
+		// 								// Add new ID to value list (if not present)
+		// 								if (newVal.indexOf(startId) === -1) {
+		// 									newVal.push(startId);
+		// 									madeChanges = true;
+		// 								}
 										
-										// Safely remove the legacy option Element
-										// We do this carefully to avoid breaking Select2
-										var $legacyOpt = $headerControl.find("option[value='" + val + "']");
-										if ($legacyOpt.length > 0) {
-											$legacyOpt.remove();
-											legacyUpdates = true; // Mark as having done a DOM change
-											console.log("[FDBGP] Migrated legacy header " + val + " to " + startId);
-										}
-									}
-								}
-							}
-						}
+		// 								// Safely remove the legacy option Element
+		// 								// We do this carefully to avoid breaking Select2
+		// 								var $legacyOpt = $headerControl.find("option[value='" + val + "']");
+		// 								if ($legacyOpt.length > 0) {
+		// 									$legacyOpt.remove();
+		// 									legacyUpdates = true; // Mark as having done a DOM change
+		// 									console.log("[FDBGP] Migrated legacy header " + val + " to " + startId);
+		// 								}
+		// 							}
+		// 						}
+		// 					}
+		// 				}
 
-						if (legacyUpdates || madeChanges) {
-							// Update Select2 value
-							$headerControl.val(newVal).trigger("change");
-							$headerControl.trigger("change.select2");
+		// 				if (legacyUpdates || madeChanges) {
+		// 					// Update Select2 value
+		// 					$headerControl.val(newVal).trigger("change");
+		// 					$headerControl.trigger("change.select2");
 							
-							var $status = $headerControl.closest(".elementor-control").find(".fdbgp-status");
-							if ($status.length > 0) {
-								$status.text("Legacy headers migrated. Saved.").show().delay(3000).fadeOut();
-							}
-						}
-					}
-				}
-			} catch(e) {
-				console.log("FDBGP Error scraping fields: " + e.message);
-			}
+		// 					var $status = $headerControl.closest(".elementor-control").find(".fdbgp-status");
+		// 					if ($status.length > 0) {
+		// 						$status.text("Legacy headers migrated. Saved.").show().delay(3000).fadeOut();
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	} catch(e) {
+		// 		console.log("FDBGP Error scraping fields: " + e.message);
+		// 	}
 			
-			// Reset flag after small delay
-			setTimeout(function() { window.fdbgpScanning = false; }, 1000);
-		}
+		// 	// Reset flag after small delay
+		// 	setTimeout(function() { window.fdbgpScanning = false; }, 1000);
+		// }
 
 		</script>
 		<?php
