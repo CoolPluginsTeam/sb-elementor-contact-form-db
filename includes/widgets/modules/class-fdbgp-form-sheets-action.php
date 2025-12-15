@@ -46,9 +46,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 		// Register AJAX actions
 		add_action( 'wp_ajax_fdbgp_get_sheets', array( $this, 'ajax_get_sheets' ) );
 		add_action( 'wp_ajax_fdbgp_create_spreadsheet', array( $this, 'ajax_create_spreadsheet' ) );
-		
-		// Load scripts in editor
-		// add_action( 'elementor/editor/footer', array( $this, 'fdbgp_admin_footer_scripts' ) );
+
 		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'render_editor_script' ] );
 		
 
@@ -315,8 +313,7 @@ public function render_editor_script() {
 			$local_sheet_name = '';
 			$local_sheet_headers = array();
 			$local_headers = array();
-// -------------------------------------------------------------
-// $settings = $widget->get_settings_for_display();
+
 			$wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
 			
 			$existincurrentpage        = 'no';
@@ -596,18 +593,7 @@ public function render_editor_script() {
 						}
 					}
 				}
-// var_dump($local_headers);
-			// $widget->add_control(
-			// 	$this->add_prefix('sheet_headers'),
-			// 	array(
-			// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
-			// 		'type'        => Controls_Manager::SELECT2,
-			// 		'multiple'    => true,
-			// 		'options'     => $local_headers,
-			// 		'label_block' => true,
-			// 		'description' => esc_attr__( 'Select which form fields to send to Google Sheets. If fields don\'t appear, click Update to save the page.', 'wpsse' ),
-			// 	)
-			// );
+
 				$widget->add_control(
 					$this->add_prefix('sheet_headers'),
 					array(
