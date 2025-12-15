@@ -39,7 +39,7 @@ class FDBGP_Widgets_Loader {
         $this->version = $version;
 
         $this->includes();
-        add_action( 'elementor_pro/init',  array($this,'elementor_init') );
+        add_action( 'elementor_pro/forms/actions/register', array($this,'register_new_form_actions') );
     }
 
     public function includes(){
@@ -47,11 +47,11 @@ class FDBGP_Widgets_Loader {
         require_once FDBGP_PLUGIN_DIR . 'includes/lib-helpers/class-fdbgp-google-api-functions.php';
     }
 
-    public function elementor_init(){
-
+    public function register_new_form_actions($form_fields_registrar){
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/modules/class-fdbgp-form-sheets-action.php';
-        $fdbgp_action = new FDBGP_Form_Sheets_Action();
-        Plugin::instance()->modules_manager->get_modules( 'forms' )->add_form_action( $fdbgp_action->get_name(), $fdbgp_action );
+        $form_fields_registrar->register(new \FDBGP_Form_Sheets_Action());        
 
+        require_once FDBGP_PLUGIN_DIR . 'includes/widgets/modules/class-fdbgp-form-register-post.php';
+        $form_fields_registrar->register(new \FDBGP_Register_Post());        
     }
 }

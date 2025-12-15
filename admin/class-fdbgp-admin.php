@@ -82,6 +82,12 @@ if(!class_exists('FDBGP_Admin')) {
                         case 'settings':
                             include_once 'views/settings.php';
                             break;
+                        case 'post-type':
+                            include_once 'views/form-to-posttype.php';
+                            break;
+                        case 'forms-sheets':
+                            include_once 'views/form-to-sheet.php';
+                            break;
                         default:
                             // Show default tab content
                             break;
