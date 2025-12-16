@@ -40,7 +40,7 @@
         }
 
         if (sheetName === 'create_new_tab' && !newSheetName) {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please enter a New Sheet Name").show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please enter a New Sheet Tab Name").show();
             return;
         }
 
