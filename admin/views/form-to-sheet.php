@@ -22,7 +22,7 @@ class FDBGP_Form_To_Sheet_Settings {
         ?>
         <div class='status-wrapper'>
         <?php
-        echo '<h2>' . esc_html__( 'Forms with "Connect Google Sheets" Action', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<h2>' . esc_html__( 'Forms with "Save Data in Google Sheets" Action', 'elementor-contact-form-db' ) . '</h2>';
         if ( ! empty( $forms ) ) {
             $this->render_forms_table( $forms );
         } else {
@@ -45,6 +45,7 @@ class FDBGP_Form_To_Sheet_Settings {
                 <tr>
                     <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
                     <th>' . esc_html__( 'Page', 'elementor-contact-form-db' ) . '</th>
+                    <th>' . esc_html__( 'Widget', 'elementor-contact-form-db' ) . '</th>
                     <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
                 </tr>
               </thead><tbody>';
@@ -53,6 +54,7 @@ class FDBGP_Form_To_Sheet_Settings {
             echo '<tr>
                     <td>' . esc_html( $form['form_name'] ) . '</td>
                     <td>' . esc_html( $form['post_title'] ) . '</td>
+                    <td>' . esc_html( $form['widget_type'] ) . '</td>
                     <td>
                         <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '">
                             ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
@@ -72,7 +74,7 @@ class FDBGP_Form_To_Sheet_Settings {
         $create_form_url = admin_url( 'post-new.php?post_type=page' );
 
         echo '<p>' . esc_html__(
-            'No Elementor form is using the "Connect Google Sheets" action.',
+            'No Elementor form is using the "Save Data in Google Sheets" action.',
             'elementor-contact-form-db'
         ) . '</p>';
 
@@ -84,7 +86,7 @@ class FDBGP_Form_To_Sheet_Settings {
 
         echo '<p class="description">' .
             esc_html__(
-                'Create a new Elementor Form and enable the "Connect Google Sheets" action under Actions After Submit.',
+                'Create a new Elementor Form and enable the "Save Data in Google Sheets" action under Actions After Submit.',
                 'elementor-contact-form-db'
             ) .
         '</p>';
@@ -134,18 +136,32 @@ class FDBGP_Form_To_Sheet_Settings {
     private function walk_elements( array $elements, $post, array &$forms ) {
 
         foreach ( $elements as $element ) {
-
+            $is_found = false;
             if (
                 isset( $element['widgetType'] ) &&
                 'form' === $element['widgetType'] &&
                 ! empty( $element['settings']['submit_actions'] ) &&
-                in_array( 'Connect Google Sheets', $element['settings']['submit_actions'], true )
-            ) {
+                in_array( 'Save Data in Google Sheets', $element['settings']['submit_actions'], true )
+            ){
+                $is_found = true;
+            }
+
+            if (
+                isset( $element['widgetType'] ) &&
+                'ehp-form' === $element['widgetType'] &&
+                ! empty( $element['settings']['cool_formkit_submit_actions'] ) &&
+                in_array( 'Save Data in Google Sheets', $element['settings']['cool_formkit_submit_actions'], true )
+            ){
+                $is_found = true;
+            }
+
+            if ($is_found) {
                 $forms[] = [
                     'post_id'    => $post->ID,
                     'post_title' => get_the_title( $post->ID ),
                     'form_name'  => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
                     'edit_url'   => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
+                    'widget_type'   => strtoupper($element['widgetType']),
                 ];
             }
 
