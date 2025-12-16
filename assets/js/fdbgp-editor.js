@@ -1,18 +1,25 @@
 (function ($) {
-    // Expose function to global scope so onclick works
+    /**
+     * Function to Update Sheet Headers
+     * Triggered by button click in Elementor Panel.
+     * Exposes function to global scope so it can be called via onclick or JS.
+     */
     window.fdbgpUpdateSheetHeaders = function (confirmOverwrite, btnContext) {
+        // Determine which button triggered the event
         var btn = btnContext || (window.event && window.event.target ? window.event.target.closest("button") : null);
         if (!btn) return;
 
         var $btn = jQuery(btn);
         var $text = $btn.find(".elementor-button-text");
+
+        // Store original text to restore later
         var originalText = $btn.data("original-text") || $text.text();
         if (!$btn.data("original-text")) $btn.data("original-text", originalText);
 
         var $message = jQuery("#fdbgp-update-message");
-
         $message.hide();
 
+        // Gather settings from the Elementor Panel inputs
         var settings = {};
         try {
             var $panel = jQuery(btn).closest(".elementor-panel");
@@ -34,6 +41,7 @@
             return;
         }
 
+        // Validation Checks
         if (!spreadsheetId || spreadsheetId === 'new') {
             $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please select a Spreadsheet first").show();
             return;
@@ -44,9 +52,11 @@
             return;
         }
 
+        // Lock UI
         $btn.prop("disabled", true);
         $text.text("Updating...");
 
+        // Perform AJAX Update
         jQuery.ajax({
             url: ajaxurl,
             type: "POST",
@@ -61,6 +71,7 @@
             },
             success: function (response) {
                 if (response.success) {
+                    // Handle recursive confirmation (if file exists/needs overwrite)
                     if (response.data.confirm_needed) {
                         if (confirm(response.data.message)) {
                             fdbgpUpdateSheetHeaders(true, btn);
@@ -69,9 +80,11 @@
                             $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Cancelled.").show();
                         }
                     } else {
+                        // Success Message
                         $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success");
                         $message.html(response.data.message).show().delay(5000).fadeOut();
 
+                        // If a new tab was created, reload the sheet list dropdown
                         if (sheetName === 'create_new_tab' && response.data.sheet_name) {
                             var $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
                             $sheetSelect.html('<option>Loading...</option>');
@@ -90,6 +103,7 @@
                                         jQuery.each(res.data.sheets, function (key, text) {
                                             $sheetSelect.append(new Option(text, key));
                                         });
+                                        // Select the newly created sheet
                                         $sheetSelect.val(response.data.sheet_name).trigger('change');
                                     }
                                 }
@@ -112,7 +126,10 @@
         });
     };
 
-    // Expose function to global scope so onclick works
+    /**
+     * Function to Create a New Spreadsheet
+     * Exposes function to global scope.
+     */
     window.fdbgpCreateSpreadsheet = function (btnContext) {
         var btn = btnContext || (window.event && window.event.target ? window.event.target.closest("button") : null);
         var $btn = jQuery(btn);
@@ -143,6 +160,7 @@
             return;
         }
 
+        // Validation
         if (!spreadsheetName || !spreadsheetName.trim()) {
             $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please enter a Spreadsheet Name").show();
             return;
@@ -151,7 +169,6 @@
             $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please enter a Sheet Tab Name").show();
             return;
         }
-
         if (!sheetHeaders || sheetHeaders.length === 0) {
             $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please select at least one Sheet Header").show();
             return;
@@ -172,12 +189,11 @@
             },
             success: function (response) {
                 if (response.success) {
-                    // Start of Modification
                     $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success").html(response.data.message).show();
 
                     // Delay updating the UI so the message is visible
                     setTimeout(function () {
-                        // Update the spreadsheet dropdown value
+                        // Update the spreadsheet dropdown value dynamically
                         var $spreadsheetSelect = jQuery("[data-setting=\"fdbgp_spreadsheetid\"]");
                         if ($spreadsheetSelect.length) {
                             if ($spreadsheetSelect.find("option[value=\"" + response.data.spreadsheet_id + "\"]").length === 0) {
@@ -195,6 +211,7 @@
                                 $spreadsheetSelect.append($newOption);
                             }
 
+                            // Auto-select the newly created sheet in the sheet list
                             if (response.data.sheet_name) {
                                 var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
                                 $sheetSelect.data('auto-select', response.data.sheet_name);
@@ -203,7 +220,6 @@
                             $spreadsheetSelect.val(response.data.spreadsheet_id).change();
                         }
                     }, 2000);
-                    // End of Modification
                 } else {
                     $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("❌ " + (response.data.message || "Unknown error")).show();
                 }
@@ -219,7 +235,7 @@
     };
 
     jQuery(document).ready(function ($) {
-        // Expose check function
+        // Expose function to check if a sheet has content (prevents accidental overwrites)
         window.fdbgpCheckSheetContent = function ($sheetSelect) {
             var sheetName = $sheetSelect.val();
             var $panel = $sheetSelect.closest('.elementor-panel');
@@ -254,6 +270,8 @@
             });
         };
 
+        // --- Event Bindings ---
+
         // Attach Click Event for Create Spreadsheet Button
         $(document).on('click', '.fdbgp-create-spreadsheet', function (e) {
             e.preventDefault();
@@ -266,9 +284,11 @@
             fdbgpUpdateSheetHeaders(false, this);
         });
 
-        // Check Sheet Content on Selection Change
+        // Check Sheet Content on Selection Change & Handle Panel State
         $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
             var sheetValue = $(this).val();
+
+            // Logic to persist state when Elementor redraws panel
             if (sheetValue && sheetValue !== '' && sheetValue !== 'create_new_tab') {
                 try {
                     var panel = elementor.getPanelView();
@@ -296,7 +316,7 @@
             window.fdbgpCheckSheetContent($(this));
         });
 
-        // Restore sheet selection on panel changes
+        // Restore sheet selection on panel changes (Elementor Hook listener)
         elementor.channels.editor.on('change', function () {
             setTimeout(function () {
                 var $sheetSelect = $('.elementor-control-fdbgp_sheet_list select:visible');
@@ -314,6 +334,7 @@
                                 var optionExists = $sheetSelect.find('option[value="' + savedSheet + '"]').length > 0;
                                 var $spreadsheetSelect = $('.elementor-control-fdbgp_spreadsheetid select:visible');
 
+                                // If option doesn't exist yet, trigger spreadsheet change to load it
                                 if (!optionExists && $spreadsheetSelect.length && $spreadsheetSelect.val()) {
                                     $sheetSelect.data('auto-select', savedSheet);
                                     $spreadsheetSelect.trigger('change');
@@ -341,6 +362,7 @@
             window.fdbgpCheckSheetContent($(this));
         });
 
+        // Fetch Sheets when Spreadsheet ID changes
         $(document).on('change', '.elementor-control-fdbgp_spreadsheetid select', function () {
             var spreadsheetId = $(this).val();
             var $panel = $(this).closest('.elementor-panel');
@@ -365,6 +387,7 @@
                             $sheetSelect.append(new Option(text, key));
                         });
 
+                        // Handle auto-selection if triggered via state restoration
                         var autoSelect = $sheetSelect.data('auto-select');
                         if (autoSelect) {
                             $sheetSelect.val(autoSelect);
@@ -419,6 +442,7 @@
 
                 $select.empty();
 
+                // Add fields from Repeater
                 if (formFields) {
                     formFields.each(function (model) {
                         var id = model.get('custom_id');
@@ -430,6 +454,7 @@
                     });
                 }
 
+                // Add static options if any
                 if (staticOptions) {
                     jQuery.each(staticOptions, function (key, label) {
                         $select.append(new Option(label, key, false, false));
@@ -454,6 +479,7 @@
         elementor.addControlView('fdbgp_dynamic_select2', FDBGP_DynamicSelect2);
     });
 
+    // Elementor Initialization Hooks
     $(window).on('elementor:init', function () {
         // Ensure sheet list loads if spreadsheet is already selected (Initial Load Fix)
         if (elementor && elementor.hooks) {
@@ -500,7 +526,7 @@
                 }
             }
 
-            // Stop polling after 10 seconds if nothing found
+            // Stop polling after 20 seconds if nothing found to save resources
             if (performance.now() > 20000) clearInterval(fdbgpCheckInterval);
         }, 1000);
     });
