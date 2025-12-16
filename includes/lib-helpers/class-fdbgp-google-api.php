@@ -44,24 +44,6 @@ abstract class FDBGP_Google_API {
 		return $params;
 
 	}
-	/**
-	 * Update plugin option in WordPress options table.
-	 *
-	 * Handles both single-site and multisite installations by using
-	 * update_site_option() for multisite and update_option() otherwise.
-	 *
-	 * @param string $key   The option key to update.
-	 * @param mixed  $value The option value to store.
-	 * @since 1.0.0
-	 * @return void
-	 */
-	// public static function fdbgp_update_option( $key = '', $value = '' ) {
-	// 	if ( is_multisite() ) {
-	// 		update_site_option( $key, $value );
-	// 	} else {
-	// 		update_option( $key, $value );
-	// 	}
-	// }
 
 
 	/**
