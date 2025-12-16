@@ -596,21 +596,73 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				// 	)
 				// );
 				// var_dump($fdbgp_seets);die();
+// ... (Previous controls like 'sheet_name' text field) ...
 
-				$widget->add_control(
-					$this->add_prefix('sheet_list'),
-					array(
-						'label'       => esc_attr__( 'Select Sheet Tab Name', 'elementor-contact-form-db' ),
-						'type'        => Controls_Manager::SELECT,
-						'default'     => '',
-						'options'     => $fdbgp_sheets,
-						'label_block' => true,
-						'condition'   => array(
-							$this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
-						),
-						'render_type' => 'ui', // Ensure UI update triggers AJAX
-					)
-				);
+        // PASTE THE MOVED CODE HERE:
+        $fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'elementor-contact-form-db' ) );
+        $fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
+        
+        if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
+            try {
+                $response = $instance_api->get_sheet_listing( $local_spreadsheet_id );
+                foreach ( $response->getSheets() as $s ) {
+                    $title = $s['properties']['title'];
+                    $fdbgp_sheets[ $title ] = $title;
+                }
+            } catch ( Exception $e ) {
+                error_log("Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage());
+            }
+        }
+        
+        if ( ! empty( $local_sheet_name ) && ! isset( $fdbgp_sheets[ $local_sheet_name ] ) && $local_sheet_name !== 'create_new_tab' ) {
+            $fdbgp_sheets[ $local_sheet_name ] = $local_sheet_name;
+        }
+        // END OF PASTED CODE
+
+        // NOW ADD THE CONTROL (Because $fdbgp_sheets is now full of data)
+        $widget->add_control(
+            $this->add_prefix('sheet_list'),
+            array(
+                'label'       => esc_attr__( 'Select Sheet Tab Name', 'elementor-contact-form-db' ),
+                'type'        => Controls_Manager::SELECT,
+                'default'     => '',
+                'options'     => $fdbgp_sheets, // This will now work!
+                'label_block' => true,
+                'condition'   => array(
+                    $this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+                ),
+                'render_type' => 'ui',
+            )
+        );
+// $widget->add_control(
+//             $this->add_prefix('sheet_sssslist'),
+//             array(
+//                 'label'       => esc_attr__( 'Select Sheet Tab Name', 'elementor-contact-form-db' ),
+//                 'type'        => Controls_Manager::SELECT,
+//                 'default'     => '',
+//                 'options'     => array('1'=>'1','2'=>'2','3'=>'3'), // This will now work!
+//                 'label_block' => true,
+//                 'condition'   => array(
+//                     $this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+//                 ),
+//                 'render_type' => 'ui',
+//             )
+//         );
+        // ... (Continue with 'new_sheet_tab_name', 'sheet_headers', etc.) ...
+				// $widget->add_control(
+				// 	$this->add_prefix('sheet_list'),
+				// 	array(
+				// 		'label'       => esc_attr__( 'Select Sheet Tab Name', 'elementor-contact-form-db' ),
+				// 		'type'        => Controls_Manager::SELECT,
+				// 		'default'     => '',
+				// 		'options'     => $fdbgp_sheets,
+				// 		'label_block' => true,
+				// 		'condition'   => array(
+				// 			$this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+				// 		),
+				// 		'render_type' => 'ui', // Ensure UI update triggers AJAX
+				// 	)
+				// );
 
 				$widget->add_control(
 					$this->add_prefix('new_sheet_tab_name'),
@@ -680,31 +732,31 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 
 			
 			
-				$fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'elementor-contact-form-db' ) );
-				// Add '' option first
-				$fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
+				// $fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'elementor-contact-form-db' ) );
+				// // Add '' option first
+				// $fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
 				
-				// Use local sheet ID to fetch sheets
-				if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
-					try {
-						$response = $instance_api->get_sheet_listing( $local_spreadsheet_id );
-						foreach ( $response->getSheets() as $s ) {
-							$title = $s['properties']['title'];
-							$fdbgp_sheets[ $title ] = $title;
-						}
-					} catch ( Exception $e ) {
-						error_log("Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage());
-					}
-				}
+				// // Use local sheet ID to fetch sheets
+				// if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
+				// 	try {
+				// 		$response = $instance_api->get_sheet_listing( $local_spreadsheet_id );
+				// 		foreach ( $response->getSheets() as $s ) {
+				// 			$title = $s['properties']['title'];
+				// 			$fdbgp_sheets[ $title ] = $title;
+				// 		}
+				// 	} catch ( Exception $e ) {
+				// 		error_log("Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage());
+				// 	}
+				// }
 				
-				// Fallback: If we have a saved sheet name but the list is empty (e.g. API fail),
-				// add the saved name to the list so the dropdown isn't blank.
-				// Careful not to overwrite if saved name is 'create_new_tab'
-				// Also, checking if it is already in the array keys (titles are keys here? No, in the loop above: $fdbgp_sheets[ $title ] = $title;)
-				// So keys are titles.
-				if ( ! empty( $local_sheet_name ) && ! isset( $fdbgp_sheets[ $local_sheet_name ] ) && $local_sheet_name !== 'create_new_tab' ) {
-					$fdbgp_sheets[ $local_sheet_name ] = $local_sheet_name;
-				}
+				// // Fallback: If we have a saved sheet name but the list is empty (e.g. API fail),
+				// // add the saved name to the list so the dropdown isn't blank.
+				// // Careful not to overwrite if saved name is 'create_new_tab'
+				// // Also, checking if it is already in the array keys (titles are keys here? No, in the loop above: $fdbgp_sheets[ $title ] = $title;)
+				// // So keys are titles.
+				// if ( ! empty( $local_sheet_name ) && ! isset( $fdbgp_sheets[ $local_sheet_name ] ) && $local_sheet_name !== 'create_new_tab' ) {
+				// 	$fdbgp_sheets[ $local_sheet_name ] = $local_sheet_name;
+				// }
 
 		
 
