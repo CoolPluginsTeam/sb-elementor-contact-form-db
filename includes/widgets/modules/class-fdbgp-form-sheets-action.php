@@ -16,7 +16,7 @@ use ElementorPro\Modules\Forms\Classes\Action_Base;
 use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions;
 
 /**
- * Class WPSSLE_Form_Sheets_Action
+ * Class fdbgp_Form_Sheets_Action
  */
 add_action( 'elementor/controls/register', function( $controls_manager ) {
     class FDBGP_Control_Dynamic_Select2 extends \Elementor\Base_Data_Control {
@@ -26,13 +26,20 @@ add_action( 'elementor/controls/register', function( $controls_manager ) {
 
         public function content_template() {
             ?>
-            <div class="elementor-control-field">
-                <label class="elementor-control-title">{{{ data.label }}}</label>
-                <div class="elementor-control-input-wrapper">
-                    <select class="elementor-control-dynamic-select2" data-setting="{{ data.name }}" multiple="multiple" style="width:100%"></select>
-                </div>
-                <div class="elementor-control-field-description">{{{ data.description }}}</div>
-            </div>
+			<div class="elementor-control-field">
+        <label class="elementor-control-title">{{{ data.label }}}</label>
+        <div class="elementor-control-input-wrapper">
+            <select class="elementor-control-dynamic-select2" data-setting="{{ data.name }}" multiple="multiple" style="width:100%">
+                <# if ( data.options ) { 
+                    _.each( data.options, function( option_title, option_value ) { #>
+                        <option value="{{ option_value }}">{{{ option_title }}}</option>
+                    <# } );
+                } #>
+            </select>
+        </div>
+        <div class="elementor-control-field-description">{{{ data.description }}}</div>
+    </div>
+        
             <?php
         }
     }
@@ -48,10 +55,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 		add_action( 'wp_ajax_fdbgp_create_spreadsheet', array( $this, 'ajax_create_spreadsheet' ) );
 		add_action( 'wp_ajax_fdbgp_update_sheet_headers', array( $this, 'ajax_update_sheet_headers' ) );
 		add_action( 'wp_ajax_fdbgp_check_sheet_headers', array( $this, 'ajax_check_sheet_headers' ) );
-
 		add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'render_editor_script' ] );
-		
-
 	}
 	
 	
@@ -63,7 +67,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	 * @return string
 	 */
 	public function get_name() {
-		return esc_html( 'Connect Google Sheets' );
+		return esc_html( 'Save Data in Google Sheets' );
 	}
 	/**
 	 * Get Label
@@ -73,7 +77,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	 * @return string
 	 */
 	public function get_label() {
-		return esc_html__( 'Connect Google Sheets', 'elementor-contact-form-db' );
+		return esc_html__( 'Save Data in Google Sheets', 'elementor-contact-form-db' );
 	}
 
 	/**
@@ -87,17 +91,18 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	public function add_prefix($id){
 		return 'fdbgp_' . $id;
 	}
-public function render_editor_script() {
 
-	wp_enqueue_script( 
-        'fdbgp-editor-script', // Unique Handle
-        FDBGP_PLUGIN_URL. 'assets/js/fdbgp-editor.js', // Path to your new JS file
-        [ 'elementor-editor', 'jquery' ], // Dependencies: waits for Elementor & jQuery
-        '1.0.0', // Version
-        true // Load in footer
-    );
-    
-}
+	public function render_editor_script() {
+
+		wp_enqueue_script( 
+			'fdbgp-editor-script', // Unique Handle
+			FDBGP_PLUGIN_URL. 'assets/js/fdbgp-editor.js', // Path to your new JS file
+			[ 'elementor-editor', 'jquery' ], // Dependencies: waits for Elementor & jQuery
+			FDBGP_PLUGIN_VERSION, // Version
+			true // Load in footer
+		);
+		
+	}
 	
 	/**
 	 * Run
@@ -109,23 +114,23 @@ public function render_editor_script() {
 	 */
 	public function run( $record, $ajax_handler ) {
 
-		$wpssle_settings = $record->get( 'form_settings' );
+		$fdbgp_settings = $record->get( 'form_settings' );
 		// Get sumitetd Form data.
-		$wpssle_raw_fields = $record->get( 'fields' );
+		$fdbgp_raw_fields = $record->get( 'fields' );
 		$instance_api      = new FDBGP_Google_API_Functions();
 		if ( ! $instance_api->checkcredenatials() ) {
 			return;
 		}
-		if ( isset( $wpssle_settings['submit_actions'] ) && in_array( $this->get_name(), $wpssle_settings['submit_actions'], true ) ) {
-			$wpssle_spreadsheetid = $wpssle_settings[$this->add_prefix('spreadsheetid')];
+		if ( isset( $fdbgp_settings['submit_actions'] ) && in_array( $this->get_name(), $fdbgp_settings['submit_actions'], true ) ) {
+			$fdbgp_spreadsheetid = $fdbgp_settings[$this->add_prefix('spreadsheetid')];
 			
-			if ( 'new' === $wpssle_spreadsheetid ) {
-				$wpssle_sheetname = $wpssle_settings[$this->add_prefix('sheet_name')];
+			if ( 'new' === $fdbgp_spreadsheetid ) {
+				$fdbgp_sheetname = $fdbgp_settings[$this->add_prefix('sheet_name')];
 			} else {
-				$wpssle_sheetname = isset( $wpssle_settings[$this->add_prefix('sheet_list')] ) ? $wpssle_settings[$this->add_prefix('sheet_list')] : '';
+				$fdbgp_sheetname = isset( $fdbgp_settings[$this->add_prefix('sheet_list')] ) ? $fdbgp_settings[$this->add_prefix('sheet_list')] : '';
 				// Fallback to text field if list is empty (backward compatibility)
-				if ( empty( $wpssle_sheetname ) && isset( $wpssle_settings[$this->add_prefix('sheet_name')] ) ) {
-					$wpssle_sheetname = $wpssle_settings[$this->add_prefix('sheet_name')];
+				if ( empty( $fdbgp_sheetname ) && isset( $fdbgp_settings[$this->add_prefix('sheet_name')] ) ) {
+					$fdbgp_sheetname = $fdbgp_settings[$this->add_prefix('sheet_name')];
 				}
 			}
 			
@@ -133,26 +138,26 @@ public function render_editor_script() {
 			$is_newly_created = false;
 			
 			// Handle new spreadsheet creation
-			if ( $wpssle_spreadsheetid === 'new' ) {
+			if ( $fdbgp_spreadsheetid === 'new' ) {
 				try {
-					$wpssle_new_spreadsheet_name = isset( $wpssle_settings[$this->add_prefix('new_spreadsheet_name')] ) ? $wpssle_settings[$this->add_prefix('new_spreadsheet_name')] : '';
+					$fdbgp_new_spreadsheet_name = isset( $fdbgp_settings[$this->add_prefix('new_spreadsheet_name')] ) ? $fdbgp_settings[$this->add_prefix('new_spreadsheet_name')] : '';
 					
 					// Validate required fields with helpful error messages
-					if ( empty( $wpssle_new_spreadsheet_name ) && empty( $wpssle_sheetname ) ) {
+					if ( empty( $fdbgp_new_spreadsheet_name ) && empty( $fdbgp_sheetname ) ) {
 						$ajax_handler->add_admin_error_message( 'WPSyncSheets: Please enter both a Spreadsheet Name and a Sheet Name to create a new spreadsheet.' );
 						return;
-					} elseif ( empty( $wpssle_new_spreadsheet_name ) ) {
+					} elseif ( empty( $fdbgp_new_spreadsheet_name ) ) {
 						$ajax_handler->add_admin_error_message( 'WPSyncSheets: Please enter a Spreadsheet Name to create a new spreadsheet.' );
 						return;
-					} elseif ( empty( $wpssle_sheetname ) ) {
+					} elseif ( empty( $fdbgp_sheetname ) ) {
 						$ajax_handler->add_admin_error_message( 'WPSyncSheets: Please enter a Sheet Name to create a new spreadsheet.' );
 						return;
 					}
 					
 					// Create new spreadsheet with initial sheet
-					$spreadsheet_object = $instance_api->newspreadsheetobject( $wpssle_new_spreadsheet_name, $wpssle_sheetname );
+					$spreadsheet_object = $instance_api->newspreadsheetobject( $fdbgp_new_spreadsheet_name, $fdbgp_sheetname );
 					$created_spreadsheet = $instance_api->createspreadsheet( $spreadsheet_object );
-					$wpssle_spreadsheetid = $created_spreadsheet->getSpreadsheetId();
+					$fdbgp_spreadsheetid = $created_spreadsheet->getSpreadsheetId();
 					$is_newly_created = true;
 					
 					// Get the sheet ID of the newly created sheet
@@ -160,33 +165,33 @@ public function render_editor_script() {
 					$sheet_id = $sheets[0]['properties']['sheetId'];
 					
 					// Add headers to the new spreadsheet
-					$wpssle_headers_data = $wpssle_settings[$this->add_prefix('sheet_headers')];
-					if ( is_array( $wpssle_headers_data ) && ! empty( $wpssle_headers_data ) ) {
+					$fdbgp_headers_data = $fdbgp_settings[$this->add_prefix('sheet_headers')];
+					if ( is_array( $fdbgp_headers_data ) && ! empty( $fdbgp_headers_data ) ) {
 						// Get form fields to map headers
-						$wpssle_raw_fields = $record->get( 'fields' );
-						$wpssle_header_labels = array();
+						$fdbgp_raw_fields = $record->get( 'fields' );
+						$fdbgp_header_labels = array();
 						
-						foreach ( $wpssle_headers_data as $field_id ) {
-							if ( isset( $wpssle_raw_fields[ $field_id ] ) ) {
-								$wpssle_header_labels[] = $wpssle_raw_fields[ $field_id ]['title'];
+						foreach ( $fdbgp_headers_data as $field_id ) {
+							if ( isset( $fdbgp_raw_fields[ $field_id ] ) ) {
+								$fdbgp_header_labels[] = $fdbgp_raw_fields[ $field_id ]['title'];
 							} else {
-								$wpssle_header_labels[] = ucfirst( str_replace( '_', ' ', $field_id ) );
+								$fdbgp_header_labels[] = ucfirst( str_replace( '_', ' ', $field_id ) );
 							}
 						}
 						
 						// Add header row
-						$wpssle_header_range = $wpssle_sheetname . '!A1';
-						$wpssle_header_body = $instance_api->valuerangeobject( array( $wpssle_header_labels ) );
-						$wpssle_header_params = FDBGP_Google_API_Functions::get_row_format();
-						$header_param = $instance_api->setparamater( $wpssle_spreadsheetid, $wpssle_header_range, $wpssle_header_body, $wpssle_header_params );
+						$fdbgp_header_range = $fdbgp_sheetname . '!A1';
+						$fdbgp_header_body = $instance_api->valuerangeobject( array( $fdbgp_header_labels ) );
+						$fdbgp_header_params = FDBGP_Google_API_Functions::get_row_format();
+						$header_param = $instance_api->setparamater( $fdbgp_spreadsheetid, $fdbgp_header_range, $fdbgp_header_body, $fdbgp_header_params );
 						$instance_api->updateentry( $header_param );
 						
 						// Freeze header row if enabled
-						// $wpssle_freeze_header = isset( $wpssle_settings[$this->add_prefix('freeze_header')] ) ? $wpssle_settings[$this->add_prefix('freeze_header')] : '';
-						// if ( $wpssle_freeze_header === 'yes' ) {
+						// $fdbgp_freeze_header = isset( $fdbgp_settings[$this->add_prefix('freeze_header')] ) ? $fdbgp_settings[$this->add_prefix('freeze_header')] : '';
+						// if ( $fdbgp_freeze_header === 'yes' ) {
 							$freeze_object = $instance_api->freezeobject( $sheet_id, 1 );
 							$freeze_param = array(
-								'spreadsheetid' => $wpssle_spreadsheetid,
+								'spreadsheetid' => $fdbgp_spreadsheetid,
 								'requestbody' => $freeze_object
 							);
 							$instance_api->formatsheet( $freeze_param );
@@ -200,7 +205,7 @@ public function render_editor_script() {
 						$elementor_data = get_post_meta( $post_id, '_elementor_data', true );
 						if ( ! empty( $elementor_data ) ) {
 							$elementor_data = json_decode( $elementor_data, true );
-							$this->update_spreadsheet_id_in_data( $elementor_data, $record->get( 'form_settings' )['id'], $wpssle_spreadsheetid );
+							$this->update_spreadsheet_id_in_data( $elementor_data, $record->get( 'form_settings' )['id'], $fdbgp_spreadsheetid );
 							update_post_meta( $post_id, '_elementor_data', wp_slash( wp_json_encode( $elementor_data ) ) );
 						}
 					}
@@ -214,32 +219,32 @@ public function render_editor_script() {
 			// Only validate existence for existing spreadsheets
 			// Newly created ones might not appear in the list immediately due to caching/latency
 			if ( ! $is_newly_created ) {
-				$wpssle_sheetarray    = $instance_api->get_spreadsheet_listing();
-				if ( ! empty( $wpssle_spreadsheetid ) && ! array_key_exists( $wpssle_spreadsheetid, $wpssle_sheetarray ) ) {
+				$fdbgp_sheetarray    = $instance_api->get_spreadsheet_listing();
+				if ( ! empty( $fdbgp_spreadsheetid ) && ! array_key_exists( $fdbgp_spreadsheetid, $fdbgp_sheetarray ) ) {
 					error_log( 'WPSyncSheets Error: Spreadsheet ID not found in listing.' );
 					return;
-				} elseif ( ! empty( $wpssle_spreadsheetid ) ) {
-					$wpssle_sheets = array(); // Initialize $wpssle_sheets here
-					$response = $instance_api->get_sheet_listing( $wpssle_spreadsheetid );
+				} elseif ( ! empty( $fdbgp_spreadsheetid ) ) {
+					$fdbgp_sheets = array(); // Initialize $fdbgp_sheets here
+					$response = $instance_api->get_sheet_listing( $fdbgp_spreadsheetid );
 					foreach ( $response->getSheets() as $s ) {
-						$wpssle_sheets[] = $s['properties']['title'];
+						$fdbgp_sheets[] = $s['properties']['title'];
 					}
 					
 					// Handle "Create New Tab" Logic
-					if ( 'create_new_tab' === $wpssle_sheetname ) {
-						$wpssle_new_tab_name = isset( $wpssle_settings[$this->add_prefix('new_sheet_tab_name')] ) ? $wpssle_settings[$this->add_prefix('new_sheet_tab_name')] : '';
+					if ( 'create_new_tab' === $fdbgp_sheetname ) {
+						$fdbgp_new_tab_name = isset( $fdbgp_settings[$this->add_prefix('new_sheet_tab_name')] ) ? $fdbgp_settings[$this->add_prefix('new_sheet_tab_name')] : '';
 						
-						if ( ! empty( $wpssle_new_tab_name ) ) {
+						if ( ! empty( $fdbgp_new_tab_name ) ) {
 							// Update the main sheetname variable
-							$wpssle_sheetname = $wpssle_new_tab_name;
+							$fdbgp_sheetname = $fdbgp_new_tab_name;
 							
 							// Check if it exists
-							if ( ! in_array( $wpssle_sheetname, $wpssle_sheets, true ) ) {
+							if ( ! in_array( $fdbgp_sheetname, $fdbgp_sheets, true ) ) {
 								try {
 									// Create the new sheet
-									$sheet_req_obj = $instance_api->createsheetobject( $wpssle_sheetname );
+									$sheet_req_obj = $instance_api->createsheetobject( $fdbgp_sheetname );
 									$sheet_param = array(
-										'spreadsheetid' => $wpssle_spreadsheetid,
+										'spreadsheetid' => $fdbgp_spreadsheetid,
 										'requestbody'   => $sheet_req_obj
 									);
 									$sheet_response = $instance_api->formatsheet( $sheet_param );
@@ -259,38 +264,38 @@ public function render_editor_script() {
 									}
 
 									// Add Headers
-									$wpssle_headers_data = $wpssle_settings[$this->add_prefix('sheet_headers')];
-									if ( is_array( $wpssle_headers_data ) && ! empty( $wpssle_headers_data ) ) {
-										$wpssle_header_labels = array();
+									$fdbgp_headers_data = $fdbgp_settings[$this->add_prefix('sheet_headers')];
+									if ( is_array( $fdbgp_headers_data ) && ! empty( $fdbgp_headers_data ) ) {
+										$fdbgp_header_labels = array();
 										// Map fields to labels
 										// Note: $record->get('fields') is what we have access to
 										$fields_refs = $record->get( 'fields' );
-										foreach ( $wpssle_headers_data as $field_id ) {
+										foreach ( $fdbgp_headers_data as $field_id ) {
 											if ( isset( $fields_refs[ $field_id ] ) ) {
-												$wpssle_header_labels[] = $fields_refs[ $field_id ]['title'];
+												$fdbgp_header_labels[] = $fields_refs[ $field_id ]['title'];
 											} else {
-												$wpssle_header_labels[] = ucfirst( str_replace( '_', ' ', $field_id ) );
+												$fdbgp_header_labels[] = ucfirst( str_replace( '_', ' ', $field_id ) );
 											}
 										}
 										
 										// Add header row
-										$wpssle_header_range = $wpssle_sheetname . '!A1';
-										$wpssle_header_body = $instance_api->valuerangeobject( array( $wpssle_header_labels ) );
-										$wpssle_header_params = FDBGP_Google_API_Functions::get_row_format();
-										$header_param = $instance_api->setparamater( $wpssle_spreadsheetid, $wpssle_header_range, $wpssle_header_body, $wpssle_header_params );
+										$fdbgp_header_range = $fdbgp_sheetname . '!A1';
+										$fdbgp_header_body = $instance_api->valuerangeobject( array( $fdbgp_header_labels ) );
+										$fdbgp_header_params = FDBGP_Google_API_Functions::get_row_format();
+										$header_param = $instance_api->setparamater( $fdbgp_spreadsheetid, $fdbgp_header_range, $fdbgp_header_body, $fdbgp_header_params );
 										$instance_api->updateentry( $header_param );
 										
 										// Freeze header row
 										$freeze_object = $instance_api->freezeobject( $new_sheet_id, 1 );
 										$freeze_param = array(
-											'spreadsheetid' => $wpssle_spreadsheetid,
+											'spreadsheetid' => $fdbgp_spreadsheetid,
 											'requestbody' => $freeze_object
 										);
 										$instance_api->formatsheet( $freeze_param );
 									}
 									
 									// Add to valid lists
-									$wpssle_sheets[] = $wpssle_sheetname;
+									$fdbgp_sheets[] = $fdbgp_sheetname;
 									
 								} catch ( Exception $e ) {
 									error_log( 'WPSyncSheets: Failed to create new tab: ' . $e->getMessage() );
@@ -301,73 +306,84 @@ public function render_editor_script() {
 					}
 					
 					// Fix for legacy settings: If sheet name is an index (e.g. "0"), try to resolve it to the actual name
-					if ( is_numeric( $wpssle_sheetname ) && ! in_array( $wpssle_sheetname, $wpssle_sheets, true ) ) {
-						$index = (int) $wpssle_sheetname;
-						if ( isset( $wpssle_sheets[ $index ] ) ) {
-							$wpssle_sheetname = $wpssle_sheets[ $index ];
+					if ( is_numeric( $fdbgp_sheetname ) && ! in_array( $fdbgp_sheetname, $fdbgp_sheets, true ) ) {
+						$index = (int) $fdbgp_sheetname;
+						if ( isset( $fdbgp_sheets[ $index ] ) ) {
+							$fdbgp_sheetname = $fdbgp_sheets[ $index ];
 						}
 					}
 					
-					if ( ! empty( $wpssle_sheetname ) && ! in_array( $wpssle_sheetname, $wpssle_sheets, true ) ) {
+					if ( ! empty( $fdbgp_sheetname ) && ! in_array( $fdbgp_sheetname, $fdbgp_sheets, true ) ) {
 						error_log( 'WPSyncSheets Error: Sheet Name not found in spreadsheet.' );
 						return;
 					}
 				}
 			}
-			if ( ( empty( $wpssle_spreadsheetid ) && $wpssle_spreadsheetid !== '0' ) || ( empty( $wpssle_sheetname ) && $wpssle_sheetname !== '0' ) ) {
+			if ( ( empty( $fdbgp_spreadsheetid ) && $fdbgp_spreadsheetid !== '0' ) || ( empty( $fdbgp_sheetname ) && $fdbgp_sheetname !== '0' ) ) {
 				error_log( 'WPSyncSheets Error: Missing Spreadsheet ID or Sheet Name.' );
 				return;
 			}
 			// Normalize the Form Data.
-			$wpssle_fields = array();
-			foreach ( $wpssle_raw_fields as $id => $field ) {
-				$wpssle_fields[ $id ] = $field['value'];
+			$fdbgp_fields = array();
+			foreach ( $fdbgp_raw_fields as $id => $field ) {
+				$fdbgp_fields[ $id ] = $field['value'];
 			}
+
+			// Add System Fields for mapping
+			$fdbgp_fields['user_ip']         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '';
+			$fdbgp_fields['user_agent']      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '';
+			$fdbgp_fields['submission_date'] = current_time( 'mysql' );
+			$fdbgp_fields['page_url']        = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : '';
 			try {
-				$wpssle_headers = isset($wpssle_settings[$this->add_prefix('sheet_headers')]) ? $wpssle_settings[$this->add_prefix('sheet_headers')] : [];
+				$fdbgp_headers = isset($fdbgp_settings[$this->add_prefix('sheet_headers')]) ? $fdbgp_settings[$this->add_prefix('sheet_headers')] : [];
 				
 				// Fallback: If no headers selected, send ALL fields
-				if ( empty($wpssle_headers) || !is_array($wpssle_headers) ) {
-					$wpssle_headers = array_keys($wpssle_fields);
+				if ( empty($fdbgp_headers) || !is_array($fdbgp_headers) ) {
+					$fdbgp_headers = array_keys($fdbgp_fields);
 				}
 
-				$wpssle_value_data = array();
-				foreach ( $wpssle_headers as $wpssle_fieldvalue ) {
-					if ( array_key_exists( $wpssle_fieldvalue, $wpssle_fields ) ) {
-						if ( is_array( $wpssle_fields[ $wpssle_fieldvalue ] ) ) {
-							$wpssle_value_data[] = implode( ',', $wpssle_fields[ $wpssle_fieldvalue ] );
+				$fdbgp_value_data = array();
+				foreach ( $fdbgp_headers as $fdbgp_fieldvalue ) {
+					if ( array_key_exists( $fdbgp_fieldvalue, $fdbgp_fields ) ) {
+						if ( is_array( $fdbgp_fields[ $fdbgp_fieldvalue ] ) ) {
+							$fdbgp_value_data[] = implode( ',', $fdbgp_fields[ $fdbgp_fieldvalue ] );
 						} else {
-							$wpssle_value_data[] = $wpssle_fields[ $wpssle_fieldvalue ];
+							$fdbgp_value_data[] = $fdbgp_fields[ $fdbgp_fieldvalue ];
 						}
 					} else {
-						$wpssle_value_data[] = '';
+						$fdbgp_value_data[] = '';
 					}
 				}
-				$wpssle_sheet         = "'" . $wpssle_sheetname . "'!A:A";
-				$wpssle_allentry      = $instance_api->get_row_list( $wpssle_spreadsheetid, $wpssle_sheet );
-				$wpssle_data          = $wpssle_allentry->getValues();
+				$fdbgp_sheet         = "'" . $fdbgp_sheetname . "'!A:A";
+				$fdbgp_allentry      = $instance_api->get_row_list( $fdbgp_spreadsheetid, $fdbgp_sheet );
+				$fdbgp_data          = $fdbgp_allentry->getValues();
 				
 				// Fix: Handle null data (empty sheet) to avoid PHP 8 fatal error in array_map
-				if ( is_null( $wpssle_data ) ) {
-					$wpssle_data = array();
+				if ( is_null( $fdbgp_data ) ) {
+					$fdbgp_data = array();
 				}
 
-				$wpssle_data          = array_map(
-					function ( $wpssle_element ) {
-						if ( isset( $wpssle_element['0'] ) ) {
-							return $wpssle_element['0'];
+				$fdbgp_data          = array_map(
+					function ( $fdbgp_element ) {
+						if ( isset( $fdbgp_element['0'] ) ) {
+							return $fdbgp_element['0'];
 						} else {
 							return '';
 						}
 					},
-					$wpssle_data
+					$fdbgp_data
 				);
 				// Safely quote the sheet name for the update range as well
-				$wpssle_rangetoupdate = "'" . $wpssle_sheetname . "'!A" . ( count( $wpssle_data ) + 1 );
-				$wpssle_requestbody   = $instance_api->valuerangeobject( array( $wpssle_value_data ) );
-				$wpssle_params        = FDBGP_Google_API_Functions::get_row_format();
-				$param                = $instance_api->setparamater( $wpssle_spreadsheetid, $wpssle_rangetoupdate, $wpssle_requestbody, $wpssle_params );
-				$instance_api->updateentry( $param );
+				// Use A1 range for append, letting Google determine the next empty row
+				$fdbgp_rangetoupdate = "'" . $fdbgp_sheetname . "'!A1";
+				$fdbgp_requestbody   = $instance_api->valuerangeobject( array( $fdbgp_value_data ) );
+				$fdbgp_params        = FDBGP_Google_API_Functions::get_row_format();
+				
+				// Add insertDataOption for safe appending
+				$fdbgp_params['insertDataOption'] = 'INSERT_ROWS';
+				
+				$param                = $instance_api->setparamater( $fdbgp_spreadsheetid, $fdbgp_rangetoupdate, $fdbgp_requestbody, $fdbgp_params );
+				$instance_api->appendentry( $param );
 			} catch ( Exception $e ) {
 				error_log( 'WPSyncSheets Exception: ' . $e->getMessage() );
 				$ajax_handler->add_admin_error_message( 'WPSyncSheets ' . $e->getMessage() );
@@ -385,7 +401,7 @@ public function render_editor_script() {
 
 		// if ( current_user_can( 'edit_wpsyncsheets_elementor_lite_form_settings' ) ) {
 			$instance_api           = new FDBGP_Google_API_Functions();
-			$wpssle_google_settings = $instance_api->get_google_creds();
+			$fdbgp_google_settings = $instance_api->get_google_creds();
 			
 			// Local variables to replace globals
 			$local_spreadsheet_id = '';
@@ -393,24 +409,24 @@ public function render_editor_script() {
 			$local_sheet_headers = array();
 			$local_headers = array();
 
-			$wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
+			$fdbgp_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html' );
 			
 			$existincurrentpage        = 'no';
-			$wpssle_sheetheaders       = array();
-			$wpssle_sheetheaders_new   = array();
-			$wpssle_form_fields        = array();
+			$fdbgp_sheetheaders       = array();
+			$fdbgp_sheetheaders_new   = array();
+			$fdbgp_form_fields        = array();
 			
-			  $wpssle_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html', 'step' ); // Added 'step'
+			  $fdbgp_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html', 'step' ); // Added 'step'
 			
 			// Retrieve saved settings from Elementor data
-			$wpssle_document = Plugin::elementor()->documents->get( get_the_ID() );
-			if ( $wpssle_document ) {
-				$wpssle_data = $wpssle_document->get_elements_data();
+			$fdbgp_document = Plugin::elementor()->documents->get( get_the_ID() );
+			if ( $fdbgp_document ) {
+				$fdbgp_data = $fdbgp_document->get_elements_data();
 				$widget_id = $widget->get_id();
 				
 				Plugin::elementor()->db->iterate_data(
-					$wpssle_data,
-					function( $element ) use ( &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, &$local_headers, $widget_id, $wpssle_exclude_headertype ) {
+					$fdbgp_data,
+					function( $element ) use ( &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, &$local_headers, $widget_id, $fdbgp_exclude_headertype ) {
 						if ( isset( $element['id'] ) && (string)$widget_id === (string)$element['id'] ) {
 							if ( isset( $element['settings'][$this->add_prefix('spreadsheetid')] ) ) {
 								$local_spreadsheet_id = $element['settings'][$this->add_prefix('spreadsheetid')];
@@ -423,7 +439,7 @@ public function render_editor_script() {
 							}
 							if ( isset( $element['settings']['form_fields'] ) ) {
 								foreach ( $element['settings']['form_fields'] as $formdata ) {
-									if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $wpssle_exclude_headertype, true ) ) ) {
+									if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $fdbgp_exclude_headertype, true ) ) ) {
 										$local_headers[ $formdata['custom_id'] ] = isset($formdata['field_label']) && $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
 									}
 								}
@@ -434,11 +450,11 @@ public function render_editor_script() {
 				);
 			}
 
-			if ( ! is_array( $wpssle_sheetheaders ) ) {
-				$wpssle_sheetheaders = array();
+			if ( ! is_array( $fdbgp_sheetheaders ) ) {
+				$fdbgp_sheetheaders = array();
 			}
-			if ( empty( $wpssle_google_settings['client_token'] ) ) {
-				$wpssle_html = sprintf(
+			if ( empty( $fdbgp_google_settings['client_token'] ) ) {
+				$fdbgp_html = sprintf(
 					'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
 					esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'wpsse' ),
 					esc_html__( 'Click Here', 'wpsse' )
@@ -455,31 +471,31 @@ public function render_editor_script() {
 				);
 
 				$widget->add_control(
-					'wpssle_html',
+					'fdbgp_html',
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw'  => $wpssle_html,
+						'raw'  => $fdbgp_html,
 					)
 				);
 				$widget->end_controls_section();
-			} elseif ( ! empty( $wpssle_google_settings['client_token'] ) && ! $instance_api->checkcredenatials() ) {
-				$wpssle_error = $instance_api->getClient( 1 );
-				if ( 'Invalid token format' === (string) $wpssle_error || 'invalid_grant' === (string) $wpssle_error ) {
-					$wpssle_html = sprintf(
+			} elseif ( ! empty( $fdbgp_google_settings['client_token'] ) && ! $instance_api->checkcredenatials() ) {
+				$fdbgp_error = $instance_api->getClient( 1 );
+				if ( 'Invalid token format' === (string) $fdbgp_error || 'invalid_grant' === (string) $fdbgp_error ) {
+					$fdbgp_html = sprintf(
 						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
 						esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'wpsse' ),
 						esc_html__( 'Click Here', 'wpsse' )
 					);
 				} else {
-					$wpssle_html = sprintf(
+					$fdbgp_html = sprintf(
 						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s</div>',
-						'Error: ' . $wpssle_error
+						'Error: ' . $fdbgp_error
 					);
 				}
 				$widget->start_controls_section(
 					$this->add_prefix('section_notice'),
 					array(
-						'label'     => esc_attr__( 'Connect Google Sheets', 'wpsse' ),
+						'label'     => esc_attr__( 'Save Data in Google Sheets', 'wpsse' ),
 						'condition' => array(
 							'submit_actions' => $this->get_name(),
 						),
@@ -489,7 +505,7 @@ public function render_editor_script() {
 					$this->add_prefix('setup_clientidsecret'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw'  => $wpssle_html,
+						'raw'  => $fdbgp_html,
 					)
 				);
 				$widget->end_controls_section();
@@ -497,7 +513,7 @@ public function render_editor_script() {
 				$widget->start_controls_section(
 					'section_google_sheets',
 					array(
-						'label'     => esc_html__( 'Connect Google Sheets', 'wpsse' ),
+						'label'     => esc_html__( 'Save Data in Google Sheets', 'wpsse' ),
 						'tab'       => 'connect_google_sheets_tab',
 						'condition' => array(
 							'submit_actions' => $this->get_name(),
@@ -505,11 +521,11 @@ public function render_editor_script() {
 					)
 				);
 				
-				$wpssle_spreadsheets = array();
+				$fdbgp_spreadsheets = array();
 				try {
-					$wpssle_spreadsheets = $instance_api->get_spreadsheet_listing();
+					$fdbgp_spreadsheets = $instance_api->get_spreadsheet_listing();
 				} catch ( Exception $e ) {
-					$wpssle_spreadsheets = array();
+					$fdbgp_spreadsheets = array();
 					error_log("WPSyncSheets Error fetching spreadsheets: " . $e->getMessage());
 				}
 				
@@ -518,7 +534,7 @@ public function render_editor_script() {
 					array(
 						'label'       => esc_attr__( 'Select Spreadsheet', 'wpsse' ),
 						'type'        => Controls_Manager::SELECT,
-						'options'     => $wpssle_spreadsheets,
+						'options'     => $fdbgp_spreadsheets,
 						'label_block' => true,
 						'render_type' => 'ui', // Ensure UI update triggers AJAX
 					)
@@ -546,24 +562,55 @@ public function render_editor_script() {
 						),
 					)
 				);
+				// $widget->add_control(
+				// 	$this->add_prefix('sheet_headers'),
+				// 	array(
+				// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+				// 		'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
+				// 		'label_block' => true,
+						
+				// 	)
+				// );
 				$widget->add_control(
 					$this->add_prefix('sheet_headers'),
 					array(
-						'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
-						'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
+						'label'       => esc_attr__( 'Sheet Headers', 'fdbgp' ),
+						'type'        => 'fdbgp_dynamic_select2',
 						'label_block' => true,
-						// 'description' => esc_attr__( 'Fields update automatically as you add them!', 'wpsse' ),
+						'multiple'    => true, 
+						// These are the extra fields you requested
+						'options'     => array(
+							'user_ip'         => esc_html__( 'User IP', 'fdbgp' ),
+							'user_agent'      => esc_html__( 'User Agent', 'fdbgp' ),
+							
+							'page_url'        => esc_html__( 'Page URL', 'fdbgp' ),
+							'submission_date' => esc_html__( 'Submission Date & Time', 'fdbgp' ),
+						)
 					)
-				);
-
+    			);
+				// $widget->add_control(
+				// 	$this->add_prefix('sheet_headers'),
+				// 	array(
+				// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+				// 		'type'        => 'fdbgp_dynamic_select2',
+				// 		'label_block' => true,
+				// 		'multiple'    => true, // Allows selecting multiple headers
+				// 		'options'     => array(
+				// 			'user_ip'         => esc_html__( 'User IP', 'wpsse' ),
+				// 			'user_agent'      => esc_html__( 'User Agent', 'wpsse' ),
+				// 			'submission_date' => esc_html__( 'Submission Date & Time', 'wpsse' ),
+				// 			'page_url'        => esc_html__( 'Page URL', 'wpsse' ),
+				// 		),
+				// 	)
+				// );
 			
 				// Add Create Spreadsheet Now button using RAW_HTML
 				$widget->add_control(
 					$this->add_prefix('create_spreadsheet_button'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw' => '<button type="button" class="elementor-button elementor-button-success" style="width:100%; margin-top:10px;" onclick="fdbgpCreateSpreadsheet()">
-							<span class="elementor-button-text">Create Spreadsheet Now</span>
+						'raw' => '<button type="button" class="elementor-button elementor-button-info" onclick="fdbgpCreateSpreadsheet()">
+							<span class="elementor-button-text">Create Spreadsheet</span>
 						</button>
 						<div id="fdbgp-message" style="margin-top:10px; padding:10px; border-radius:3px; display:none;"></div>',
 						'condition'   => array(
@@ -574,9 +621,9 @@ public function render_editor_script() {
 
 
 			
-				$wpssle_sheets = array();
+				$fdbgp_sheets = array();
 				// Add 'Create New Tab' option first
-				$wpssle_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
+				$fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
 				
 				// Use local sheet ID to fetch sheets
 				if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
@@ -584,7 +631,7 @@ public function render_editor_script() {
 						$response = $instance_api->get_sheet_listing( $local_spreadsheet_id );
 						foreach ( $response->getSheets() as $s ) {
 							$title = $s['properties']['title'];
-							$wpssle_sheets[ $title ] = $title;
+							$fdbgp_sheets[ $title ] = $title;
 						}
 					} catch ( Exception $e ) {
 						error_log("WPSyncSheets Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage());
@@ -594,10 +641,10 @@ public function render_editor_script() {
 				// Fallback: If we have a saved sheet name but the list is empty (e.g. API fail),
 				// add the saved name to the list so the dropdown isn't blank.
 				// Careful not to overwrite if saved name is 'create_new_tab'
-				// Also, checking if it is already in the array keys (titles are keys here? No, in the loop above: $wpssle_sheets[ $title ] = $title;)
+				// Also, checking if it is already in the array keys (titles are keys here? No, in the loop above: $fdbgp_sheets[ $title ] = $title;)
 				// So keys are titles.
-				if ( ! empty( $local_sheet_name ) && ! isset( $wpssle_sheets[ $local_sheet_name ] ) && $local_sheet_name !== 'create_new_tab' ) {
-					$wpssle_sheets[ $local_sheet_name ] = $local_sheet_name;
+				if ( ! empty( $local_sheet_name ) && ! isset( $fdbgp_sheets[ $local_sheet_name ] ) && $local_sheet_name !== 'create_new_tab' ) {
+					$fdbgp_sheets[ $local_sheet_name ] = $local_sheet_name;
 				}
 
 				$widget->add_control(
@@ -605,7 +652,7 @@ public function render_editor_script() {
 					array(
 						'label'       => esc_attr__( 'Select Sheet Tab Name', 'wpsse' ),
 						'type'        => Controls_Manager::SELECT,
-						'options'     => $wpssle_sheets,
+						'options'     => $fdbgp_sheets,
 						'label_block' => true,
 						'condition'   => array(
 							$this->add_prefix('spreadsheetid') . '!' => 'new',
@@ -632,7 +679,7 @@ public function render_editor_script() {
 					$this->add_prefix('update_sheet_button'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw' => '<button type="button" class="elementor-button elementor-button-warning" style="width:100%; margin-top:10px;" onclick="fdbgpUpdateSheetHeaders()">
+						'raw' => '<button type="button" class="elementor-button elementor-button-info" onclick="fdbgpUpdateSheetHeaders()">
 							<span class="elementor-button-text">Update Sheet</span>
 						</button>
 						<div id="fdbgp-update-message" style="margin-top:10px; padding:10px; border-radius:3px; display:none;"></div>',
@@ -708,9 +755,10 @@ public function render_editor_script() {
 			}
 			
 			wp_send_json_success( array(
-				'message' => 'Spreadsheet created successfully!',
-				'spreadsheet_id' => $spreadsheet_id,
+				'message'          => 'Spreadsheet created successfully!',
+				'spreadsheet_id'   => $spreadsheet_id,
 				'spreadsheet_name' => $spreadsheet_name,
+				'sheet_name'       => $sheet_name,
 			) );
 			
 		} catch ( Exception $e ) {
@@ -887,7 +935,9 @@ public function render_editor_script() {
 		}
 	}
 	public function ajax_check_sheet_headers() {
+
 		check_ajax_referer( 'elementor_ajax', '_nonce' );
+
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			wp_send_json_error( array( 'message' => 'Permission denied' ) );
 		}

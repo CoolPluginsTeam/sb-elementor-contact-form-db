@@ -57,7 +57,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @since 1.0.0
 	 */
-	public function wpssle_load_library() {
+	public function fdbgp_load_library() {
 		if ( ! class_exists( 'ComposerAutoloaderInita672e4231f706419bd66ef535c4ab40e' ) ) {
 			require_once FDBGP_PLUGIN_DIR . 'vendor/autoload.php';
 		}
@@ -116,10 +116,10 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return boolean
 	 */
 	public function checkcredenatials() {
-		$wpssle_google_settings_value = $this->get_google_creds();
-		$clientid                     = isset( $wpssle_google_settings_value['client_id'] ) ? $wpssle_google_settings_value['client_id'] : '';
-		$clientsecert                 = isset( $wpssle_google_settings_value['client_secret'] ) ? $wpssle_google_settings_value['client_secret'] : '';
-		$auth_token                   = isset( $wpssle_google_settings_value['client_token'] ) ? $wpssle_google_settings_value['client_token'] : '';
+		$fdbgp_google_settings_value = $this->get_google_creds();
+		$clientid                     = isset( $fdbgp_google_settings_value['client_id'] ) ? $fdbgp_google_settings_value['client_id'] : '';
+		$clientsecert                 = isset( $fdbgp_google_settings_value['client_secret'] ) ? $fdbgp_google_settings_value['client_secret'] : '';
+		$auth_token                   = isset( $fdbgp_google_settings_value['client_token'] ) ? $fdbgp_google_settings_value['client_token'] : '';
 		if ( empty( $clientid ) || empty( $clientsecert ) || empty( $auth_token ) ) {
 			return false;
 		} else {
@@ -148,15 +148,15 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @param object $key plugin meta key.
 	 * @param string $type boolean value.
 	 */
-	public static function wpssle_option( $key = '', $type = '' ) {
-		$wpssle_old_keys     = self::wpssle_old_option_keys();
-		$wpssle_oldmeta_keys = array_keys( $wpssle_old_keys );
-		if ( in_array( $key, $wpssle_oldmeta_keys, true ) ) {
-			self::wpssle_database_update();
-		}
-		$value = parent::wpssle_option( $key, $type );
-		return $value;
-	}
+	// public static function fdbgp_option( $key = '', $type = '' ) {
+	// 	$fdbgp_old_keys     = self::fdbgp_old_option_keys();
+	// 	$fdbgp_oldmeta_keys = array_keys( $fdbgp_old_keys );
+	// 	if ( in_array( $key, $fdbgp_oldmeta_keys, true ) ) {
+	// 		self::fdbgp_database_update();
+	// 	}
+	// 	$value = parent::fdbgp_option( $key, $type );
+	// 	return $value;
+	// }
 
 	/**
 	 * Update meta value.
@@ -164,15 +164,15 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @param object $key plugin meta key.
 	 * @param string $value plugin meta value.
 	 */
-	public static function wpssle_update_option( $key = '', $value = '' ) {
-		$wpssle_old_keys     = self::wpssle_old_option_keys();
-		$wpssle_oldmeta_keys = array_keys( $wpssle_old_keys );
-		if ( in_array( $key, $wpssle_oldmeta_keys, true ) ) {
-			self::wpssle_database_update();
-		}
-		$value = parent::wpssle_update_option( $key, $value );
-		return $value;
-	}
+	// public static function fdbgp_update_option( $key = '', $value = '' ) {
+	// 	$fdbgp_old_keys     = self::fdbgp_old_option_keys();
+	// 	$fdbgp_oldmeta_keys = array_keys( $fdbgp_old_keys );
+	// 	if ( in_array( $key, $fdbgp_oldmeta_keys, true ) ) {
+	// 		self::fdbgp_database_update();
+	// 	}
+	// 	$value = parent::fdbgp_update_option( $key, $value );
+	// 	return $value;
+	// }
 
 	/**
 	 * Old meta keys.
@@ -181,33 +181,33 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return array
 	 */
-	public static function wpssle_old_option_keys() {
-		return array(
-			'wpsse_google_accessToken' => 'elementorsheets_google_accessToken',
-			'wpsse_google_settings'    => 'elementorsheets_google_settings',
-		);
-	}
+	// public static function fdbgp_old_option_keys() {
+	// 	return array(
+	// 		'wpsse_google_accessToken' => 'elementorsheets_google_accessToken',
+	// 		'wpsse_google_settings'    => 'elementorsheets_google_settings',
+	// 	);
+	// }
 
 	/**
 	 * Update old meta keys to new meta keys.
 	 *
 	 * @since 1.0.0
 	 */
-	public static function wpssle_database_update() {
-		$wpssle_is_updated = self::wpssle_option( 'wpsse_database_updated' );
-		$wpssle_old_keys   = self::wpssle_old_option_keys();
-		global $wpdb;
-		if ( ! $wpssle_is_updated ) {
-			$table_name = $wpdb->prefix . 'options';
-			foreach ( $wpssle_old_keys as $newkey => $oldkey ) {
-				// @codingStandardsIgnoreStart
-				$sql    = $wpdb->prepare( "UPDATE `$table_name` SET `option_name`=%s WHERE `option_name`=%s", $newkey, $oldkey );
-				$result = $wpdb->get_results( $sql );
-				// @codingStandardsIgnoreEnd
-			}
-			self::wpssle_update_option( 'wpsse_database_updated', 1 );
-		}
-	}
+	// public static function fdbgp_database_update() {
+	// 	$fdbgp_is_updated = self::fdbgp_option( 'wpsse_database_updated' );
+	// 	$fdbgp_old_keys   = self::fdbgp_old_option_keys();
+	// 	global $wpdb;
+	// 	if ( ! $fdbgp_is_updated ) {
+	// 		$table_name = $wpdb->prefix . 'options';
+	// 		foreach ( $fdbgp_old_keys as $newkey => $oldkey ) {
+	// 			// @codingStandardsIgnoreStart
+	// 			$sql    = $wpdb->prepare( "UPDATE `$table_name` SET `option_name`=%s WHERE `option_name`=%s", $newkey, $oldkey );
+	// 			$result = $wpdb->get_results( $sql );
+	// 			// @codingStandardsIgnoreEnd
+	// 		}
+	// 		self::fdbgp_update_option( 'wpsse_database_updated', 1 );
+	// 	}
+	// }
 
 	/**
 	 * Get Google Client Object.
@@ -219,11 +219,11 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 */
 	public function getClient( $flag = 0 ) {
 
-		$this->wpssle_load_library();
-		$wpssle_google_settings_value = $this->get_google_creds();
-		$clientid                     = isset( $wpssle_google_settings_value['client_id'] ) ? $wpssle_google_settings_value['client_id'] : '';
-		$clientsecert                 = isset( $wpssle_google_settings_value['client_secret'] ) ? $wpssle_google_settings_value['client_secret'] : '';
-		$auth_token                   = isset( $wpssle_google_settings_value['client_token'] ) ? $wpssle_google_settings_value['client_token'] : '';
+		$this->fdbgp_load_library();
+		$fdbgp_google_settings_value = $this->get_google_creds();
+		$clientid                     = isset( $fdbgp_google_settings_value['client_id'] ) ? $fdbgp_google_settings_value['client_id'] : '';
+		$clientsecert                 = isset( $fdbgp_google_settings_value['client_secret'] ) ? $fdbgp_google_settings_value['client_secret'] : '';
+		$auth_token                   = isset( $fdbgp_google_settings_value['client_token'] ) ? $fdbgp_google_settings_value['client_token'] : '';
 		$client       = new \Google_Client();
 		$client->setApplicationName( 'WPSyncSheets For Elementor - Elementor Google Spreadsheet Addon' );
 		$client->setScopes( \Google_Service_Sheets::SPREADSHEETS_READONLY );
@@ -240,10 +240,10 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 				$auth_url = $client->createAuthUrl();
 				return $auth_url;
 			}
-			$wpssle_accesstoken = get_option( 'fdbgp_google_access_token' );
+			$fdbgp_accesstoken = get_option( 'fdbgp_google_access_token' );
 
-			if ( ! empty( $wpssle_accesstoken ) ) {
-				$accesstoken = json_decode( $wpssle_accesstoken, true );
+			if ( ! empty( $fdbgp_accesstoken ) ) {
+				$accesstoken = json_decode( $fdbgp_accesstoken, true );
 			} else {
 				if ( empty( $auth_token ) ) {
 					$auth_url = $client->createAuthUrl();
@@ -398,13 +398,13 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return array.
 	 */
-	public function get_sheetname_list( $response_object ) {
-		$sheets = array();
-		foreach ( $response_object->getSheets() as $key => $value ) {
-			$sheets[] = $value['properties']['title'];
-		}
-		return $sheets;
-	}
+	// public function get_sheetname_list( $response_object ) {
+	// 	$sheets = array();
+	// 	foreach ( $response_object->getSheets() as $key => $value ) {
+	// 		$sheets[] = $value['properties']['title'];
+	// 	}
+	// 	return $sheets;
+	// }
 
 	/**
 	 * Create sheet array.
@@ -414,13 +414,13 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return array.
 	 */
-	public function get_sheetid_list( $response_object ) {
-		$sheets = array();
-		foreach ( $response_object->getSheets() as $key => $value ) {
-			$sheets[ $value['properties']['sheetId'] ] = $value['properties']['title'];
-		}
-		return $sheets;
-	}
+	// public function get_sheetid_list( $response_object ) {
+	// 	$sheets = array();
+	// 	foreach ( $response_object->getSheets() as $key => $value ) {
+	// 		$sheets[ $value['properties']['sheetId'] ] = $value['properties']['title'];
+	// 	}
+	// 	return $sheets;
+	// }
 
 	/**
 	 * Create insertDimension Object.
@@ -430,26 +430,26 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function insertdimensionobject( $param = array() ) {
-		$requests           = new \Google_Service_Sheets_Request(
-			array(
-				'insertDimension' => array(
-					'range' => array(
-						'sheetId'    => $param['sheetid'],
-						'dimension'  => 'ROWS',
-						'startIndex' => $param['startindex'],
-						'endIndex'   => $param['endindex'],
-					),
-				),
-			)
-		);
-		$batchupdaterequest = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
-			array(
-				'requests' => $requests,
-			)
-		);
-		return $batchupdaterequest;
-	}
+	// public function insertdimensionobject( $param = array() ) {
+	// 	$requests           = new \Google_Service_Sheets_Request(
+	// 		array(
+	// 			'insertDimension' => array(
+	// 				'range' => array(
+	// 					'sheetId'    => $param['sheetid'],
+	// 					'dimension'  => 'ROWS',
+	// 					'startIndex' => $param['startindex'],
+	// 					'endIndex'   => $param['endindex'],
+	// 				),
+	// 			),
+	// 		)
+	// 	);
+	// 	$batchupdaterequest = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+	// 		array(
+	// 			'requests' => $requests,
+	// 		)
+	// 	);
+	// 	return $batchupdaterequest;
+	// }
 
 	/**
 	 * Create insertDimension Column Object.
@@ -459,39 +459,39 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function insertdimensioncolumnobject( $param = array() ) {
-		$requests           = new \Google_Service_Sheets_Request(
-			array(
-				'insertDimension' => array(
-					'range'             => array(
-						'sheetId'    => $param['sheetid'],
-						'dimension'  => 'COLUMNS',
-						'startIndex' => $param['startindex'],
-						'endIndex'   => $param['endindex'],
-					),
-					'inheritFromBefore' => true,
-				),
-			)
-		);
-		$batchupdaterequest = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
-			array(
-				'requests' => $requests,
-			)
-		);
-		return $batchupdaterequest;
-	}
+	// public function insertdimensioncolumnobject( $param = array() ) {
+	// 	$requests           = new \Google_Service_Sheets_Request(
+	// 		array(
+	// 			'insertDimension' => array(
+	// 				'range'             => array(
+	// 					'sheetId'    => $param['sheetid'],
+	// 					'dimension'  => 'COLUMNS',
+	// 					'startIndex' => $param['startindex'],
+	// 					'endIndex'   => $param['endindex'],
+	// 				),
+	// 				'inheritFromBefore' => true,
+	// 			),
+	// 		)
+	// 	);
+	// 	$batchupdaterequest = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+	// 		array(
+	// 			'requests' => $requests,
+	// 		)
+	// 	);
+	// 	return $batchupdaterequest;
+	// }
 
 	/**
 	 * Create Google_Service_Sheets_BatchUpdateSpreadsheetRequest Object
 	 * to freeze first row.
 	 *
 	 * @param int $sheetid Sheet ID.
-	 * @param int $wpssle_freeze number of rows to be freezed.
+	 * @param int $fdbgp_freeze number of rows to be freezed.
 	 * @since 1.0.0
 	 *
 	 * @return object.
 	 */
-	public function freezeobject( $sheetid = 0, $wpssle_freeze = 0 ) {
+	public function freezeobject( $sheetid = 0, $fdbgp_freeze = 0 ) {
 		$requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
 			array(
 				'requests' => array(
@@ -499,7 +499,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 						'properties' => array(
 							'sheetId'        => $sheetid,
 							'gridProperties' => array(
-								'frozenRowCount' => $wpssle_freeze,
+								'frozenRowCount' => $fdbgp_freeze,
 							),
 						),
 						'fields'     => 'gridProperties.frozenRowCount',
@@ -578,38 +578,38 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function createspreadsheetobject( $spreadsheetname = '' ) {
-		$wpssle_requestbody = new \Google_Service_Sheets_Spreadsheet(
-			array(
-				'properties' => array(
-					'title' => $spreadsheetname,
-				),
-			)
-		);
-		return $wpssle_requestbody;
-	}
+	// public function createspreadsheetobject( $spreadsheetname = '' ) {
+	// 	$fdbgp_requestbody = new \Google_Service_Sheets_Spreadsheet(
+	// 		array(
+	// 			'properties' => array(
+	// 				'title' => $spreadsheetname,
+	// 			),
+	// 		)
+	// 	);
+	// 	return $fdbgp_requestbody;
+	// }
 
 	/**
 	 * Google_Service_Sheets_BatchUpdateSpreadsheetRequest Object
 	 *
-	 * @param string $wpssle_sheetname Sheet Name.
+	 * @param string $fdbgp_sheetname Sheet Name.
 	 * @since 1.0.0
 	 *
 	 * @return object.
 	 */
-	public function createsheetobject( $wpssle_sheetname = '' ) {
-		$wpssle_requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+	public function createsheetobject( $fdbgp_sheetname = '' ) {
+		$fdbgp_requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
 			array(
 				'requests' => array(
 					'addSheet' => array(
 						'properties' => array(
-							'title' => $wpssle_sheetname,
+							'title' => $fdbgp_sheetname,
 						),
 					),
 				),
 			)
 		);
-		return $wpssle_requestbody;
+		return $fdbgp_requestbody;
 	}
 
 	/**
@@ -620,18 +620,18 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function deletesheetobject() {
-		$wpssle_requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
-			array(
-				'requests' => array(
-					'deleteSheet' => array(
-						'sheetId' => 0,
-					),
-				),
-			)
-		);
-		return $wpssle_requestbody;
-	}
+	// public function deletesheetobject() {
+	// 	$fdbgp_requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+	// 		array(
+	// 			'requests' => array(
+	// 				'deleteSheet' => array(
+	// 					'sheetId' => 0,
+	// 				),
+	// 			),
+	// 		)
+	// 	);
+	// 	return $fdbgp_requestbody;
+	// }
 
 	/**
 	 * Create Google_Service_Sheets_ClearValuesRequest Object
@@ -715,13 +715,13 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return array.
 	 */
-	public function prepare_param( $sheetid, $startindex, $endindex ) {
-		$param               = array();
-		$param['sheetid']    = $sheetid;
-		$param['startindex'] = $startindex;
-		$param['endindex']   = $endindex;
-		return $param;
-	}
+	// public function prepare_param( $sheetid, $startindex, $endindex ) {
+	// 	$param               = array();
+	// 	$param['sheetid']    = $sheetid;
+	// 	$param['startindex'] = $startindex;
+	// 	$param['endindex']   = $endindex;
+	// 	return $param;
+	// }
 
 	/**
 	 * Create moveDimension Object.
@@ -731,22 +731,22 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function moveDimensionrequests( $param = array() ) {
-		$requests = new \Google_Service_Sheets_Request(
-			array(
-				'moveDimension' => array(
-					'source'           => array(
-						'dimension'  => 'COLUMNS',
-						'sheetId'    => $param['sheetid'],
-						'startIndex' => $param['startindex'],
-						'endIndex'   => $param['endindex'],
-					),
-					'destinationIndex' => $param['destindex'],
-				),
-			)
-		);
-		return $requests;
-	}
+	// public function moveDimensionrequests( $param = array() ) {
+	// 	$requests = new \Google_Service_Sheets_Request(
+	// 		array(
+	// 			'moveDimension' => array(
+	// 				'source'           => array(
+	// 					'dimension'  => 'COLUMNS',
+	// 					'sheetId'    => $param['sheetid'],
+	// 					'startIndex' => $param['startindex'],
+	// 					'endIndex'   => $param['endindex'],
+	// 				),
+	// 				'destinationIndex' => $param['destindex'],
+	// 			),
+	// 		)
+	// 	);
+	// 	return $requests;
+	// }
 	/**
 	 * Create insertDimension Object.
 	 *
@@ -757,20 +757,20 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function insertdimensionrequests( $param = array(), $dimension = 'COLUMNS', $inheritstyle = false ) {
-		$requests = array(
-			'insertDimension' => array(
-				'range'             => array(
-					'sheetId'    => $param['sheetid'],
-					'dimension'  => $dimension,
-					'startIndex' => $param['startindex'],
-					'endIndex'   => $param['endindex'],
-				),
-				'inheritFromBefore' => false,
-			),
-		);
-		return $requests;
-	}
+	// public function insertdimensionrequests( $param = array(), $dimension = 'COLUMNS', $inheritstyle = false ) {
+	// 	$requests = array(
+	// 		'insertDimension' => array(
+	// 			'range'             => array(
+	// 				'sheetId'    => $param['sheetid'],
+	// 				'dimension'  => $dimension,
+	// 				'startIndex' => $param['startindex'],
+	// 				'endIndex'   => $param['endindex'],
+	// 			),
+	// 			'inheritFromBefore' => false,
+	// 		),
+	// 	);
+	// 	return $requests;
+	// }
 	/**
 	 * Create deleteDimension Object.
 	 *
@@ -780,19 +780,19 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function deleteDimensionrequests( $param = array(), $dimension = 'COLUMNS' ) {
-		$requests = array(
-			'deleteDimension' => array(
-				'range' => array(
-					'sheetId'    => $param['sheetid'],
-					'dimension'  => $dimension,
-					'startIndex' => $param['startindex'],
-					'endIndex'   => $param['endindex'],
-				),
-			),
-		);
-		return $requests;
-	}
+	// public function deleteDimensionrequests( $param = array(), $dimension = 'COLUMNS' ) {
+	// 	$requests = array(
+	// 		'deleteDimension' => array(
+	// 			'range' => array(
+	// 				'sheetId'    => $param['sheetid'],
+	// 				'dimension'  => $dimension,
+	// 				'startIndex' => $param['startindex'],
+	// 				'endIndex'   => $param['endindex'],
+	// 			),
+	// 		),
+	// 	);
+	// 	return $requests;
+	// }
 	/**
 	 * Batch update requests to google sheet.
 	 *
@@ -801,82 +801,82 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 *
 	 * @return object.
 	 */
-	public function updatebachrequests( $param = array() ) {
-		$flat_requests = array();
-		$flat_requests = self::normalize_sheet_requests( $param['requestarray'] );
-		unset($param['requestarray']); // free memory.
-		$batchupdaterequest = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
-			'requests' => $flat_requests,
-		]);
-		unset($flat_requests); // free memory.
+	// public function updatebachrequests( $param = array() ) {
+	// 	$flat_requests = array();
+	// 	$flat_requests = self::normalize_sheet_requests( $param['requestarray'] );
+	// 	unset($param['requestarray']); // free memory.
+	// 	$batchupdaterequest = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
+	// 		'requests' => $flat_requests,
+	// 	]);
+	// 	unset($flat_requests); // free memory.
 		
-		$requestobject['spreadsheetid'] = $param['spreadsheetid'];
-		$requestobject['requestbody']   = $batchupdaterequest;
-		unset($batchupdaterequest); // free memory.
-		return parent::batchupdate( self::$instance_service, $requestobject );
-	}
+	// 	$requestobject['spreadsheetid'] = $param['spreadsheetid'];
+	// 	$requestobject['requestbody']   = $batchupdaterequest;
+	// 	unset($batchupdaterequest); // free memory.
+	// 	return parent::batchupdate( self::$instance_service, $requestobject );
+	// }
 	/**
 	 * Normalize sheet requests into an array of Google_Service_Sheets_Request objects.
 	 *
 	 * @param array $requests The input requests in various formats.
 	 * @return array An array of Google_Service_Sheets_Request objects.
 	 */
-	public function normalize_sheet_requests( $requests ) {
-	    $valid_keys = [
-	        'addBanding', 'addChart', 'addConditionalFormatRule', 'addDataSource',
-	        'addDimensionGroup', 'addFilterView', 'addNamedRange', 'addProtectedRange',
-	        'addSheet', 'addSlicer', 'appendCells', 'appendDimension', 'autoFill',
-	        'autoResizeDimensions', 'clearBasicFilter', 'copyPaste', 'createDeveloperMetadata',
-	        'cutPaste', 'deleteBanding', 'deleteConditionalFormatRule', 'deleteDataSource',
-	        'deleteDeveloperMetadata', 'deleteDimension', 'deleteDimensionGroup',
-	        'deleteDuplicates', 'deleteEmbeddedObject', 'deleteFilterView', 'deleteNamedRange',
-	        'deleteProtectedRange', 'deleteRange', 'deleteSheet', 'duplicateFilterView',
-	        'duplicateSheet', 'findReplace', 'insertDimension', 'insertRange', 'mergeCells',
-	        'moveDimension', 'pasteData', 'randomizeRange', 'refreshDataSource', 'repeatCell',
-	        'setBasicFilter', 'setDataValidation', 'sortRange', 'textToColumns',
-	        'trimWhitespace', 'unmergeCells', 'updateBanding', 'updateBorders', 'updateCells',
-	        'updateChartSpec', 'updateConditionalFormatRule', 'updateDataSource',
-	        'updateDeveloperMetadata', 'updateDimensionGroup', 'updateDimensionProperties',
-	        'updateEmbeddedObjectBorder', 'updateEmbeddedObjectPosition', 'updateFilterView',
-	        'updateNamedRange', 'updateProtectedRange', 'updateSheetProperties',
-	        'updateSlicerSpec', 'updateSpreadsheetProperties'
-	    ];
+	// public function normalize_sheet_requests( $requests ) {
+	//     $valid_keys = [
+	//         'addBanding', 'addChart', 'addConditionalFormatRule', 'addDataSource',
+	//         'addDimensionGroup', 'addFilterView', 'addNamedRange', 'addProtectedRange',
+	//         'addSheet', 'addSlicer', 'appendCells', 'appendDimension', 'autoFill',
+	//         'autoResizeDimensions', 'clearBasicFilter', 'copyPaste', 'createDeveloperMetadata',
+	//         'cutPaste', 'deleteBanding', 'deleteConditionalFormatRule', 'deleteDataSource',
+	//         'deleteDeveloperMetadata', 'deleteDimension', 'deleteDimensionGroup',
+	//         'deleteDuplicates', 'deleteEmbeddedObject', 'deleteFilterView', 'deleteNamedRange',
+	//         'deleteProtectedRange', 'deleteRange', 'deleteSheet', 'duplicateFilterView',
+	//         'duplicateSheet', 'findReplace', 'insertDimension', 'insertRange', 'mergeCells',
+	//         'moveDimension', 'pasteData', 'randomizeRange', 'refreshDataSource', 'repeatCell',
+	//         'setBasicFilter', 'setDataValidation', 'sortRange', 'textToColumns',
+	//         'trimWhitespace', 'unmergeCells', 'updateBanding', 'updateBorders', 'updateCells',
+	//         'updateChartSpec', 'updateConditionalFormatRule', 'updateDataSource',
+	//         'updateDeveloperMetadata', 'updateDimensionGroup', 'updateDimensionProperties',
+	//         'updateEmbeddedObjectBorder', 'updateEmbeddedObjectPosition', 'updateFilterView',
+	//         'updateNamedRange', 'updateProtectedRange', 'updateSheetProperties',
+	//         'updateSlicerSpec', 'updateSpreadsheetProperties'
+	//     ];
 
-	    $flat_requests = [];
+	//     $flat_requests = [];
 
-	    foreach ( (array) $requests as $key => $request ) {
-	        // Case 1: Request is already a Google_Service_Sheets_Request object
-	        if ( $request instanceof \Google_Service_Sheets_Request ) {
-	            $flat_requests[] = $request;
-	            continue;
-	        }
+	//     foreach ( (array) $requests as $key => $request ) {
+	//         // Case 1: Request is already a Google_Service_Sheets_Request object
+	//         if ( $request instanceof \Google_Service_Sheets_Request ) {
+	//             $flat_requests[] = $request;
+	//             continue;
+	//         }
 
-	        // Case 2: Single associative request: e.g., ['deleteDimension' => [...]]
-	        if ( is_string( $key ) && in_array( $key, $valid_keys, true ) && is_array( $request ) ) {
-	            $flat_requests[] = new \Google_Service_Sheets_Request( [ $key => $request ] );
-	            continue;
-	        }
+	//         // Case 2: Single associative request: e.g., ['deleteDimension' => [...]]
+	//         if ( is_string( $key ) && in_array( $key, $valid_keys, true ) && is_array( $request ) ) {
+	//             $flat_requests[] = new \Google_Service_Sheets_Request( [ $key => $request ] );
+	//             continue;
+	//         }
 
-	        // Case 3: A list of request arrays (numerically indexed)
-	        if ( is_array( $request ) && array_keys( $request ) === range( 0, count( $request ) - 1 ) ) {
-	            foreach ( $request as $sub_request ) {
-	                $flat_requests = array_merge(
-	                    $flat_requests,
-	                    self::normalize_sheet_requests( [ $sub_request ] )
-	                );
-	            }
-	            continue;
-	        }
+	//         // Case 3: A list of request arrays (numerically indexed)
+	//         if ( is_array( $request ) && array_keys( $request ) === range( 0, count( $request ) - 1 ) ) {
+	//             foreach ( $request as $sub_request ) {
+	//                 $flat_requests = array_merge(
+	//                     $flat_requests,
+	//                     self::normalize_sheet_requests( [ $sub_request ] )
+	//                 );
+	//             }
+	//             continue;
+	//         }
 
-	        // Case 4: Possibly another nested single request
-	        if ( is_array( $request ) ) {
-	            $request_key = key( $request );
-	            if ( in_array( $request_key, $valid_keys, true ) ) {
-	                $flat_requests[] = new \Google_Service_Sheets_Request( $request );
-	            }
-	        }
-	    }
+	//         // Case 4: Possibly another nested single request
+	//         if ( is_array( $request ) ) {
+	//             $request_key = key( $request );
+	//             if ( in_array( $request_key, $valid_keys, true ) ) {
+	//                 $flat_requests[] = new \Google_Service_Sheets_Request( $request );
+	//             }
+	//         }
+	//     }
 
-	    return $flat_requests;
-	}
+	//     return $flat_requests;
+	// }
 }

@@ -85,7 +85,7 @@
                             "background-color": "#d4edda",
                             "color": "#155724",
                             "border": "1px solid #c3e6cb"
-                        }).html("✅ " + response.data.message).show();
+                        }).html("✅ " + response.data.message).show().delay(5000).fadeOut();
 
                         if (sheetName === 'create_new_tab' && response.data.sheet_name) {
                             var $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
@@ -226,6 +226,12 @@
                             // Re-add "Create New Spreadsheet" at the end
                             $spreadsheetSelect.append($newOption);
                         }
+
+                        if (response.data.sheet_name) {
+                            var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
+                            $sheetSelect.data('auto-select', response.data.sheet_name);
+                        }
+
                         $spreadsheetSelect.val(response.data.spreadsheet_id).change();
                     }
 
@@ -233,7 +239,7 @@
                         "background-color": "#d4edda",
                         "color": "#155724",
                         "border": "1px solid #c3e6cb"
-                    }).html("✅ " + response.data.message).show();
+                    }).html("✅ " + response.data.message).show().delay(5000).fadeOut();
                 } else {
                     $message.css({
                         "background-color": "#f8d7da",
@@ -257,9 +263,8 @@
     };
 
     jQuery(document).ready(function ($) {
-        // Check Sheet Content on Selection Change
-        $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
-            var $sheetSelect = $(this);
+        // Expose check function
+        window.fdbgpCheckSheetContent = function ($sheetSelect) {
             var sheetName = $sheetSelect.val();
             var $panel = $sheetSelect.closest('.elementor-panel');
             var spreadsheetId = $panel.find(".elementor-control-fdbgp_spreadsheetid select").val();
@@ -290,6 +295,11 @@
                     }
                 }
             });
+        };
+
+        // Check Sheet Content on Selection Change
+        $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
+            window.fdbgpCheckSheetContent($(this));
         });
 
         $(document).on('change', '.elementor-control-fdbgp_spreadsheetid select', function () {
@@ -315,6 +325,13 @@
                         $.each(response.data.sheets, function (key, text) {
                             $sheetSelect.append(new Option(text, key));
                         });
+
+                        var autoSelect = $sheetSelect.data('auto-select');
+                        if (autoSelect) {
+                            $sheetSelect.val(autoSelect);
+                            $sheetSelect.removeData('auto-select');
+                        }
+
                         $sheetSelect.trigger('change');
                     } else {
                         $sheetSelect.html('<option>No sheets found</option>');
@@ -359,6 +376,7 @@
                 var formFields = this.container.settings.get('form_fields');
                 var $select = this.ui.select;
                 var currentVal = self.getControlValue();
+                var staticOptions = this.model.get('options');
 
                 $select.empty();
 
@@ -370,6 +388,12 @@
 
                         var text = label + ' (' + id + ')';
                         $select.append(new Option(text, id, false, false));
+                    });
+                }
+
+                if (staticOptions) {
+                    jQuery.each(staticOptions, function(key, label) {
+                        $select.append(new Option(label, key, false, false));
                     });
                 }
 
@@ -403,10 +427,42 @@
                         // If sheet list seems unpopulated (only minimal options), trigger reload
                         if ($sheetSelect.find('option').length <= 2) {
                             $spreadsheetSelect.trigger('change');
+                        } else {
+                            // Otherwise check sheet content
+                            if (window.fdbgpCheckSheetContent) {
+                                window.fdbgpCheckSheetContent($sheetSelect);
+                            }
                         }
                     }
                 }, 1000); // 1 second delay to ensure complete rendering
             });
         }
+
+        // Fallback: Polling to check if panel is already open (Page Reload)
+        var fdbgpCheckInterval = setInterval(function () {
+            // Find visible select controls
+            var $spreadsheetSelect = jQuery(".elementor-control-fdbgp_spreadsheetid select").filter(':visible');
+
+            if ($spreadsheetSelect.length && $spreadsheetSelect.val() && $spreadsheetSelect.val() !== 'new') {
+                var $sheetSelect = jQuery(".elementor-control-fdbgp_sheet_list select").filter(':visible');
+
+                // Need both to be present
+                if ($sheetSelect.length) {
+                    // If we found them, stop polling
+                    clearInterval(fdbgpCheckInterval);
+
+                    if ($sheetSelect.find('option').length <= 2) {
+                        $spreadsheetSelect.trigger('change');
+                    } else {
+                        if (window.fdbgpCheckSheetContent) {
+                            window.fdbgpCheckSheetContent($sheetSelect);
+                        }
+                    }
+                }
+            }
+
+            // Stop polling after 10 seconds if nothing found
+            if (performance.now() > 20000) clearInterval(fdbgpCheckInterval);
+        }, 1000);
     });
 })(jQuery);

@@ -27,14 +27,14 @@ abstract class FDBGP_Google_API {
 	 * @since 1.0.0
 	 * @return mixed The option value, or $type if not found.
 	 */
-	public static function wpssle_option( $key = '', $type = '' ) {
-		if ( is_multisite() ) {
-			$value = get_site_option( $key, $type );
-		} else {
-			$value = get_option( $key, $type );
-		}
-		return $value;
-	}
+	// public static function fdbgp_option( $key = '', $type = '' ) {
+	// 	if ( is_multisite() ) {
+	// 		$value = get_site_option( $key, $type );
+	// 	} else {
+	// 		$value = get_option( $key, $type );
+	// 	}
+	// 	return $value;
+	// }
 
 
 	public static function get_row_format() {
@@ -55,13 +55,13 @@ abstract class FDBGP_Google_API {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public static function wpssle_update_option( $key = '', $value = '' ) {
-		if ( is_multisite() ) {
-			update_site_option( $key, $value );
-		} else {
-			update_option( $key, $value );
-		}
-	}
+	// public static function fdbgp_update_option( $key = '', $value = '' ) {
+	// 	if ( is_multisite() ) {
+	// 		update_site_option( $key, $value );
+	// 	} else {
+	// 		update_option( $key, $value );
+	// 	}
+	// }
 
 
 	/**
