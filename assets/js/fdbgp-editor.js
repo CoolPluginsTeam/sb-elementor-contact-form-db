@@ -35,20 +35,12 @@
         }
 
         if (!spreadsheetId || spreadsheetId === 'new') {
-            $message.css({
-                "background-color": "#fff3cd",
-                "color": "#856404",
-                "border": "1px solid #ffeaa7"
-            }).html("⚠️ Please select a Spreadsheet first").show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please select a Spreadsheet first").show();
             return;
         }
 
         if (sheetName === 'create_new_tab' && !newSheetName) {
-            $message.css({
-                "background-color": "#fff3cd",
-                "color": "#856404",
-                "border": "1px solid #ffeaa7"
-            }).html("⚠️ Please enter a New Sheet Name").show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please enter a New Sheet Name").show();
             return;
         }
 
@@ -74,18 +66,11 @@
                             fdbgpUpdateSheetHeaders(true, btn);
                             return;
                         } else {
-                            $message.css({
-                                "background-color": "#fff3cd",
-                                "color": "#856404",
-                                "border": "1px solid #ffeaa7"
-                            }).html("Cancelled.").show();
+                            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Cancelled.").show();
                         }
                     } else {
-                        $message.css({
-                            "background-color": "#d4edda",
-                            "color": "#155724",
-                            "border": "1px solid #c3e6cb"
-                        }).html("✅ " + response.data.message).show().delay(5000).fadeOut();
+                        $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success");
+                        $message.html(response.data.message).show().delay(5000).fadeOut();
 
                         if (sheetName === 'create_new_tab' && response.data.sheet_name) {
                             var $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
@@ -112,19 +97,13 @@
                         }
                     }
                 } else {
-                    $message.css({
-                        "background-color": "#f8d7da",
-                        "color": "#721c24",
-                        "border": "1px solid #f5c6cb"
-                    }).html("❌ " + (response.data.message || "Unknown error")).show();
+                    $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
+                    $message.html(response.data.message || "Unknown error").show();
                 }
             },
             error: function () {
-                $message.css({
-                    "background-color": "#f8d7da",
-                    "color": "#721c24",
-                    "border": "1px solid #f5c6cb"
-                }).html("❌ Server error").show();
+                $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
+                $message.html("❌ Server error").show();
             },
             complete: function () {
                 $btn.prop("disabled", false);
@@ -134,8 +113,8 @@
     };
 
     // Expose function to global scope so onclick works
-    window.fdbgpCreateSpreadsheet = function () {
-        var btn = event.target.closest("button");
+    window.fdbgpCreateSpreadsheet = function (btnContext) {
+        var btn = btnContext || (window.event && window.event.target ? window.event.target.closest("button") : null);
         var $btn = jQuery(btn);
         var $text = $btn.find(".elementor-button-text");
         var originalText = $text.text();
@@ -160,37 +139,21 @@
             var sheetName = settings["fdbgp_sheet_name"] || "";
             var sheetHeaders = settings["fdbgp_sheet_headers"] || [];
         } catch (e) {
-            $message.css({
-                "background-color": "#f8d7da",
-                "color": "#721c24",
-                "border": "1px solid #f5c6cb"
-            }).html("Error getting form settings: " + e.message).show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Error getting form settings: " + e.message).show();
             return;
         }
 
         if (!spreadsheetName || !spreadsheetName.trim()) {
-            $message.css({
-                "background-color": "#fff3cd",
-                "color": "#856404",
-                "border": "1px solid #ffeaa7"
-            }).html("⚠️ Please enter a Spreadsheet Name").show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please enter a Spreadsheet Name").show();
             return;
         }
         if (!sheetName || !sheetName.trim()) {
-            $message.css({
-                "background-color": "#fff3cd",
-                "color": "#856404",
-                "border": "1px solid #ffeaa7"
-            }).html("⚠️ Please enter a Sheet Name").show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please enter a Sheet Tab Name").show();
             return;
         }
 
         if (!sheetHeaders || sheetHeaders.length === 0) {
-            $message.css({
-                "background-color": "#fff3cd",
-                "color": "#856404",
-                "border": "1px solid #ffeaa7"
-            }).html("⚠️ Please select at least one Sheet Header").show();
+            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please select at least one Sheet Header").show();
             return;
         }
 
@@ -209,51 +172,44 @@
             },
             success: function (response) {
                 if (response.success) {
-                    // Update the spreadsheet dropdown value
-                    var $spreadsheetSelect = jQuery("[data-setting=\"fdbgp_spreadsheetid\"]");
-                    if ($spreadsheetSelect.length) {
-                        if ($spreadsheetSelect.find("option[value=\"" + response.data.spreadsheet_id + "\"]").length === 0) {
-                            // Remove "Create New Spreadsheet" option temporarily
-                            var $newOption = $spreadsheetSelect.find("option[value=\'new\']");
-                            $newOption.remove();
+                    // Start of Modification
+                    $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success").html(response.data.message).show();
 
-                            // Add the new spreadsheet
-                            var newOpt = document.createElement("option");
-                            newOpt.value = response.data.spreadsheet_id;
-                            newOpt.text = response.data.spreadsheet_name;
-                            $spreadsheetSelect.append(newOpt);
+                    // Delay updating the UI so the message is visible
+                    setTimeout(function () {
+                        // Update the spreadsheet dropdown value
+                        var $spreadsheetSelect = jQuery("[data-setting=\"fdbgp_spreadsheetid\"]");
+                        if ($spreadsheetSelect.length) {
+                            if ($spreadsheetSelect.find("option[value=\"" + response.data.spreadsheet_id + "\"]").length === 0) {
+                                // Remove "Create New Spreadsheet" option temporarily
+                                var $newOption = $spreadsheetSelect.find("option[value=\'new\']");
+                                $newOption.remove();
 
-                            // Re-add "Create New Spreadsheet" at the end
-                            $spreadsheetSelect.append($newOption);
+                                // Add the new spreadsheet
+                                var newOpt = document.createElement("option");
+                                newOpt.value = response.data.spreadsheet_id;
+                                newOpt.text = response.data.spreadsheet_name;
+                                $spreadsheetSelect.append(newOpt);
+
+                                // Re-add "Create New Spreadsheet" at the end
+                                $spreadsheetSelect.append($newOption);
+                            }
+
+                            if (response.data.sheet_name) {
+                                var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
+                                $sheetSelect.data('auto-select', response.data.sheet_name);
+                            }
+
+                            $spreadsheetSelect.val(response.data.spreadsheet_id).change();
                         }
-
-                        if (response.data.sheet_name) {
-                            var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
-                            $sheetSelect.data('auto-select', response.data.sheet_name);
-                        }
-
-                        $spreadsheetSelect.val(response.data.spreadsheet_id).change();
-                    }
-
-                    $message.css({
-                        "background-color": "#d4edda",
-                        "color": "#155724",
-                        "border": "1px solid #c3e6cb"
-                    }).html("✅ " + response.data.message).show().delay(5000).fadeOut();
+                    }, 2000);
+                    // End of Modification
                 } else {
-                    $message.css({
-                        "background-color": "#f8d7da",
-                        "color": "#721c24",
-                        "border": "1px solid #f5c6cb"
-                    }).html("❌ " + (response.data.message || "Unknown error")).show();
+                    $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("❌ " + (response.data.message || "Unknown error")).show();
                 }
             },
             error: function () {
-                $message.css({
-                    "background-color": "#f8d7da",
-                    "color": "#721c24",
-                    "border": "1px solid #f5c6cb"
-                }).html("❌ Server error").show();
+                $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("❌ Server error").show();
             },
             complete: function () {
                 $btn.prop("disabled", false);
@@ -288,14 +244,27 @@
                 success: function (response) {
                     if (response.success && response.data.has_content) {
                         $message.css({
-                            "background-color": "#fff3cd",
-                            "color": "#856404",
-                            "border": "1px solid #ffeaa7"
-                        }).html("⚠️ " + (response.data.message || "Warning: Sheet has content.")).show();
+                            "background-color": "",
+                            "color": "",
+                            "border": ""
+                        }).removeClass("elementor-panel-alert-danger elementor-panel-alert-success").addClass("elementor-panel-alert-info");
+                        $message.html(response.data.message || "Selected sheet is not empty. Backup recommended before updating.").show();
                     }
                 }
             });
         };
+
+        // Attach Click Event for Create Spreadsheet Button
+        $(document).on('click', '.fdbgp-create-spreadsheet', function (e) {
+            e.preventDefault();
+            fdbgpCreateSpreadsheet(this);
+        });
+
+        // Attach Click Event for Update Sheet Button
+        $(document).on('click', '.fdbgp-update-sheet', function (e) {
+            e.preventDefault();
+            fdbgpUpdateSheetHeaders(false, this);
+        });
 
         // Check Sheet Content on Selection Change
         $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
@@ -392,7 +361,7 @@
                 }
 
                 if (staticOptions) {
-                    jQuery.each(staticOptions, function(key, label) {
+                    jQuery.each(staticOptions, function (key, label) {
                         $select.append(new Option(label, key, false, false));
                     });
                 }

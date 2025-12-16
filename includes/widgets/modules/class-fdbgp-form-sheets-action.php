@@ -186,16 +186,13 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						$header_param = $instance_api->setparamater( $fdbgp_spreadsheetid, $fdbgp_header_range, $fdbgp_header_body, $fdbgp_header_params );
 						$instance_api->updateentry( $header_param );
 						
-						// Freeze header row if enabled
-						// $fdbgp_freeze_header = isset( $fdbgp_settings[$this->add_prefix('freeze_header')] ) ? $fdbgp_settings[$this->add_prefix('freeze_header')] : '';
-						// if ( $fdbgp_freeze_header === 'yes' ) {
 							$freeze_object = $instance_api->freezeobject( $sheet_id, 1 );
 							$freeze_param = array(
 								'spreadsheetid' => $fdbgp_spreadsheetid,
 								'requestbody' => $freeze_object
 							);
 							$instance_api->formatsheet( $freeze_param );
-						// }
+						
 					}
 					
 					// Update the form settings to save the new spreadsheet ID
@@ -609,10 +606,10 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					$this->add_prefix('create_spreadsheet_button'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw' => '<button type="button" class="elementor-button elementor-button-info" onclick="fdbgpCreateSpreadsheet()">
+						'raw' => '<button type="button" class="elementor-button elementor-button-info fdbgp-create-spreadsheet">
 							<span class="elementor-button-text">Create Spreadsheet</span>
 						</button>
-						<div id="fdbgp-message" style="margin-top:10px; padding:10px; border-radius:3px; display:none;"></div>',
+						<div id="fdbgp-message" class="elementor-control-alert elementor-panel-alert elementor-panel-alert-success" style="display:none;margin-top: 10px;"></div>',
 						'condition'   => array(
 							$this->add_prefix('spreadsheetid') => 'new',
 						),
@@ -674,15 +671,16 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						'placeholder' => 'e.g. Sheet2',
 					)
 				);
+		
 
 				$widget->add_control(
 					$this->add_prefix('update_sheet_button'),
 					array(
 						'type' => Controls_Manager::RAW_HTML,
-						'raw' => '<button type="button" class="elementor-button elementor-button-info" onclick="fdbgpUpdateSheetHeaders()">
+						'raw' => '<button type="button" class="elementor-button elementor-button-info fdbgp-update-sheet">
 							<span class="elementor-button-text">Update Sheet</span>
 						</button>
-						<div id="fdbgp-update-message" style="margin-top:10px; padding:10px; border-radius:3px; display:none;"></div>',
+						<div id="fdbgp-update-message" class="elementor-control-alert elementor-panel-alert elementor-panel-alert-danger" style="margin-top:10px;"></div>',
 						'condition'   => array(
 							$this->add_prefix('spreadsheetid') . '!' => 'new',
 						),
@@ -964,7 +962,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			if ( ! empty( $rows ) ) {
 				wp_send_json_success( array(
 					'has_content' => true,
-					'message'     => 'Warning: This sheet already includes content or headers. Do you want to update the sheet?',
+					'message'     => 'Selected sheet is not empty. Backup recommended before updating.',
 				) );
 			} else {
 				wp_send_json_success( array( 'has_content' => false ) );
