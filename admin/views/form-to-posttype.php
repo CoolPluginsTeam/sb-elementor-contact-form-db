@@ -136,19 +136,32 @@ class FDBGP_Form_To_Post_Settings {
     private function walk_elements( array $elements, $post, array &$forms ) {
 
         foreach ( $elements as $element ) {
-
+            $is_found = false;
             if (
                 isset( $element['widgetType'] ) &&
                 'form' === $element['widgetType'] &&
                 ! empty( $element['settings']['submit_actions'] ) &&
                 in_array( 'eef-register-post', $element['settings']['submit_actions'], true )
-            ) {
+            ){
+                $is_found = true;
+            }
+
+            if (
+                isset( $element['widgetType'] ) &&
+                'ehp-form' === $element['widgetType'] &&
+                ! empty( $element['settings']['cool_formkit_submit_actions'] ) &&
+                in_array( 'eef-register-post', $element['settings']['cool_formkit_submit_actions'], true )
+            ){
+                $is_found = true;
+            }
+
+            if ($is_found) {
                 $forms[] = [
                     'post_id'    => $post->ID,
                     'post_title' => get_the_title( $post->ID ),
                     'form_name'  => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
                     'edit_url'   => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
-                    'widget_type'   => $element['widgetType'],
+                    'widget_type'   => strtoupper($element['widgetType']),
                 ];
             }
 

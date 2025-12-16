@@ -8,14 +8,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 use \Elementor\Plugin as ElementorPlugin;
 use \Elementor\Controls_Manager as ElementorControls;
 use \Elementor\Repeater as ElementorRepeater;
-use ElementorPro\Modules\Forms\Classes\Action_Base;
+use HelloPlus\Modules\Forms\Classes\Action_Base;
+use HelloPlus\Includes\Utils;
+
 
 /**
  * Register post after form submit.
  */
-class FDBGP_Register_Post extends Action_Base {
+class HelloPlus_FDBGP_Register_Post extends Action_Base {
+
+	private static $registered_actions = [];
+
 	public function __construct() {
-		\add_action( 'elementor/element/form/section_form_fields/before_section_end', array( $this, 'add_control_fields' ), 100, 2 );
+		add_action( 'elementor/element/ehp-form/section_form_fields/before_section_end', array( $this, 'add_control_fields' ),100,2 );
 	}
 	/**
 	 * Get Name
@@ -24,7 +29,7 @@ class FDBGP_Register_Post extends Action_Base {
 	 *
 	 * @return string
 	 */
-	public function get_name() {
+	public function get_name() : string{
 		return 'eef-register-post';
 	}
 
@@ -35,7 +40,7 @@ class FDBGP_Register_Post extends Action_Base {
 	 *
 	 * @return string
 	 */
-	public function get_label() {
+	public function get_label() : string {
 		return 'Register Post/Custom Post';
 	}
 
@@ -60,12 +65,19 @@ class FDBGP_Register_Post extends Action_Base {
 	 * @param \Elementor\Widget_Base $widget
 	 */
 	public function register_settings_section( $widget ) {
+		$control_id = 'eef-register-post-section';
+        if ( in_array( $control_id, self::$registered_actions, true ) ) {
+            return; // Already registered
+        }
+
+        self::$registered_actions[] = $control_id;
+
 		$widget->start_controls_section(
 			'eef-register-post-section',
 			[
 				'label' => \esc_html__( 'Register Post/Custom Post', 'extensions-for-elementor-form' ),
 				'condition' => [
-					'submit_actions' => $this->get_name(),
+					'cool_formkit_submit_actions' => $this->get_name(),
 				],
 			]
 		);
@@ -193,7 +205,12 @@ class FDBGP_Register_Post extends Action_Base {
 	 * @param $args
 	 */
 	public function add_control_fields( $element, $args ) {
-		$elementor = ElementorPlugin::instance();
+		$widget_name = $element->get_name();        
+        if($widget_name !== 'ehp-form'){
+            return;
+        }
+
+		$elementor = Utils::elementor();
 		$control_data = $elementor->controls_manager->get_control_from_stack( $element->get_name(), 'form_fields' );
 
 		if ( is_wp_error( $control_data ) ) {
