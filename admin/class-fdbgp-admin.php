@@ -71,10 +71,11 @@ if(!class_exists('FDBGP_Admin')) {
                 <h2 class="nav-tab-wrapper">
                     <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'elementor-contact-form-db'); ?></a>
                     <a href="?page=formsdb&tab=post-type" class="nav-tab <?php echo $tab == 'post-type' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Post Type', 'elementor-contact-form-db'); ?></a>
-                    <a href="?page=formsdb&tab=hello-plus-entries" class="nav-tab <?php echo $tab == 'hello-plus-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'elementor-contact-form-db'); ?></a>
+                    <?php if(is_plugin_active( 'hello-plus/hello-plus.php' )): ?>
+                        <a href="?page=cfkef-entries" class="nav-tab <?php echo $tab == 'cfkef-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'elementor-contact-form-db'); ?></a>
+                    <?php endif; ?>
                     <a href="?page=formsdb&tab=settings" class="nav-tab <?php echo $tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'elementor-contact-form-db'); ?></a>
                     <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'elementor-contact-form-db'); ?></a>
-                    <a href="?page=formsdb&tab=google-api" class="nav-tab <?php echo $tab == 'google-api' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Google API', 'elementor-contact-form-db'); ?></a>
                 </h2>
                 <div class="tab-content">
                     <?php
@@ -101,7 +102,7 @@ if(!class_exists('FDBGP_Admin')) {
         public function enqueue_admin_styles() {
             wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
 
-            if (isset($_GET['page']) && (strpos($_GET['page'], 'formsdb') !== false)){
+            if (isset($_GET['page']) && (strpos($_GET['page'], 'formsdb') !== false || strpos($_GET['page'], 'cfkef-entries') !== false)) {
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
                 wp_enqueue_style('dashicons');
 

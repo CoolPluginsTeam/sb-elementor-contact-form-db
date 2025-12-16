@@ -287,21 +287,21 @@ input:checked + .fdbgp-slider::before {
     font-family: Inter, Roboto, Helvetica, Arial, sans-serif;
 }
 
-body.elementor_page_cool-formkit,
-body.elementor_page_fdbgp-entries{
+body.elementor_page_formsdb,
+body.elementor_page_cfkef-entries{
     background-color: #fff;
 }
 
-.elementor_page_cool-formkit #wpbody #wpbody-content {
+.elementor_page_formsdb #wpbody #wpbody-content {
     margin-top: 80px !important;
     margin-block-start: 80px !important;
 }
-.elementor_page_cool-formkit .e-admin-top-bar--active,
-.elementor_page_cool-formkit #e-admin-top-bar-root,
-.elementor_page_cool-formkit #wpfooter {
+.elementor_page_formsdb .e-admin-top-bar--active,
+.elementor_page_formsdb #e-admin-top-bar-root,
+.elementor_page_formsdb #wpfooter {
     display: none !important;
 }
-.elementor_page_cool-formkit .notice {
+.elementor_page_formsdb .notice {
     margin: 2px 20px 20px 0;
 }
 
@@ -717,23 +717,26 @@ p.description{
   100% { transform: rotate(360deg); }
 }
 
-.elementor_page_fdbgp-entries #screen-meta {
+.elementor_page_cfkef-entries #screen-meta {
     margin-top: 60px !important;
 }
-.elementor_page_fdbgp-entries #screen-meta-links {
+.elementor_page_cfkef-entries #screen-meta-links {
     margin-top: 60px;
 }
-.elementor_page_fdbgp-entries #screen-meta[style="display: block;"] ~ #screen-meta-links{
+.elementor_page_cfkef-entries #screen-meta[style="display: block;"] ~ #screen-meta-links{
     margin-top:0px;
 }
-.elementor_page_cool-formkit #screen-meta-links {
+.elementor_page_formsdb #screen-meta-links {
     display: none !important;
 }
-.elementor_page_fdbgp-entries #footer-left,
-.elementor_page_fdbgp-entries #footer-upgrade{
+.elementor_page_cfkef-entries #footer-left,
+.elementor_page_cfkef-entries #footer-upgrade{
     display: none;
 }  
 
+li a[href="admin.php?page=cfkef-entries"]{
+    display: none !important;
+}
 .status-wrapper{
     margin: 20px 0px;
     padding: 10px;
@@ -758,7 +761,7 @@ p.description{
     .fdbgp-wrapper .nav-tab-wrapper{
         margin-top: 35px;
     }
-    .elementor_page_fdbgp-entries .fdbgp-wrapper .nav-tab-wrapper{
+    .elementor_page_cfkef-entries .fdbgp-wrapper .nav-tab-wrapper{
         margin-top: 110px;
     }
     .fdbgp-form-elements-container,.fdbgp-sidebar,

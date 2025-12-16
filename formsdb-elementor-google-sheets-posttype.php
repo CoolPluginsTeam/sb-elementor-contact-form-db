@@ -109,10 +109,10 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		function FDBGP_plugin_dashboard_link( $links ) {
-		$settings_link = '<a href="' . admin_url( 'admin.php?page=formsdb' ) . '">Settings</a>';
-		array_unshift( $links, $settings_link );
-		return $links;
-	}
+			$settings_link = '<a href="' . admin_url( 'admin.php?page=formsdb' ) . '">Settings</a>';
+			array_unshift( $links, $settings_link );
+			return $links;
+		}
 
 		private function includes() {
 
@@ -120,8 +120,6 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function autoload( $class_name ) {
-
-		
 			if ( 0 !== strpos( $class_name, __NAMESPACE__ ) ) {
 				return;
 			}

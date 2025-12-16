@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use \Elementor\Plugin as ElementorPlugin;
-use \Elementor\Controls_Manager as ElementorControls;
-use \Elementor\Repeater as ElementorRepeater;
+use Elementor\Plugin as ElementorPlugin;
+use Elementor\Controls_Manager as ElementorControls;
+use Elementor\Repeater as ElementorRepeater;
 use HelloPlus\Modules\Forms\Classes\Action_Base;
 use HelloPlus\Includes\Utils;
 

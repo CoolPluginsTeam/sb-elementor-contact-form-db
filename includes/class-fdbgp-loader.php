@@ -1,6 +1,7 @@
 <?php
 
 use Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard\FDBGP_Dashboard;
+use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Entries_Posts;
 
 if (!defined('ABSPATH')) {
     die;
@@ -44,7 +45,10 @@ if(!class_exists('FDBGP_Loader')) {
 
         private function admin_menu_dashboard() {
             if(class_exists(FDBGP_Dashboard::class)){
-                $menu_pages = FDBGP_Dashboard::get_instance($this->get_plugin_name(), $this->get_version());
+                FDBGP_Dashboard::get_instance($this->get_plugin_name(), $this->get_version());
+            }
+            if(class_exists(FDBGP_Entries_Posts::class)){
+                FDBGP_Entries_Posts::get_instance();
             }
         }
 

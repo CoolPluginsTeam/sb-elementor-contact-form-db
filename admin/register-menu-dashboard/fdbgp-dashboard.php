@@ -13,7 +13,7 @@ class FDBGP_Dashboard {
     private $plugin_name;
     private static $allowed_pages = array(
         'formsdb',
-        'fdbgp-entries'
+        'cfkef-entries'
     );
     private static $instance = null;
     public static function get_instance($plugin_name, $version)
@@ -28,6 +28,22 @@ class FDBGP_Dashboard {
     {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+
+        $dashboard_pages = array(
+            'cfkef-entries' => array(
+                'title' => '↳ Entries',
+                'position' => 46,
+                'slug' => 'cfkef-entries', // Retained the original slug with post-new.php?post_type=
+            )
+        );
+
+        $dashboard_pages = apply_filters('fdbgp_dashboard_pages', $dashboard_pages);
+
+        foreach (self::$allowed_pages as $page) {
+            if (isset($dashboard_pages[$page]['slug']) && isset($dashboard_pages[$page]['title']) && isset($dashboard_pages[$page]['position'])) {
+                $this->add_menu_page($dashboard_pages[$page]['slug'], $dashboard_pages[$page]['title'], isset($dashboard_pages[$page]['callback']) ? $dashboard_pages[$page]['callback'] : [$this, 'render_page'], $dashboard_pages[$page]['position']);
+            }
+        }
 
         add_action('elementor/admin-top-bar/is-active', [$this, 'hide_elementor_top_bar']);
         add_action('admin_print_scripts', [$this, 'hide_unrelated_notices']);
@@ -177,7 +193,7 @@ class FDBGP_Dashboard {
         <div class="fdbgp-header">
                 <div class="fdbgp-header-logo">
                     <a href="?page=formsdb">
-                        <!-- <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/logo-cool-formkit.png'); ?>" alt="Cool FormKit Logo"> -->
+                        <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/logo-cool-formkit.png'); ?>" alt="Cool FormKit Logo">
                     </a>
                 </div>
                 <div class="fdbgp-header-buttons">
@@ -192,31 +208,8 @@ class FDBGP_Dashboard {
 
         echo '<div class="tab-content">';
 
-        if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
-            ?>
-            <p>
-                <?php esc_html_e( 'Form submissions submitted through', 'elementor-contact-form-db' ); ?> 
-                <strong><?php esc_html_e( 'Elementor Pro Form Widget', 'elementor-contact-form-db' ); ?></strong> 
-                <?php esc_html_e( 'are not shown here. You can view them in the', 'elementor-contact-form-db' ); ?>
-                <a href="<?php echo esc_url( admin_url( 'admin.php?page=e-form-submissions' ) ); ?>" target="_blank" rel="noopener noreferrer">
-                    <?php esc_html_e( 'Elementor Form Submissions section', 'elementor-contact-form-db' ); ?>
-                </a>.
-            </p>
-            <?php
-        }
+        do_action('fdbgp_render_menu_pages', $this);
 
-
-        if(get_option('fdbgp_enable_hello_plus',true) || get_option('fdbgp_enable_formkit_builder',true)){
-            do_action('fdbgp_render_menu_pages', $this);
-        }else{
-            echo '<p style="margin:20px auto;
-                    width: 500px;
-                    padding: 50px;
-                    background-color: white;
-                    text-align: center;
-            ">Sorry, you are not allowed on this page</p>';
-        }
-        
         echo '</div></div>';
     }
 
@@ -235,14 +228,29 @@ class FDBGP_Dashboard {
     public function fdbgp_get_tabs(){
         $default_tabs = array(
             array(
-                'title' => 'Form Elements',
+                'title' => 'Forms To Sheet',
                 'position' => 1,
                 'slug' => 'formsdb',
+            ),
+            array(
+                'title' => 'Forms To Post Type',
+                'position' => 3,
+                'slug' => 'formsdb&tab=post-type',
+            ),
+            array(
+                'title' => 'Hello+ Form Entries',
+                'position' => 3,
+                'slug' => 'cfkef-entries',
             ),
             array(
                 'title' => 'Settings',
                 'position' => 3,
                 'slug' => 'formsdb&tab=settings',
+            ),
+            array(
+                'title' => 'Advanced Fields',
+                'position' => 3,
+                'slug' => 'formsdb&tab=advanced',
             ),
         );
 
