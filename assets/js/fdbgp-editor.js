@@ -281,6 +281,17 @@
                         }
                     }
                 } catch (e) { }
+            } else if (sheetValue === 'create_new_tab') {
+                // Clear saved state when user selects "Create New Tab"
+                try {
+                    var panel = elementor.getPanelView();
+                    if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
+                        var widgetId = panel.getCurrentPageView().model.get('id');
+                        if (widgetId && window.fdbgpWidgetState && window.fdbgpWidgetState[widgetId]) {
+                            delete window.fdbgpWidgetState[widgetId].sheet;
+                        }
+                    }
+                } catch (e) { }
             }
             window.fdbgpCheckSheetContent($(this));
         });

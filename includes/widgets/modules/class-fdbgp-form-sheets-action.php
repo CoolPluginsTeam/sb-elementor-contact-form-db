@@ -717,7 +717,10 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						</button>
 						<div id="fdbgp-update-message" class="elementor-control-alert elementor-panel-alert elementor-panel-alert-danger" style="margin-top:10px;display:none;"></div>',
 						'condition'   => array(
-							$this->add_prefix('spreadsheetid') . '!' => 'new',
+							'condition'   => array(
+							$this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+						),
+							// $this->add_prefix('spreadsheetid') . '!' => 'new',
 						),
 					)
 				);
