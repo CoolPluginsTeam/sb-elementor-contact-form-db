@@ -319,6 +319,13 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				error_log( 'Error: Missing Spreadsheet ID or Sheet Name.' );
 				return;
 			}
+			
+			// Validate that at least one field/header is selected
+			$fdbgp_sheetheaders = isset($fdbgp_settings[$this->add_prefix('sheet_headers')]) ? $fdbgp_settings[$this->add_prefix('sheet_headers')] : [];
+			if ( empty( $fdbgp_sheetheaders ) || ! is_array( $fdbgp_sheetheaders ) || count( $fdbgp_sheetheaders ) === 0 ) {
+				
+				return;
+			}
 			// Normalize the Form Data.
 			$fdbgp_fields = array();
 			foreach ( $fdbgp_raw_fields as $id => $field ) {
@@ -414,6 +421,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			
 			  $fdbgp_exclude_headertype = array( 'honeypot', 'recaptcha', 'recaptcha_v3', 'html', 'step' ); // Added 'step'
 			
+
 			// Retrieve saved settings from Elementor data
 			$fdbgp_document = Plugin::elementor()->documents->get( get_the_ID() );
 			if ( $fdbgp_document ) {
@@ -587,6 +595,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						
 				// 	)
 				// );
+				// var_dump($fdbgp_seets);die();
 
 				$widget->add_control(
 					$this->add_prefix('sheet_list'),
@@ -672,7 +681,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			
 			
 				$fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'elementor-contact-form-db' ) );
-				// Add 'Create New Tab' option first
+				// Add '' option first
 				$fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
 				
 				// Use local sheet ID to fetch sheets
