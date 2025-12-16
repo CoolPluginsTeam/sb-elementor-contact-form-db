@@ -268,6 +268,65 @@
 
         // Check Sheet Content on Selection Change
         $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
+            var sheetValue = $(this).val();
+            if (sheetValue && sheetValue !== '' && sheetValue !== 'create_new_tab') {
+                try {
+                    var panel = elementor.getPanelView();
+                    if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
+                        var widgetId = panel.getCurrentPageView().model.get('id');
+                        if (widgetId) {
+                            if (!window.fdbgpWidgetState) window.fdbgpWidgetState = {};
+                            if (!window.fdbgpWidgetState[widgetId]) window.fdbgpWidgetState[widgetId] = {};
+                            window.fdbgpWidgetState[widgetId].sheet = sheetValue;
+                        }
+                    }
+                } catch (e) { }
+            }
+            window.fdbgpCheckSheetContent($(this));
+        });
+
+        // Restore sheet selection on panel changes
+        elementor.channels.editor.on('change', function () {
+            setTimeout(function () {
+                var $sheetSelect = $('.elementor-control-fdbgp_sheet_list select:visible');
+                if ($sheetSelect.length === 0) return;
+
+                try {
+                    var panel = elementor.getPanelView();
+                    if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
+                        var widgetId = panel.getCurrentPageView().model.get('id');
+                        if (widgetId && window.fdbgpWidgetState && window.fdbgpWidgetState[widgetId] && window.fdbgpWidgetState[widgetId].sheet) {
+                            var savedSheet = window.fdbgpWidgetState[widgetId].sheet;
+                            var currentSheet = $sheetSelect.val();
+
+                            if (!currentSheet || currentSheet === '' || currentSheet !== savedSheet) {
+                                var optionExists = $sheetSelect.find('option[value="' + savedSheet + '"]').length > 0;
+                                var $spreadsheetSelect = $('.elementor-control-fdbgp_spreadsheetid select:visible');
+
+                                if (!optionExists && $spreadsheetSelect.length && $spreadsheetSelect.val()) {
+                                    $sheetSelect.data('auto-select', savedSheet);
+                                    $spreadsheetSelect.trigger('change');
+                                } else if (optionExists) {
+                                    $sheetSelect.val(savedSheet);
+                                }
+                            }
+                        }
+                    }
+                } catch (e) { }
+            }, 300);
+        });
+
+        // Clear sheet state when spreadsheet changes
+        $(document).on('change', '.elementor-control-fdbgp_spreadsheetid select', function () {
+            try {
+                var panel = elementor.getPanelView();
+                if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
+                    var widgetId = panel.getCurrentPageView().model.get('id');
+                    if (widgetId && window.fdbgpWidgetState && window.fdbgpWidgetState[widgetId]) {
+                        delete window.fdbgpWidgetState[widgetId].sheet;
+                    }
+                }
+            } catch (e) { }
             window.fdbgpCheckSheetContent($(this));
         });
 
