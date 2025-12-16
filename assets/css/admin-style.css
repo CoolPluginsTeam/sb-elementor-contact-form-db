@@ -763,9 +763,6 @@ p.description{
     display: none;
 }  
 
-li a[href="admin.php?page=cfkef-entries"]{
-    display: none !important;
-}
 .status-wrapper{
     margin: 20px 0px;
     padding: 10px;

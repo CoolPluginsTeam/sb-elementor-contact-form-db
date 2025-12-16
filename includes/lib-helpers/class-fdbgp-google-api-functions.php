@@ -339,7 +339,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 				$sheetarray[ $file->getId() ] = $file->getName();
 			}
 		}
-		$sheetarray['new'] = esc_html__( 'Create New Spreadsheet', 'wpsse' );
+		$sheetarray['new'] = esc_html__( 'Create New Spreadsheet', 'elementor-contact-form-db' );
 		return $sheetarray;
 	}
 

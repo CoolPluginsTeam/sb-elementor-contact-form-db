@@ -7,7 +7,6 @@ if (!defined('ABSPATH')) {
  * Google Spreadsheet
  *
  * @since 1.0.0
- * @package wpsyncsheets-elementor
  */
 
 use ElementorPro\Plugin;
@@ -144,13 +143,13 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					
 					// Validate required fields with helpful error messages
 					if ( empty( $fdbgp_new_spreadsheet_name ) && empty( $fdbgp_sheetname ) ) {
-						$ajax_handler->add_admin_error_message( 'WPSyncSheets: Please enter both a Spreadsheet Name and a Sheet Name to create a new spreadsheet.' );
+						$ajax_handler->add_admin_error_message( 'Please enter both a Spreadsheet Name and a Sheet Name to create a new spreadsheet.' );
 						return;
 					} elseif ( empty( $fdbgp_new_spreadsheet_name ) ) {
-						$ajax_handler->add_admin_error_message( 'WPSyncSheets: Please enter a Spreadsheet Name to create a new spreadsheet.' );
+						$ajax_handler->add_admin_error_message( 'Please enter a Spreadsheet Name to create a new spreadsheet.' );
 						return;
 					} elseif ( empty( $fdbgp_sheetname ) ) {
-						$ajax_handler->add_admin_error_message( 'WPSyncSheets: Please enter a Sheet Name to create a new spreadsheet.' );
+						$ajax_handler->add_admin_error_message( 'Please enter a Sheet Name to create a new spreadsheet.' );
 						return;
 					}
 					
@@ -208,7 +207,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					}
 					
 				} catch ( Exception $e ) {
-					$ajax_handler->add_admin_error_message( 'WPSyncSheets: Failed to create spreadsheet - ' . $e->getMessage() );
+					$ajax_handler->add_admin_error_message( 'Failed to create spreadsheet - ' . $e->getMessage() );
 					return;
 				}
 			}
@@ -218,7 +217,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			if ( ! $is_newly_created ) {
 				$fdbgp_sheetarray    = $instance_api->get_spreadsheet_listing();
 				if ( ! empty( $fdbgp_spreadsheetid ) && ! array_key_exists( $fdbgp_spreadsheetid, $fdbgp_sheetarray ) ) {
-					error_log( 'WPSyncSheets Error: Spreadsheet ID not found in listing.' );
+					error_log( 'Error: Spreadsheet ID not found in listing.' );
 					return;
 				} elseif ( ! empty( $fdbgp_spreadsheetid ) ) {
 					$fdbgp_sheets = array(); // Initialize $fdbgp_sheets here
@@ -295,7 +294,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 									$fdbgp_sheets[] = $fdbgp_sheetname;
 									
 								} catch ( Exception $e ) {
-									error_log( 'WPSyncSheets: Failed to create new tab: ' . $e->getMessage() );
+									error_log( 'Failed to create new tab: ' . $e->getMessage() );
 									// Fallback: Proceed, maybe it exists and we missed it, or it will fail on insert.
 								}
 							}
@@ -311,13 +310,13 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					}
 					
 					if ( ! empty( $fdbgp_sheetname ) && ! in_array( $fdbgp_sheetname, $fdbgp_sheets, true ) ) {
-						error_log( 'WPSyncSheets Error: Sheet Name not found in spreadsheet.' );
+						error_log( 'Error: Sheet Name not found in spreadsheet.' );
 						return;
 					}
 				}
 			}
 			if ( ( empty( $fdbgp_spreadsheetid ) && $fdbgp_spreadsheetid !== '0' ) || ( empty( $fdbgp_sheetname ) && $fdbgp_sheetname !== '0' ) ) {
-				error_log( 'WPSyncSheets Error: Missing Spreadsheet ID or Sheet Name.' );
+				error_log( 'Error: Missing Spreadsheet ID or Sheet Name.' );
 				return;
 			}
 			// Normalize the Form Data.
@@ -382,8 +381,8 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$param                = $instance_api->setparamater( $fdbgp_spreadsheetid, $fdbgp_rangetoupdate, $fdbgp_requestbody, $fdbgp_params );
 				$instance_api->appendentry( $param );
 			} catch ( Exception $e ) {
-				error_log( 'WPSyncSheets Exception: ' . $e->getMessage() );
-				$ajax_handler->add_admin_error_message( 'WPSyncSheets ' . $e->getMessage() );
+				error_log( 'Exception: ' . $e->getMessage() );
+				$ajax_handler->add_admin_error_message( 'Error: ' . $e->getMessage() );
 			}
 		}
 	}
@@ -396,7 +395,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 	 */
 	public function register_settings_section( $widget ) {
 
-		// if ( current_user_can( 'edit_wpsyncsheets_elementor_lite_form_settings' ) ) {
+		// if ( current_user_can( 'edit_posts' ) ) {
 			$instance_api           = new FDBGP_Google_API_Functions();
 			$fdbgp_google_settings = $instance_api->get_google_creds();
 			
@@ -453,13 +452,13 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			if ( empty( $fdbgp_google_settings['client_token'] ) ) {
 				$fdbgp_html = sprintf(
 					'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
-					esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'wpsse' ),
-					esc_html__( 'Click Here', 'wpsse' )
+					esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'elementor-contact-form-db' ),
+					esc_html__( 'Click Here', 'elementor-contact-form-db' )
 				);
 				$widget->start_controls_section(
 					'section_google_sheets',
 					array(
-						'label'     => esc_html__( 'Google Sheets', 'wpsse' ),
+						'label'     => esc_html__( 'Google Sheets', 'elementor-contact-form-db' ),
 						'tab'       => 'connect_google_sheets_tab',
 						'condition' => array(
 							'submit_actions' => $this->get_name(),
@@ -480,8 +479,8 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				if ( 'Invalid token format' === (string) $fdbgp_error || 'invalid_grant' === (string) $fdbgp_error ) {
 					$fdbgp_html = sprintf(
 						'<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
-						esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'wpsse' ),
-						esc_html__( 'Click Here', 'wpsse' )
+						esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'elementor-contact-form-db' ),
+						esc_html__( 'Click Here', 'elementor-contact-form-db' )
 					);
 				} else {
 					$fdbgp_html = sprintf(
@@ -492,7 +491,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$widget->start_controls_section(
 					$this->add_prefix('section_notice'),
 					array(
-						'label'     => esc_attr__( 'Save Data in Google Sheets', 'wpsse' ),
+						'label'     => esc_attr__( 'Save Data in Google Sheets', 'elementor-contact-form-db' ),
 						'condition' => array(
 							'submit_actions' => $this->get_name(),
 						),
@@ -510,7 +509,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$widget->start_controls_section(
 					'section_google_sheets',
 					array(
-						'label'     => esc_html__( 'Save Data in Google Sheets', 'wpsse' ),
+						'label'     => esc_html__( 'Save Data in Google Sheets', 'elementor-contact-form-db' ),
 						'tab'       => 'connect_google_sheets_tab',
 						'condition' => array(
 							'submit_actions' => $this->get_name(),
@@ -523,15 +522,15 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					$fdbgp_spreadsheets = $instance_api->get_spreadsheet_listing();
 				} catch ( Exception $e ) {
 					$fdbgp_spreadsheets = array();
-					error_log("WPSyncSheets Error fetching spreadsheets: " . $e->getMessage());
+					error_log("Error fetching spreadsheets: " . $e->getMessage());
 				}
 				
-				$fdbgp_spreadsheets = array( '' => esc_html__( 'Please Select a Spreadsheet', 'wpsse' ) ) + $fdbgp_spreadsheets;
+				$fdbgp_spreadsheets = array( '' => esc_html__( 'Please Select a Spreadsheet', 'elementor-contact-form-db' ) ) + $fdbgp_spreadsheets;
 
 				$widget->add_control(
 					$this->add_prefix('spreadsheetid'),
 					array(
-						'label'       => esc_attr__( 'Select Spreadsheet', 'wpsse' ),
+						'label'       => esc_attr__( 'Select Spreadsheet', 'elementor-contact-form-db' ),
 						'type'        => Controls_Manager::SELECT,
 						'default'     => '',
 						'options'     => $fdbgp_spreadsheets,
@@ -543,7 +542,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$widget->add_control(
 					$this->add_prefix('new_spreadsheet_name'),
 					array(
-						'label'       => esc_attr__( 'Spreadsheet Name', 'wpsse' ),
+						'label'       => esc_attr__( 'Spreadsheet Name', 'elementor-contact-form-db' ),
 						'type'        => Controls_Manager::TEXT,
 						'label_block' => true,
 						'condition'   => array(
@@ -555,7 +554,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$widget->add_control(
 					$this->add_prefix('sheet_name'),
 					array(
-					'label'       => esc_attr__( 'Sheet Tab Name', 'wpsse' ),
+					'label'       => esc_attr__( 'Sheet Tab Name', 'elementor-contact-form-db' ),
 						'type'        => Controls_Manager::TEXT,
 						// 'placeholder' => 'Please Select a Sheet Tab Name',
 						'label_block' => true,
@@ -569,7 +568,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				// $widget->add_control(
 				// 	$this->add_prefix('new_sheet_tab_name'),
 				// 	array(
-				// 		'label'       => esc_attr__( 'New Sheet Tab Name', 'wpsse' ),
+				// 		'label'       => esc_attr__( 'New Sheet Tab Name', 'elementor-contact-form-db' ),
 				// 		'type'        => Controls_Manager::TEXT,
 				// 		'label_block' => true,
 				// 		'condition'   => array(
@@ -582,7 +581,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				// $widget->add_control(
 				// 	$this->add_prefix('sheet_headers'),
 				// 	array(
-				// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+				// 		'label'       => esc_attr__( 'Sheet Headers', 'elementor-contact-form-db' ),
 				// 		'type'        => 'fdbgp_dynamic_select2', // Matches the get_type() in Step 1
 				// 		'label_block' => true,
 						
@@ -592,7 +591,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$widget->add_control(
 					$this->add_prefix('sheet_list'),
 					array(
-						'label'       => esc_attr__( 'Select Sheet Tab Name', 'wpsse' ),
+						'label'       => esc_attr__( 'Select Sheet Tab Name', 'elementor-contact-form-db' ),
 						'type'        => Controls_Manager::SELECT,
 						'default'     => '',
 						'options'     => $fdbgp_sheets,
@@ -607,7 +606,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				$widget->add_control(
 					$this->add_prefix('new_sheet_tab_name'),
 					array(
-						'label'       => esc_attr__( 'New Sheet Tab Name', 'wpsse' ),
+						'label'       => esc_attr__( 'New Sheet Tab Name', 'elementor-contact-form-db' ),
 						'type'        => Controls_Manager::TEXT,
 						'label_block' => true,
 						'condition'   => array(
@@ -641,15 +640,15 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 				// $widget->add_control(
 				// 	$this->add_prefix('sheet_headers'),
 				// 	array(
-				// 		'label'       => esc_attr__( 'Sheet Headers', 'wpsse' ),
+				// 		'label'       => esc_attr__( 'Sheet Headers', 'elementor-contact-form-db' ),
 				// 		'type'        => 'fdbgp_dynamic_select2',
 				// 		'label_block' => true,
 				// 		'multiple'    => true, // Allows selecting multiple headers
 				// 		'options'     => array(
-				// 			'user_ip'         => esc_html__( 'User IP', 'wpsse' ),
-				// 			'user_agent'      => esc_html__( 'User Agent', 'wpsse' ),
-				// 			'submission_date' => esc_html__( 'Submission Date & Time', 'wpsse' ),
-				// 			'page_url'        => esc_html__( 'Page URL', 'wpsse' ),
+				// 			'user_ip'         => esc_html__( 'User IP', 'elementor-contact-form-db' ),
+				// 			'user_agent'      => esc_html__( 'User Agent', 'elementor-contact-form-db' ),
+				// 			'submission_date' => esc_html__( 'Submission Date & Time', 'elementor-contact-form-db' ),
+				// 			'page_url'        => esc_html__( 'Page URL', 'elementor-contact-form-db' ),
 				// 		),
 				// 	)
 				// );
@@ -672,9 +671,9 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 
 			
 			
-				$fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'wpsse' ) );
+				$fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'elementor-contact-form-db' ) );
 				// Add 'Create New Tab' option first
-				$fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
+				$fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
 				
 				// Use local sheet ID to fetch sheets
 				if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
@@ -685,7 +684,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 							$fdbgp_sheets[ $title ] = $title;
 						}
 					} catch ( Exception $e ) {
-						error_log("WPSyncSheets Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage());
+						error_log("Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage());
 					}
 				}
 				
@@ -822,7 +821,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 			$sheets = array();
 			
 			// Add Create New Tab option
-			$sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
+			$sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
 			
 			foreach ( $response->getSheets() as $s ) {
 				$title = $s['properties']['title'];
