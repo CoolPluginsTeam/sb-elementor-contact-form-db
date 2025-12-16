@@ -40,6 +40,11 @@ class FDBGP_Form_To_Post_Settings {
      */
     private function render_forms_table( array $forms ) {
 
+        ?>
+        <div class="cool-formkit-setting-table-con">
+            <div class="cool-formkit-left-side-setting">
+        <?php
+
         echo '<table class="widefat striped">';
         echo '<thead>
                 <tr>
@@ -64,6 +69,29 @@ class FDBGP_Form_To_Post_Settings {
         }
 
         echo '</tbody></table>';
+
+        ?>
+
+            </div>
+            
+                <div class="cool-formkit-right-side-info-bar">
+                    <!-- Configuration Instructions -->
+                    <div class="notice notice-info">
+                        <h3><?php esc_html_e('How to use Register Post/Custom Post', 'elementor-contact-form-db'); ?></h3>
+                        <ol>
+                            <li><?php esc_html_e('Create a page elementor', 'elementor-contact-form-db'); ?> 
+                            </li>
+                            <li><?php esc_html_e('use "Register Post/Custom Post" in Action After Submit', 'elementor-contact-form-db'); ?></li>
+                            <li><?php esc_html_e('select post type and post status in setting.', 'elementor-contact-form-db'); ?></li>
+                            <li><?php esc_html_e('Update the page', 'elementor-contact-form-db'); ?></li>
+                        </ol>
+                    </div>
+                </div>
+
+                
+            </div>
+
+        <?php
     }
 
     /**

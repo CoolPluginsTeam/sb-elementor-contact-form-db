@@ -40,6 +40,11 @@ class FDBGP_Form_To_Sheet_Settings {
      */
     private function render_forms_table( array $forms ) {
 
+        ?>
+        <div class="cool-formkit-setting-table-con">
+            <div class="cool-formkit-left-side-setting">
+        <?php
+
         echo '<table class="widefat striped">';
         echo '<thead>
                 <tr>
@@ -64,6 +69,32 @@ class FDBGP_Form_To_Sheet_Settings {
         }
 
         echo '</tbody></table>';
+
+        ?>
+
+        </div>
+        
+            <div class="cool-formkit-right-side-info-bar">
+                <!-- Configuration Instructions -->
+                <div class="notice notice-info">
+                    <h3><?php esc_html_e('How to use Save Data in Google Sheets', 'elementor-contact-form-db'); ?></h3>
+                    <ol>
+                        <li><?php esc_html_e('Configure Google API ', 'elementor-contact-form-db'); ?>
+                        <a href="admin.php?page=formsdb&tab=settings">Here</a>
+                        </li>
+                        <li><?php esc_html_e('Create a page elementor', 'elementor-contact-form-db'); ?> 
+                        </li>
+                        <li><?php esc_html_e('use "Save Data in Google Sheets" in Action After Submit', 'elementor-contact-form-db'); ?></li>
+                        <li><?php esc_html_e('select Spreadsheet, sheet headers and sheet tab name.', 'elementor-contact-form-db'); ?></li>
+                        <li><?php esc_html_e('Update the sheet', 'elementor-contact-form-db'); ?></li>
+                    </ol>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <?php
     }
 
     /**

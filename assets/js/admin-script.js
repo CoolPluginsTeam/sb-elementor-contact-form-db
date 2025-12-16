@@ -1,34 +1,53 @@
-document.addEventListener('DOMContentLoaded', function () {
+jQuery(document).ready(function ($) {
 
     jQuery('.copy-btn').click(function (e) {
         e.preventDefault();
+
         var target = $(this).data('clipboard-target');
         var text = $(target).text();
         var $button = $(this);
         var originalText = $button.text();
 
-        // Create temporary input element
-        var $temp = $('<textarea>');
-        $('body').append($temp);
-        $temp.val(text).select();
+        // Function to show feedback
+        function showCopiedFeedback() {
+            $button.text('Copied!');
+            $button.addClass('button-primary');
 
-        try {
-            var successful = document.execCommand('copy');
-            if (successful) {
-                $button.text('<?php esc_attr_e("Copied!", "elementor-contact-form-db"); ?>');
-                $button.addClass('button-primary');
-
-                setTimeout(function () {
-                    $button.text(originalText);
-                    $button.removeClass('button-primary');
-                }, 2000);
-            }
-        } catch (err) {
-            console.log('Failed to copy text: ', err);
+            setTimeout(function () {
+                $button.text(originalText);
+                $button.removeClass('button-primary');
+            }, 2000);
         }
 
-        $temp.remove();
+        // Check if secure context and navigator.clipboard available
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text)
+                .then(showCopiedFeedback)
+                .catch(function (err) {
+                    console.log('Clipboard API failed, falling back to execCommand:', err);
+                    fallbackCopy();
+                });
+        } else {
+            // Fallback for insecure contexts
+            fallbackCopy();
+        }
+
+        function fallbackCopy() {
+            var $temp = $('<textarea>');
+            $('body').append($temp);
+            $temp.val(text).select();
+
+            try {
+                var successful = document.execCommand('copy');
+                if (successful) showCopiedFeedback();
+            } catch (err) {
+                console.log('execCommand copy failed: ', err);
+            }
+
+            $temp.remove();
+        }
     });
+
 
     // Show/hide Generate Token button based on Client ID and Secret
     jQuery('#client_id, #client_secret').on('input', function () {

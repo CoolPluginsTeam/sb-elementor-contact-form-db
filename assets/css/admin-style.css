@@ -704,6 +704,7 @@ p.description{
 }
 
 .revoke-button{
+    cursor: pointer;
     color: red;
     padding: 10px;
     border: 1px solid red !important;
@@ -711,6 +712,34 @@ p.description{
     border-radius: 5px;
     background-color: white !important;
 }
+
+
+.cool-formkit-setting-table-con{
+    display: flex;
+    column-gap: 10px;
+}
+
+.cool-formkit-setting-table-con input[type="text"]{
+    width: 100%;
+    max-width: 350px;
+}
+
+.cool-formkit-left-side-setting{
+    width: 60%;
+}
+
+.cool-formkit-right-side-info-bar{
+    width: 40%;
+}
+
+.form-table th{
+    width: 40% !important;
+}
+
+.cool-formkit-site-url-con{
+    margin: 5px 0px;
+}
+
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -746,6 +775,18 @@ li a[href="admin.php?page=cfkef-entries"]{
 /* End Dashboard tab styles */
 
 @media screen and (max-width:782px) {
+
+    .cool-formkit-setting-table-con{
+        flex-direction: column;
+    }
+
+    .cool-formkit-left-side-setting{
+        width: 80%;
+    }
+
+    .cool-formkit-right-side-info-bar{
+        min-width: 300px;
+    }
 
     .form-table .site-key-td, .form-table .secret-key-td{
         width: 100% !important;
