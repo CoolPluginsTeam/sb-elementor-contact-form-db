@@ -89,6 +89,9 @@ if(!class_exists('FDBGP_Admin')) {
                         case 'forms-sheets':
                             include_once 'views/form-to-sheet.php';
                             break;
+                        case 'advanced':
+                            include_once 'views/advanced-fields.php';
+                            break;
                         default:
                             // Show default tab content
                             break;

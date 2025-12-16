@@ -33,66 +33,66 @@ class FDBGP_Form_To_Post_Settings {
         <?php
     }
 
+
+    private function render_right_sidebar() {
+        ?>
+            <div class="cool-formkit-right-side-info-bar">
+                <div class="notice notice-info">
+                    <h3><?php esc_html_e('How to use Register Post/Custom Post', 'elementor-contact-form-db'); ?></h3>
+                    <ol>
+                        <li><?php esc_html_e('Create a page with Elementor', 'elementor-contact-form-db'); ?></li>
+                        <li><?php esc_html_e('Use "Register Post/Custom Post" in Actions After Submit', 'elementor-contact-form-db'); ?></li>
+                        <li><?php esc_html_e('Select post type and post status in settings', 'elementor-contact-form-db'); ?></li>
+                        <li><?php esc_html_e('Update the page', 'elementor-contact-form-db'); ?></li>
+                    </ol>
+                </div>
+            </div>
+        <?php
+    }
+
+
     /**
      * Render table of forms
      *
      * @param array $forms
      */
     private function render_forms_table( array $forms ) {
-
         ?>
-        <div class="cool-formkit-setting-table-con">
-            <div class="cool-formkit-left-side-setting">
-        <?php
+            <div class="cool-formkit-setting-table-con">
+                <div class="cool-formkit-left-side-setting">
+                    <?php
+                    echo '<table class="widefat striped">';
+                    echo '<thead>
+                            <tr>
+                                <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Page', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Widget', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
+                            </tr>
+                        </thead><tbody>';
 
-        echo '<table class="widefat striped">';
-        echo '<thead>
-                <tr>
-                    <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
-                    <th>' . esc_html__( 'Page', 'elementor-contact-form-db' ) . '</th>
-                    <th>' . esc_html__( 'Widget', 'elementor-contact-form-db' ) . '</th>
-                    <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
-                </tr>
-              </thead><tbody>';
+                    foreach ( $forms as $form ) {
+                        echo '<tr>
+                                <td>' . esc_html( $form['form_name'] ) . '</td>
+                                <td>' . esc_html( $form['post_title'] ) . '</td>
+                                <td>' . esc_html( $form['widget_type'] ) . '</td>
+                                <td>
+                                    <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '">
+                                        ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
+                                    </a>
+                                </td>
+                            </tr>';
+                    }
 
-        foreach ( $forms as $form ) {
-            echo '<tr>
-                    <td>' . esc_html( $form['form_name'] ) . '</td>
-                    <td>' . esc_html( $form['post_title'] ) . '</td>
-                    <td>' . esc_html( $form['widget_type'] ) . '</td>
-                    <td>
-                        <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '">
-                            ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
-                        </a>
-                    </td>
-                  </tr>';
-        }
-
-        echo '</tbody></table>';
-
-        ?>
-
-            </div>
-            
-                <div class="cool-formkit-right-side-info-bar">
-                    <!-- Configuration Instructions -->
-                    <div class="notice notice-info">
-                        <h3><?php esc_html_e('How to use Register Post/Custom Post', 'elementor-contact-form-db'); ?></h3>
-                        <ol>
-                            <li><?php esc_html_e('Create a page elementor', 'elementor-contact-form-db'); ?> 
-                            </li>
-                            <li><?php esc_html_e('use "Register Post/Custom Post" in Action After Submit', 'elementor-contact-form-db'); ?></li>
-                            <li><?php esc_html_e('select post type and post status in setting.', 'elementor-contact-form-db'); ?></li>
-                            <li><?php esc_html_e('Update the page', 'elementor-contact-form-db'); ?></li>
-                        </ol>
-                    </div>
+                    echo '</tbody></table>';
+                    ?>
                 </div>
 
-                
+                <?php $this->render_right_sidebar(); ?>
             </div>
-
         <?php
     }
+
 
     /**
      * Render empty state
@@ -100,25 +100,35 @@ class FDBGP_Form_To_Post_Settings {
     private function render_empty_state() {
 
         $create_form_url = admin_url( 'post-new.php?post_type=page' );
+        ?>
+        <div class="cool-formkit-setting-table-con">
+            <div class="cool-formkit-left-side-setting">
 
-        echo '<p>' . esc_html__(
-            'No Elementor form is using the "Register Post/Custom Post" action.',
-            'elementor-contact-form-db'
-        ) . '</p>';
+                <p><?php esc_html_e(
+                    'No Elementor form is using the "Register Post/Custom Post" action.',
+                    'elementor-contact-form-db'
+                ); ?></p>
 
-        echo '<p>
-            <a class="button button-primary" href="' . esc_url( $create_form_url ) . '">
-                ' . esc_html__( 'Create New Form', 'elementor-contact-form-db' ) . '
-            </a>
-        </p>';
+                <p>
+                    <a class="button button-primary" href="<?php echo esc_url( $create_form_url ); ?>">
+                        <?php esc_html_e( 'Create New Form', 'elementor-contact-form-db' ); ?>
+                    </a>
+                </p>
 
-        echo '<p class="description">' .
-            esc_html__(
-                'Create a new Elementor Form and enable the "Register Post/Custom Post" action under Actions After Submit.',
-                'elementor-contact-form-db'
-            ) .
-        '</p>';
+                <p class="description">
+                    <?php esc_html_e(
+                        'Create a new Elementor Form and enable the "Register Post/Custom Post" action under Actions After Submit.',
+                        'elementor-contact-form-db'
+                    ); ?>
+                </p>
+
+            </div>
+
+            <?php $this->render_right_sidebar(); ?>
+        </div>
+        <?php
     }
+
 
     /**
      * Get Elementor forms that use Register Post action

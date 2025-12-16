@@ -124,10 +124,10 @@ class FDBGP_Dashboard {
 
 
                         // Remove all callbacks except WPForms notices.
-                        // if ($remove_all_filters && strpos($class, 'wpforms') === false) {
-                        //     unset($wp_filter[$notice_type]->callbacks[$priority][$name]);
-                        //     continue;
-                        // }
+                        if ($remove_all_filters && strpos($class, 'wpforms') === false) {
+                            unset($wp_filter[$notice_type]->callbacks[$priority][$name]);
+                            continue;
+                        }
 
                         $cb = is_array($arr['function']) ? $arr['function'][1] : $arr['function'];
                         
