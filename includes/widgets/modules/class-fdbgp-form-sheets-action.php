@@ -526,11 +526,14 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					error_log("WPSyncSheets Error fetching spreadsheets: " . $e->getMessage());
 				}
 				
+				$fdbgp_spreadsheets = array( '' => esc_html__( 'Please Select a Spreadsheet', 'wpsse' ) ) + $fdbgp_spreadsheets;
+
 				$widget->add_control(
 					$this->add_prefix('spreadsheetid'),
 					array(
 						'label'       => esc_attr__( 'Select Spreadsheet', 'wpsse' ),
 						'type'        => Controls_Manager::SELECT,
+						'default'     => '',
 						'options'     => $fdbgp_spreadsheets,
 						'label_block' => true,
 						'render_type' => 'ui', // Ensure UI update triggers AJAX
@@ -546,6 +549,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						'condition'   => array(
 							$this->add_prefix('spreadsheetid') => 'new',
 						),
+						'placeholder' => 'Please Select a Spreadsheet Name',
 					)
 				);
 				$widget->add_control(
@@ -553,12 +557,28 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					array(
 					'label'       => esc_attr__( 'Sheet Tab Name', 'wpsse' ),
 						'type'        => Controls_Manager::TEXT,
+						// 'placeholder' => 'Please Select a Sheet Tab Name',
 						'label_block' => true,
 						'condition'   => array(
 							$this->add_prefix('spreadsheetid') => 'new',
 						),
+						'placeholder' => 'Please Select a Sheet Tab Name',
 					)
 				);
+				
+				// $widget->add_control(
+				// 	$this->add_prefix('new_sheet_tab_name'),
+				// 	array(
+				// 		'label'       => esc_attr__( 'New Sheet Tab Name', 'wpsse' ),
+				// 		'type'        => Controls_Manager::TEXT,
+				// 		'label_block' => true,
+				// 		'condition'   => array(
+				// 			$this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+				// 			$this->add_prefix('sheet_list') => 'create_new_tab',
+				// 		),
+				// 		'placeholder' => 'e.g. Sheet2',
+				// 	)
+				// );
 				// $widget->add_control(
 				// 	$this->add_prefix('sheet_headers'),
 				// 	array(
@@ -568,10 +588,39 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 						
 				// 	)
 				// );
+
+				$widget->add_control(
+					$this->add_prefix('sheet_list'),
+					array(
+						'label'       => esc_attr__( 'Select Sheet Tab Name', 'wpsse' ),
+						'type'        => Controls_Manager::SELECT,
+						'default'     => '',
+						'options'     => $fdbgp_sheets,
+						'label_block' => true,
+						'condition'   => array(
+							$this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+						),
+						'render_type' => 'ui', // Ensure UI update triggers AJAX
+					)
+				);
+
+				$widget->add_control(
+					$this->add_prefix('new_sheet_tab_name'),
+					array(
+						'label'       => esc_attr__( 'New Sheet Tab Name', 'wpsse' ),
+						'type'        => Controls_Manager::TEXT,
+						'label_block' => true,
+						'condition'   => array(
+							$this->add_prefix('spreadsheetid') . '!' => array( 'new', '' ),
+							$this->add_prefix('sheet_list') => 'create_new_tab',
+						),
+						'placeholder' => 'e.g. Sheet2',
+					)
+				);
 				$widget->add_control(
 					$this->add_prefix('sheet_headers'),
 					array(
-						'label'       => esc_attr__( 'Sheet Headers', 'fdbgp' ),
+						'label'       => esc_attr__( 'Select a data to save in sheet', 'fdbgp' ),
 						'type'        => 'fdbgp_dynamic_select2',
 						'label_block' => true,
 						'multiple'    => true, 
@@ -582,7 +631,11 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 							
 							'page_url'        => esc_html__( 'Page URL', 'fdbgp' ),
 							'submission_date' => esc_html__( 'Submission Date & Time', 'fdbgp' ),
-						)
+						),
+						'condition'   => array(
+							$this->add_prefix('spreadsheetid') . '!' => array('' ),
+						),
+						'placeholder' => 'Please Select a data to save in sheet',
 					)
     			);
 				// $widget->add_control(
@@ -618,7 +671,8 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 
 
 			
-				$fdbgp_sheets = array();
+			
+				$fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'wpsse' ) );
 				// Add 'Create New Tab' option first
 				$fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'wpsse' );
 				
@@ -644,33 +698,6 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
 					$fdbgp_sheets[ $local_sheet_name ] = $local_sheet_name;
 				}
 
-				$widget->add_control(
-					$this->add_prefix('sheet_list'),
-					array(
-						'label'       => esc_attr__( 'Select Sheet Tab Name', 'wpsse' ),
-						'type'        => Controls_Manager::SELECT,
-						'options'     => $fdbgp_sheets,
-						'label_block' => true,
-						'condition'   => array(
-							$this->add_prefix('spreadsheetid') . '!' => 'new',
-						),
-						'render_type' => 'ui', // Ensure UI update triggers AJAX
-					)
-				);
-
-				$widget->add_control(
-					$this->add_prefix('new_sheet_tab_name'),
-					array(
-						'label'       => esc_attr__( 'New Sheet Tab Name', 'wpsse' ),
-						'type'        => Controls_Manager::TEXT,
-						'label_block' => true,
-						'condition'   => array(
-							$this->add_prefix('spreadsheetid') . '!' => 'new',
-							$this->add_prefix('sheet_list') => 'create_new_tab',
-						),
-						'placeholder' => 'e.g. Sheet2',
-					)
-				);
 		
 
 				$widget->add_control(

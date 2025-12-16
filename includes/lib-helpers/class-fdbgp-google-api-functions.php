@@ -334,7 +334,6 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		);
 
 		$results = self::$instance_drive->files->listFiles( $optparams );
-
 		if ( count( $results->getFiles() ) > 0 ) {
 			foreach ( $results->getFiles() as $file ) {
 				$sheetarray[ $file->getId() ] = $file->getName();
