@@ -245,6 +245,8 @@
             // $message.hide();
 
             if (!sheetName || sheetName === 'create_new_tab' || !spreadsheetId || spreadsheetId === 'new') {
+                // Hide warning message for new tabs/spreadsheets
+                $message.hide();
                 return;
             }
 
@@ -263,7 +265,7 @@
                             "background-color": "",
                             "color": "",
                             "border": ""
-                        }).removeClass("elementor-panel-alert-danger elementor-panel-alert-success").addClass("elementor-panel-alert-info");
+                        }).removeClass("elementor-panel-alert-danger elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
                         // Stop any ongoing animations (e.g., fadeOut from success message) and show permanently
                         $message.stop(true, true).css('opacity', '1').html(response.data.message || "Selected sheet is not empty. Backup recommended before updating.").show();
                     }
