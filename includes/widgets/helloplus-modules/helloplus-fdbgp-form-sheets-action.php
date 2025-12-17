@@ -10,9 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 
-use ElementorPro\Plugin;
 use Elementor\Controls_Manager;
-use ElementorPro\Modules\Forms\Classes\Action_Base;
+use HelloPlus\Modules\Forms\Classes\Action_Base;
 use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions;
 
 /**
@@ -20,7 +19,7 @@ use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions;
  */
 add_action( 'elementor/controls/register', function ( $controls_manager ) {
     
-    class FDBGP_Control_Dynamic_Select2 extends \Elementor\Base_Data_Control {
+    class HelloPlus_FDBGP_Control_Dynamic_Select2 extends \Elementor\Base_Data_Control {
         public function get_type() {
             return 'fdbgp_dynamic_select2';
         }
@@ -44,13 +43,13 @@ add_action( 'elementor/controls/register', function ( $controls_manager ) {
         }
     }
     
-    $controls_manager->register( new FDBGP_Control_Dynamic_Select2() );
+    $controls_manager->register( new HelloPlus_FDBGP_Control_Dynamic_Select2() );
 } );
 
 /**
- * Class FDBGP_Form_Sheets_Action
+ * Class HelloPlus_FDBGP_Form_Sheets_Action
  */
-class FDBGP_Form_Sheets_Action extends Action_Base {
+class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
     
     /**
      * Constructor
@@ -64,6 +63,12 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
         add_action( 'elementor/editor/after_enqueue_scripts', [ $this, 'render_editor_script' ] );
     }
     
+    private static $registered_actions = [];
+
+
+    public static function elementor() {
+		return Elementor\Plugin::$instance;
+	}
     /**
      * Get Name
      * Return the action name
@@ -71,7 +76,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * @access public
      * @return string
      */
-    public function get_name() {
+    public function get_name() : string {
         return esc_html( 'Save Submissions in Google Sheet' );
     }
 
@@ -82,7 +87,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * @access public
      * @return string
      */
-    public function get_label() {
+    public function get_label() : string{
         return esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' );
     }
 
@@ -103,8 +108,8 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      */
     public function render_editor_script() {
         wp_enqueue_script(
-            'fdbgp-editor-script', // Unique Handle
-            FDBGP_PLUGIN_URL . 'assets/js/fdbgp-editor.js', // Path to your new JS file
+            'helloplus-fdbgp-editor-script', // Unique Handle
+            FDBGP_PLUGIN_URL . 'assets/helloplus-addons/js/helloplus-fdbgp-editor.js', // Path to your new JS file
             [ 'elementor-editor', 'jquery' ], // Dependencies
             FDBGP_PLUGIN_VERSION, // Version
             true // Load in footer
@@ -129,7 +134,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
             return;
         }
 
-        if ( isset( $fdbgp_settings['submit_actions'] ) && in_array( $this->get_name(), $fdbgp_settings['submit_actions'], true ) ) {
+        if ( isset( $fdbgp_settings['cool_formkit_submit_actions'] ) && in_array( $this->get_name(), $fdbgp_settings['cool_formkit_submit_actions'], true ) ) {
             
             $fdbgp_spreadsheetid = $fdbgp_settings[ $this->add_prefix( 'spreadsheetid' ) ];
             
@@ -413,6 +418,12 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * @param \Elementor\Widget_Base $widget settings.
      */
     public function register_settings_section( $widget ) {
+        $control_id = $this->add_prefix('section_google_sheets');
+        if ( in_array( $control_id, self::$registered_actions, true ) ) {
+            return; // Already registered
+        }
+
+        self::$registered_actions[] = $control_id;
 
         $instance_api          = new FDBGP_Google_API_Functions();
         $fdbgp_google_settings = $instance_api->get_google_creds();
@@ -427,12 +438,12 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
         $fdbgp_sheetheaders       = array();
 
         // Retrieve saved settings from Elementor data
-        $fdbgp_document = Plugin::elementor()->documents->get( get_the_ID() );
+        $fdbgp_document = self::elementor()->documents->get( get_the_ID() );
         if ( $fdbgp_document ) {
             $fdbgp_data = $fdbgp_document->get_elements_data();
             $widget_id  = $widget->get_id();
             
-            Plugin::elementor()->db->iterate_data(
+            self::elementor()->db->iterate_data(
                 $fdbgp_data,
                 function ( $element ) use ( &$local_spreadsheet_id, &$local_sheet_name, &$local_sheet_headers, &$local_headers, $widget_id, $fdbgp_exclude_headertype ) {
                     if ( isset( $element['id'] ) && (string) $widget_id === (string) $element['id'] ) {
@@ -474,7 +485,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     'label'     => esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
                     'tab'       => 'connect_google_sheets_tab',
                     'condition' => array(
-                        'submit_actions' => $this->get_name(),
+                        'cool_formkit_submit_actions' => $this->get_name(),
                     ),
                 )
             );
@@ -507,7 +518,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                 array(
                     'label'     => esc_attr__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
                     'condition' => array(
-                        'submit_actions' => $this->get_name(),
+                        'cool_formkit_submit_actions' => $this->get_name(),
                     ),
                 )
             );
@@ -527,7 +538,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     'label'     => esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
                     'tab'       => 'connect_google_sheets_tab',
                     'condition' => array(
-                        'submit_actions' => $this->get_name(),
+                        'cool_formkit_submit_actions' => $this->get_name(),
                     ),
                 )
             );

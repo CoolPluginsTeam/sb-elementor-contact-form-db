@@ -49,6 +49,7 @@ class HelloPlus_Addons_Loader {
 
     public function load_actions(){
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-register-post.php';
+        require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-sheets-action.php';
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/action/collect-entries.php';
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/action/save-form-data.php';
 
@@ -58,16 +59,22 @@ class HelloPlus_Addons_Loader {
             if ($forms_module && isset($forms_module->actions_registrar)) {
                 $forms_module->actions_registrar->register(new HelloPlus_FDBGP_Register_Post());
                 $forms_module->actions_registrar->register(new HelloPlus_Collect_Entries());
+                $forms_module->actions_registrar->register(new HelloPlus_FDBGP_Form_Sheets_Action());
             }
         }
     }
 
     public function show_actions_on_editor_side( $element, $args ) {
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-register-post.php';
+        require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-sheets-action.php';
 
         $instance = new HelloPlus_FDBGP_Register_Post();
         $custom_actions[ $instance->get_name() ] = $instance->get_label();
-        $action_instances[] = $instance;        // === 3. Add Dropdown in Editor
+        $action_instances[] = $instance;        
+
+        $instance = new HelloPlus_FDBGP_Form_Sheets_Action();
+        $custom_actions[ $instance->get_name() ] = $instance->get_label();
+        $action_instances[] = $instance;        
 
         $element->start_controls_section(
             'cool_formkit_conditional_actions_section',
