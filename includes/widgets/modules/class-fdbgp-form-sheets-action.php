@@ -471,7 +471,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->start_controls_section(
                 'section_google_sheets',
                 array(
-                    'label'     => esc_html__( 'Google Sheets', 'elementor-contact-form-db' ),
+                    'label'     => esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
                     'tab'       => 'connect_google_sheets_tab',
                     'condition' => array(
                         'submit_actions' => $this->get_name(),

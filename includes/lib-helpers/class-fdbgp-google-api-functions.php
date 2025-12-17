@@ -165,7 +165,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		$client->addScope( \Google_Service_Sheets::SPREADSHEETS );
 		$client->setClientId( $clientid );
 		$client->setClientSecret( $clientsecert );
-		$client->setRedirectUri( esc_html( admin_url( 'admin.php?page=formsdb' ) ) );
+		$client->setRedirectUri(admin_url( 'admin.php?page=formsdb&tab=settings' ));
 		$client->setAccessType( 'offline' );
 		$client->setPrompt('consent');
 		// Load previously authorized credentials from a database.

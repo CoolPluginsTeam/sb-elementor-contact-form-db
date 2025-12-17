@@ -17,7 +17,7 @@ $google_settings = get_option('fdbgp_google_settings', array(
 // Get site domain and redirect URI
 $site_url = parse_url(site_url(), PHP_URL_HOST);
 $site_domain = str_replace('www.', '', $site_url);
-$redirect_uri = admin_url('admin.php?page=formsdb');
+$redirect_uri = admin_url('admin.php?page=formsdb&tab=settings');
 
 // Process form submission
 $success_message = '';
