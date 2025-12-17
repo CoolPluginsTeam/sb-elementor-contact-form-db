@@ -17,26 +17,11 @@ if (!defined('ABSPATH')) {
 abstract class FDBGP_Google_API {
 
 	/**
-	 * Get plugin option from WordPress options table.
+	 * Get parameters for row formatting in Google Sheets API.
 	 *
-	 * Handles both single-site and multisite installations by using
-	 * get_site_option() for multisite and get_option() otherwise.
-	 *
-	 * @param string $key   The option key to retrieve.
-	 * @param mixed  $type  Default value if option does not exist.
 	 * @since 1.0.0
-	 * @return mixed The option value, or $type if not found.
+	 * @return array Associative array of parameters for row formatting.
 	 */
-	// public static function fdbgp_option( $key = '', $type = '' ) {
-	// 	if ( is_multisite() ) {
-	// 		$value = get_site_option( $key, $type );
-	// 	} else {
-	// 		$value = get_option( $key, $type );
-	// 	}
-	// 	return $value;
-	// }
-
-
 	public static function get_row_format() {
 
 		$params = array( 'valueInputOption' => 'RAW' );

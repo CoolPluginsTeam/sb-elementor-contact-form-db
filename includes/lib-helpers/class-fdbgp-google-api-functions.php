@@ -159,7 +159,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		$clientsecert                 = isset( $fdbgp_google_settings_value['client_secret'] ) ? $fdbgp_google_settings_value['client_secret'] : '';
 		$auth_token                   = isset( $fdbgp_google_settings_value['client_token'] ) ? $fdbgp_google_settings_value['client_token'] : '';
 		$client       = new \Google_Client();
-		$client->setApplicationName( 'WPSyncSheets For Elementor - Elementor Google Spreadsheet Addon' );
+		$client->setApplicationName( 'FormsDB - Elementor Google Spreadsheet Addon' );
 		$client->setScopes( \Google_Service_Sheets::SPREADSHEETS_READONLY );
 		$client->setScopes( \Google_Service_Drive::DRIVE_METADATA_READONLY );
 		$client->addScope( \Google_Service_Sheets::SPREADSHEETS );

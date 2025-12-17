@@ -9,7 +9,7 @@ class FDBGP_Form_To_Post_Settings {
      * Render settings UI
      */
     public function __construct(){
-        $forms = $this->get_forms_with_register_post_action();
+        $forms = $this->get_all_forms();
         $this->render_page($forms);
     }
     
@@ -65,20 +65,27 @@ class FDBGP_Form_To_Post_Settings {
                     echo '<thead>
                             <tr>
                                 <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Page', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Widget', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Post Type', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
                             </tr>
                         </thead><tbody>';
 
                     foreach ( $forms as $form ) {
+                        $post_type_status = '<span>❌</span>';
+                        if ( ! empty( $form['post_type_url'] ) && ! empty( $form['post_type_label'] ) ) {
+                            $post_type_status = '<a href="' . esc_url( $form['post_type_url'] ) . '" target="_blank" class="button button-secondary">
+                                <span>✅</span> ' . esc_html( $form['post_type_label'] ) . '
+                            </a>';
+                        }
+                        
                         echo '<tr>
                                 <td>' . esc_html( $form['form_name'] ) . '</td>
                                 <td>' . esc_html( $form['post_title'] ) . '</td>
-                                <td>' . esc_html( $form['widget_type'] ) . '</td>
+                                <td>' . $post_type_status . '</td>
                                 <td>
-                                    <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '">
-                                        ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
+                                    <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
+                                        ' . esc_html__( 'Edit Page', 'elementor-contact-form-db' ) . '
                                     </a>
                                 </td>
                             </tr>';
@@ -131,11 +138,11 @@ class FDBGP_Form_To_Post_Settings {
 
 
     /**
-     * Get Elementor forms that use Register Post action
+     * Get All Elementor forms
      *
      * @return array
      */
-    private function get_forms_with_register_post_action() {
+    private function get_all_forms() {
 
         $forms = [];
 
@@ -175,31 +182,47 @@ class FDBGP_Form_To_Post_Settings {
 
         foreach ( $elements as $element ) {
             $is_found = false;
-            if (
-                isset( $element['widgetType'] ) &&
-                'form' === $element['widgetType'] &&
-                ! empty( $element['settings']['submit_actions'] ) &&
-                in_array( 'eef-register-post', $element['settings']['submit_actions'], true )
-            ){
-                $is_found = true;
-            }
+            $post_type_url = '';
+            $post_type_label = '';
 
-            if (
-                isset( $element['widgetType'] ) &&
-                'ehp-form' === $element['widgetType'] &&
-                ! empty( $element['settings']['cool_formkit_submit_actions'] ) &&
-                in_array( 'eef-register-post', $element['settings']['cool_formkit_submit_actions'], true )
-            ){
+            if ( isset( $element['widgetType'] ) && ( 'form' === $element['widgetType'] || 'ehp-form' === $element['widgetType'] ) ) {
                 $is_found = true;
+                
+                // Check if Register Post action is enabled
+                $submit_actions = [];
+                if ( 'form' === $element['widgetType'] && ! empty( $element['settings']['submit_actions'] ) ) {
+                    $submit_actions = $element['settings']['submit_actions'];
+                } elseif ( 'ehp-form' === $element['widgetType'] && ! empty( $element['settings']['cool_formkit_submit_actions'] ) ) {
+                    $submit_actions = $element['settings']['cool_formkit_submit_actions'];
+                }
+
+                if ( in_array( 'eef-register-post', $submit_actions, true ) ) {
+                    // Get Post Type
+                    if ( ! empty( $element['settings'] ) ) {
+                        $post_type_slug = $element['settings']['eef-register-post-post-type'] ?? 'post';
+                        $post_type_obj = get_post_type_object( $post_type_slug );      
+                        
+                        if ( $post_type_obj ) {
+                            $post_type_label = $post_type_obj->labels->name;
+                            $post_type_url = admin_url( 'edit.php?post_type=' . $post_type_slug );
+                        } else {
+                            // Fallback if post type object not found (e.g. inactive CPT)
+                            $post_type_label = ucfirst( $post_type_slug );
+                            $post_type_url = admin_url( 'edit.php?post_type=' . $post_type_slug );
+                        }
+                    }
+                }
             }
 
             if ($is_found) {
                 $forms[] = [
-                    'post_id'    => $post->ID,
-                    'post_title' => get_the_title( $post->ID ),
-                    'form_name'  => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
-                    'edit_url'   => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
-                    'widget_type'   => strtoupper($element['widgetType']),
+                    'post_id'         => $post->ID,
+                    'post_title'      => get_the_title( $post->ID ),
+                    'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
+                    'edit_url'        => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
+                    'widget_type'     => strtoupper($element['widgetType']),
+                    'post_type_label' => $post_type_label,
+                    'post_type_url'   => $post_type_url,
                 ];
             }
 
