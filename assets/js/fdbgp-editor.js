@@ -82,7 +82,7 @@
                     } else {
                         // Success Message
                         $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success");
-                        $message.html(response.data.message).show().delay(5000).fadeOut();
+                        $message.html(response.data.message + '<br><strong>📌 Don\'t forget to click "Update" or "Publish" to save!</strong>').show().delay(10000).fadeOut();
 
                         // If a new tab was created, reload the sheet list dropdown
                         if (sheetName === 'create_new_tab' && response.data.sheet_name) {
@@ -105,6 +105,19 @@
                                         });
                                         // Select the newly created sheet
                                         $sheetSelect.val(response.data.sheet_name).trigger('change');
+
+                                        // IMPORTANT: Update Elementor's model to persist the value
+                                        try {
+                                            var panel = elementor.getPanelView();
+                                            if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
+                                                var currentView = panel.getCurrentPageView();
+                                                if (currentView.model && currentView.model.setSetting) {
+                                                    currentView.model.setSetting('fdbgp_sheet_list', response.data.sheet_name);
+                                                }
+                                            }
+                                        } catch (e) {
+                                            console.error('Error updating Elementor model:', e);
+                                        }
                                     }
                                 }
                             });
@@ -189,7 +202,9 @@
             },
             success: function (response) {
                 if (response.success) {
-                    $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success").html(response.data.message).show();
+                    $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success")
+                        .html(response.data.message + '<br><strong>📌 Important: Click "Update" or "Publish" button to save your changes!</strong>')
+                        .show();
 
                     // Delay updating the UI so the message is visible
                     setTimeout(function () {
@@ -198,7 +213,7 @@
                         if ($spreadsheetSelect.length) {
                             if ($spreadsheetSelect.find("option[value=\"" + response.data.spreadsheet_id + "\"]").length === 0) {
                                 // Remove "Create New Spreadsheet" option temporarily
-                                var $newOption = $spreadsheetSelect.find("option[value=\'new\']");
+                                var $newOption = $spreadsheetSelect.find("option[value='new']");
                                 $newOption.remove();
 
                                 // Add the new spreadsheet
@@ -217,6 +232,7 @@
                                 $sheetSelect.data('auto-select', response.data.sheet_name);
                             }
 
+                            // Update the dropdown UI
                             $spreadsheetSelect.val(response.data.spreadsheet_id).change();
                         }
                     }, 2000);
