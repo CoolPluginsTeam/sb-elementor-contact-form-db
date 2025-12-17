@@ -66,13 +66,17 @@ class FDBGP_Form_To_Post_Settings {
                             <tr>
                                 <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Status', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Post Type', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
                             </tr>
                         </thead><tbody>';
 
                     foreach ( $forms as $form ) {
-                        $post_type_status = '<span>❌</span>';
+                        $post_type_status = '<a href="' . esc_url( $form['edit_url'] ) . '" target="_blank" class="button button-secondary">
+                                <span>❌</span> ' . esc_html__( 'Connect Post Type', 'elementor-contact-form-db' ) . '
+                            </a>';
+
                         if ( ! empty( $form['post_type_url'] ) && ! empty( $form['post_type_label'] ) ) {
                             $post_type_status = '<a href="' . esc_url( $form['post_type_url'] ) . '" target="_blank" class="button button-secondary">
                                 <span>✅</span> ' . esc_html( $form['post_type_label'] ) . '
@@ -81,11 +85,12 @@ class FDBGP_Form_To_Post_Settings {
                         
                         echo '<tr>
                                 <td>' . esc_html( $form['form_name'] ) . '</td>
-                                <td>' . esc_html( $form['post_title'] ) . '</td>
+                                <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
                                 <td>' . $post_type_status . '</td>
+                                <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
                                 <td>
                                     <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
-                                        ' . esc_html__( 'Edit Page', 'elementor-contact-form-db' ) . '
+                                        ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
                                     </a>
                                 </td>
                             </tr>';
@@ -218,11 +223,13 @@ class FDBGP_Form_To_Post_Settings {
                 $forms[] = [
                     'post_id'         => $post->ID,
                     'post_title'      => get_the_title( $post->ID ),
+                    'frontend_url'    => get_permalink( $post->ID ),
                     'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
                     'edit_url'        => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
                     'widget_type'     => strtoupper($element['widgetType']),
                     'post_type_label' => $post_type_label,
                     'post_type_url'   => $post_type_url,
+                    'status' => in_array( 'eef-register-post', $submit_actions, true ),
                 ];
             }
 
