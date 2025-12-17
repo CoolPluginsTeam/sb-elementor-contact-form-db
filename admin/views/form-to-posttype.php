@@ -22,7 +22,7 @@ class FDBGP_Form_To_Post_Settings {
         ?>
         <div class='status-wrapper'>
         <?php
-        echo '<h2>' . esc_html__( 'Forms with "Register Post/Custom Post" Action', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<h2>' . esc_html__( 'Forms with "Save Submissions In Post Type" Action', 'elementor-contact-form-db' ) . '</h2>';
         if ( ! empty( $forms ) ) {
             $this->render_forms_table( $forms );
         } else {
@@ -38,10 +38,10 @@ class FDBGP_Form_To_Post_Settings {
         ?>
             <div class="cool-formkit-right-side-info-bar">
                 <div class="notice notice-info">
-                    <h3><?php esc_html_e('How to use Register Post/Custom Post', 'elementor-contact-form-db'); ?></h3>
+                    <h3><?php esc_html_e('How to use Save Submissions In Post Type', 'elementor-contact-form-db'); ?></h3>
                     <ol>
                         <li><?php esc_html_e('Create a page with Elementor', 'elementor-contact-form-db'); ?></li>
-                        <li><?php esc_html_e('Use "Register Post/Custom Post" in Actions After Submit', 'elementor-contact-form-db'); ?></li>
+                        <li><?php esc_html_e('Use "Save Submissions In Post Type" in Actions After Submit', 'elementor-contact-form-db'); ?></li>
                         <li><?php esc_html_e('Select post type and post status in settings', 'elementor-contact-form-db'); ?></li>
                         <li><?php esc_html_e('Update the page', 'elementor-contact-form-db'); ?></li>
                     </ol>
@@ -112,7 +112,7 @@ class FDBGP_Form_To_Post_Settings {
             <div class="cool-formkit-left-side-setting">
 
                 <p><?php esc_html_e(
-                    'No Elementor form is using the "Register Post/Custom Post" action.',
+                    'No Elementor form is using the "Save Submissions In Post Type" action.',
                     'elementor-contact-form-db'
                 ); ?></p>
 
@@ -124,7 +124,7 @@ class FDBGP_Form_To_Post_Settings {
 
                 <p class="description">
                     <?php esc_html_e(
-                        'Create a new Elementor Form and enable the "Register Post/Custom Post" action under Actions After Submit.',
+                        'Create a new Elementor Form and enable the "Save Submissions In Post Type" action under Actions After Submit.',
                         'elementor-contact-form-db'
                     ); ?>
                 </p>
