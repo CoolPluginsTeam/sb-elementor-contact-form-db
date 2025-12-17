@@ -563,7 +563,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     'condition'   => array(
                         $this->add_prefix( 'spreadsheetid' ) => 'new',
                     ),
-                    'placeholder' => 'Please Select a Spreadsheet Name',
+                    'placeholder' => 'Please Enter a Spreadsheet Name',
                 )
             );
             
@@ -576,12 +576,12 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     'condition'   => array(
                         $this->add_prefix( 'spreadsheetid' ) => 'new',
                     ),
-                    'placeholder' => 'Please Select a Sheet Tab Name',
+                    'placeholder' => 'Please Enter a Sheet Tab Name',
                 )
             );
 
             // Populate Sheet List based on selection (Fixed logic)
-            $fdbgp_sheets = array( '' => esc_html__( 'Please Select Sheet Tab Name', 'elementor-contact-form-db' ) );
+            $fdbgp_sheets = array( '' => esc_html__( 'Please Enter Sheet Tab Name', 'elementor-contact-form-db' ) );
             $fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
             
             if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
@@ -636,11 +636,12 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     'type'        => 'fdbgp_dynamic_select2',
                     'label_block' => true,
                     'multiple'    => true, 
+                    'default'     => [ 'user_ip','page_url','submission_date' ],
                     'options'     => array(
                         'user_ip'         => esc_html__( 'User IP', 'fdbgp' ),
                         'user_agent'      => esc_html__( 'User Agent', 'fdbgp' ),
                         'page_url'        => esc_html__( 'Page URL', 'fdbgp' ),
-                        'submission_date' => esc_html__( 'Submission Date & Time', 'fdbgp' ),
+                        'submission_date' => esc_html__( 'Submission DateTime', 'fdbgp' ),
                     ),
                     'condition'   => array(
                         $this->add_prefix( 'spreadsheetid' ) . '!' => array( '' ),
@@ -686,6 +687,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
     // --- AJAX HANDLERS ---
 
     public function ajax_create_spreadsheet() {
+
         check_ajax_referer( 'elementor_ajax', '_nonce' );
         
         if ( ! current_user_can( 'edit_posts' ) ) {
@@ -754,6 +756,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * AJAX Handler: Get Sheets from Spreadsheet
      */
     public function ajax_get_sheets() {
+
         check_ajax_referer( 'elementor_ajax', '_nonce' );
         
         if ( ! current_user_can( 'edit_posts' ) ) {
@@ -795,6 +798,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * AJAX Handler: Update Sheet Headers
      */
     public function ajax_update_sheet_headers() {
+
         check_ajax_referer( 'elementor_ajax', '_nonce' );
         if ( ! current_user_can( 'edit_posts' ) ) {
             wp_send_json_error( array( 'message' => 'Permission denied' ) );
@@ -928,6 +932,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * @return bool Whether the update was successful.
      */
     private function update_spreadsheet_id_in_data( &$data, $form_id, $new_spreadsheet_id ) {
+        
         if ( ! is_array( $data ) ) {
             return false;
         }
