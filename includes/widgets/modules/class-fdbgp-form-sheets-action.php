@@ -317,14 +317,14 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     }
                     
                     if ( ! empty( $fdbgp_sheetname ) && ! in_array( $fdbgp_sheetname, $fdbgp_sheets, true ) ) {
-                        error_log( 'Error: Sheet Name not found in spreadsheet.' );
+                        //error_log( 'Error: Sheet Name not found in spreadsheet.' );
                         return;
                     }
                 }
             }
             
             if ( ( empty( $fdbgp_spreadsheetid ) && $fdbgp_spreadsheetid !== '0' ) || ( empty( $fdbgp_sheetname ) && $fdbgp_sheetname !== '0' ) ) {
-                error_log( 'Error: Missing Spreadsheet ID or Sheet Name.' );
+                //error_log( 'Error: Missing Spreadsheet ID or Sheet Name.' );
                 return;
             }
             
@@ -399,7 +399,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                 $instance_api->appendentry( $param );
                 
             } catch ( Exception $e ) {
-                error_log( 'Exception: ' . $e->getMessage() );
+              //  error_log( 'Exception: ' . $e->getMessage() );
                 $ajax_handler->add_admin_error_message( 'Error: ' . $e->getMessage() );
             }
         }
