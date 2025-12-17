@@ -902,12 +902,24 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                 wp_send_json_error( array( 'message' => 'API Error' ) );
             }
 
-            // Quote sheet name to handle spaces
-            $check_range = "'" . $sheet_name . "'!A1:Z1";
+            // Check if sheet has data beyond just headers (check first few rows across all columns)
+            $check_range = "'" . $sheet_name . "'!A2:Z100";
             $existing    = $api->get_row_list( $spreadsheet_id, $check_range );
             $rows        = $existing->getValues();
 
+            // Check if there's any actual data (non-empty rows beyond header)
+            $has_data = false;
             if ( ! empty( $rows ) ) {
+                foreach ( $rows as $row ) {
+                    // Check if row has any non-empty values
+                    if ( ! empty( $row ) && ! empty( array_filter( $row ) ) ) {
+                        $has_data = true;
+                        break;
+                    }
+                }
+            }
+
+            if ( $has_data ) {
                 wp_send_json_success( array(
                     'has_content' => true,
                     'message'     => 'Selected sheet is not empty. Backup recommended before updating.',

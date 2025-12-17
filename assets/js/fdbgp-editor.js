@@ -268,6 +268,9 @@
                         }).removeClass("elementor-panel-alert-danger elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
                         // Stop any ongoing animations (e.g., fadeOut from success message) and show permanently
                         $message.stop(true, true).css('opacity', '1').html(response.data.message || "Selected sheet is not empty. Backup recommended before updating.").show();
+                    } else {
+                        // Hide message if sheet is empty
+                        $message.hide();
                     }
                 }
             });
