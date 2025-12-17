@@ -82,7 +82,7 @@
                     } else {
                         // Success Message
                         $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success");
-                        $message.html(response.data.message + '<br><strong>📌 Don\'t forget to click "Update" or "Publish" to save!</strong>').show().delay(10000).fadeOut();
+                        $message.html(response.data.message).show().delay(10000).fadeOut();
 
                         // If a new tab was created, reload the sheet list dropdown
                         if (sheetName === 'create_new_tab' && response.data.sheet_name) {
@@ -202,8 +202,18 @@
             },
             success: function (response) {
                 if (response.success) {
+                    // Get current post ID to make cache unique per page
+                    var postId = elementor.config.document.id || 'default';
+                    var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+
+                    // Cache the spreadsheet info for persistence across page reload
+                    localStorage.setItem(cacheKey, JSON.stringify({
+                        id: response.data.spreadsheet_id,
+                        name: response.data.spreadsheet_name,
+                        sheet_name: response.data.sheet_name || ''
+                    }));
+
                     $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success")
-                        .html(response.data.message + '<br><strong>📌 Important: Click "Update" or "Publish" button to save your changes!</strong>')
                         .show();
 
                     // Delay updating the UI so the message is visible
@@ -552,4 +562,135 @@
             if (performance.now() > 20000) clearInterval(fdbgpCheckInterval);
         }, 1000);
     });
+
+    // Restore cached spreadsheet after page load
+    jQuery(document).ready(function () {
+        setTimeout(function () {
+            restoreCachedSpreadsheet();
+        }, 2000);
+    });
+
+    // Also restore when navigating to Google Sheets section
+    if (typeof elementor !== 'undefined') {
+        elementor.channels.editor.on('section:activated', function () {
+            setTimeout(function () {
+                restoreCachedSpreadsheet();
+            }, 500);
+        });
+
+        // Clear cache when page is published/updated
+        elementor.channels.data.on('document:after:save', function () {
+            var postId = elementor.config.document.id || 'default';
+            var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+            localStorage.removeItem(cacheKey);
+        });
+
+        // Update cache when user manually selects spreadsheet
+        jQuery(document).on('change', "[data-setting='fdbgp_spreadsheetid']", function () {
+            var spreadsheetId = jQuery(this).val();
+            if (spreadsheetId && spreadsheetId !== '' && spreadsheetId !== 'new') {
+                var spreadsheetName = jQuery(this).find('option:selected').text();
+                var postId = elementor.config.document.id || 'default';
+                var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+
+                localStorage.setItem(cacheKey, JSON.stringify({
+                    id: spreadsheetId,
+                    name: spreadsheetName,
+                    sheet_name: ''
+                }));
+            }
+        });
+
+        // Update cache when user manually selects sheet tab
+        jQuery(document).on('change', "[data-setting='fdbgp_sheet_list']", function () {
+            var sheetName = jQuery(this).val();
+            if (sheetName && sheetName !== '' && sheetName !== 'create_new_tab') {
+                var postId = elementor.config.document.id || 'default';
+                var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+
+                // Get spreadsheet info
+                var $spreadsheetSelect = jQuery("[data-setting='fdbgp_spreadsheetid']");
+                var spreadsheetId = $spreadsheetSelect.val();
+                var spreadsheetName = $spreadsheetSelect.find('option:selected').text();
+
+                // Update existing cache or create new one
+                var existingCache = localStorage.getItem(cacheKey);
+                if (existingCache) {
+                    try {
+                        var cacheData = JSON.parse(existingCache);
+                        cacheData.sheet_name = sheetName;
+                        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+                    } catch (e) {
+                        console.log('Error updating cache:', e);
+                    }
+                } else if (spreadsheetId && spreadsheetId !== '' && spreadsheetId !== 'new') {
+                    // Create cache if it doesn't exist
+                    localStorage.setItem(cacheKey, JSON.stringify({
+                        id: spreadsheetId,
+                        name: spreadsheetName,
+                        sheet_name: sheetName
+                    }));
+                }
+            }
+        });
+    }
+
+    function restoreCachedSpreadsheet() {
+        var $spreadsheetSelect = jQuery("[data-setting='fdbgp_spreadsheetid']");
+
+        if ($spreadsheetSelect.length) {
+            // Don't restore if user has already manually selected a spreadsheet
+            var currentSpreadsheetVal = $spreadsheetSelect.val();
+            if (currentSpreadsheetVal && currentSpreadsheetVal !== '') {
+                // Already has a value, don't override
+                return;
+            }
+
+            // Get current post ID to retrieve the right cache
+            var postId = elementor.config.document.id || 'default';
+            var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+
+            // Check if there's a cached spreadsheet for this page
+            var cachedSpreadsheet = localStorage.getItem(cacheKey);
+
+            if (cachedSpreadsheet) {
+                try {
+                    var spreadsheetData = JSON.parse(cachedSpreadsheet);
+
+                    // Check if this spreadsheet is not already in the dropdown
+                    if ($spreadsheetSelect.find('option[value="' + spreadsheetData.id + '"]').length === 0) {
+                        // Add it to the dropdown
+                        var $newOption = $spreadsheetSelect.find('option[value="new"]');
+                        $newOption.remove();
+
+                        var newOpt = document.createElement('option');
+                        newOpt.value = spreadsheetData.id;
+                        newOpt.text = spreadsheetData.name;
+                        $spreadsheetSelect.append(newOpt);
+
+                        $spreadsheetSelect.append($newOption);
+                    }
+
+                    // Select it
+                    $spreadsheetSelect.val(spreadsheetData.id).change();
+
+                    // If there's a cached sheet name, set it too
+                    if (spreadsheetData.sheet_name) {
+                        setTimeout(function () {
+                            var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
+                            if ($sheetSelect.length && $sheetSelect.find('option[value="' + spreadsheetData.sheet_name + '"]').length > 0) {
+                                $sheetSelect.val(spreadsheetData.sheet_name).change();
+                                // Don't clear cache here - let it persist until publish/update
+                            }
+                        }, 1000);
+                    } else {
+                        // Clear cache if no sheet name (incomplete data)
+                        localStorage.removeItem(cacheKey);
+                    }
+                } catch (e) {
+                    console.log('Error restoring spreadsheet:', e);
+                }
+            }
+        }
+    }
 })(jQuery);
