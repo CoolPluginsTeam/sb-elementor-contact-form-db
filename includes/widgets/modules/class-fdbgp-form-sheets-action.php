@@ -673,7 +673,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                     'raw'       => '<button type="button" class="elementor-button elementor-button-info fdbgp-update-sheet">
                         <span class="elementor-button-text">Update Sheet</span>
                     </button>
-                    <div id="fdbgp-update-message" class="elementor-control-alert elementor-panel-alert elementor-panel-alert-danger" style="margin-top:10px;display:none;"></div>',
+                    <div id="fdbgp-update-message" class="elementor-control-alert elementor-panel-alert elementor-panel-alert-danger" style="margin-top:10px; display:none;"></div>',
                     'condition' => array(
                         $this->add_prefix( 'spreadsheetid' ) . '!' => array( 'new', '' ),
                     ),
@@ -932,7 +932,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
      * @return bool Whether the update was successful.
      */
     private function update_spreadsheet_id_in_data( &$data, $form_id, $new_spreadsheet_id ) {
-        
+
         if ( ! is_array( $data ) ) {
             return false;
         }

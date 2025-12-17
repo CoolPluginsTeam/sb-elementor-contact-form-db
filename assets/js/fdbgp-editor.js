@@ -17,7 +17,7 @@
         if (!$btn.data("original-text")) $btn.data("original-text", originalText);
 
         var $message = jQuery("#fdbgp-update-message");
-        $message.hide();
+        // $message.hide();
 
         // Gather settings from the Elementor Panel inputs
         var settings = {};
@@ -242,7 +242,7 @@
             var spreadsheetId = $panel.find(".elementor-control-fdbgp_spreadsheetid select").val();
 
             var $message = $panel.find("#fdbgp-update-message");
-            $message.hide();
+            // $message.hide();
 
             if (!sheetName || sheetName === 'create_new_tab' || !spreadsheetId || spreadsheetId === 'new') {
                 return;
@@ -264,7 +264,8 @@
                             "color": "",
                             "border": ""
                         }).removeClass("elementor-panel-alert-danger elementor-panel-alert-success").addClass("elementor-panel-alert-info");
-                        $message.html(response.data.message || "Selected sheet is not empty. Backup recommended before updating.").show();
+                        // Stop any ongoing animations (e.g., fadeOut from success message) and show permanently
+                        $message.stop(true, true).css('opacity', '1').html(response.data.message || "Selected sheet is not empty. Backup recommended before updating.").show();
                     }
                 }
             });
