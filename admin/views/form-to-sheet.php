@@ -22,7 +22,7 @@ class FDBGP_Form_To_Sheet_Settings {
         ?>
         <div class='status-wrapper'>
         <?php
-        echo '<h2>' . esc_html__( 'Forms with "Save Data in Google Sheets" Action', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<h2>' . esc_html__( 'Forms with "Save Submissions in Google Sheet" Action', 'elementor-contact-form-db' ) . '</h2>';
         if ( ! empty( $forms ) ) {
             $this->render_forms_table( $forms );
         } else {
@@ -38,7 +38,7 @@ class FDBGP_Form_To_Sheet_Settings {
         ?>
         <div class="cool-formkit-right-side-info-bar">
             <div class="notice notice-info">
-                <h3><?php esc_html_e('How to use Save Data in Google Sheets', 'elementor-contact-form-db'); ?></h3>
+                <h3><?php esc_html_e('How to use Save Submissions in Google Sheet', 'elementor-contact-form-db'); ?></h3>
                 <ol>
                     <li>
                         <?php esc_html_e('Configure Google API', 'elementor-contact-form-db'); ?>
@@ -47,7 +47,7 @@ class FDBGP_Form_To_Sheet_Settings {
                         </a>
                     </li>
                     <li><?php esc_html_e('Create a page with Elementor', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Use "Save Data in Google Sheets" in Action After Submit', 'elementor-contact-form-db'); ?></li>
+                    <li><?php esc_html_e('Use "Save Submissions in Google Sheet" in Action After Submit', 'elementor-contact-form-db'); ?></li>
                     <li><?php esc_html_e('Select Spreadsheet, sheet headers and sheet tab name', 'elementor-contact-form-db'); ?></li>
                     <li><?php esc_html_e('Update the sheet', 'elementor-contact-form-db'); ?></li>
                 </ol>
@@ -115,7 +115,7 @@ class FDBGP_Form_To_Sheet_Settings {
 
                 <p>
                     <?php esc_html_e(
-                        'No Elementor form is using the "Save Data in Google Sheets" action.',
+                        'No Elementor form is using the "Save Submissions in Google Sheet" action.',
                         'elementor-contact-form-db'
                     ); ?>
                 </p>
@@ -128,7 +128,7 @@ class FDBGP_Form_To_Sheet_Settings {
 
                 <p class="description">
                     <?php esc_html_e(
-                        'Create a new Elementor Form and enable the "Save Data in Google Sheets" action under Actions After Submit.',
+                        'Create a new Elementor Form and enable the "Save Submissions in Google Sheet" action under Actions After Submit.',
                         'elementor-contact-form-db'
                     ); ?>
                 </p>
@@ -191,7 +191,7 @@ class FDBGP_Form_To_Sheet_Settings {
                 isset( $element['widgetType'] ) &&
                 'form' === $element['widgetType'] &&
                 ! empty( $element['settings']['submit_actions'] ) &&
-                in_array( 'Save Data in Google Sheets', $element['settings']['submit_actions'], true )
+                in_array( 'Save Submissions in Google Sheet', $element['settings']['submit_actions'], true )
             ){
                 $is_found = true;
             }
@@ -200,7 +200,7 @@ class FDBGP_Form_To_Sheet_Settings {
                 isset( $element['widgetType'] ) &&
                 'ehp-form' === $element['widgetType'] &&
                 ! empty( $element['settings']['cool_formkit_submit_actions'] ) &&
-                in_array( 'Save Data in Google Sheets', $element['settings']['cool_formkit_submit_actions'], true )
+                in_array( 'Save Submissions in Google Sheet', $element['settings']['cool_formkit_submit_actions'], true )
             ){
                 $is_found = true;
             }
