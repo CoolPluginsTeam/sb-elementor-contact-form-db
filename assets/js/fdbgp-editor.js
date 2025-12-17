@@ -214,6 +214,7 @@
                     }));
 
                     $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success")
+                        .html(response.data.message)
                         .show();
 
                     // Delay updating the UI so the message is visible
