@@ -73,13 +73,17 @@ class FDBGP_Form_To_Sheet_Settings {
                             <tr>
                                 <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Status', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Google Sheet', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
                             </tr>
                         </thead><tbody>';
 
                     foreach ( $forms as $form ) {
-                        $sheet_status = '<span>❌</span>';
+                        $sheet_status = '<a href="' . esc_url( $form['edit_url'] ) . '" target="_blank" class="button button-secondary">
+                                <span>❌</span> ' . esc_html__( 'Connect Sheet', 'elementor-contact-form-db' ) . '
+                            </a>';
+
                         if ( ! empty( $form['spreadsheet_url'] ) ) {
                             $sheet_status = '<a href="' . esc_url( $form['spreadsheet_url'] ) . '" target="_blank" class="button button-secondary">
                                 <span>✅</span> ' . esc_html__( 'View Sheet', 'elementor-contact-form-db' ) . '
@@ -88,11 +92,12 @@ class FDBGP_Form_To_Sheet_Settings {
 
                         echo '<tr>
                                 <td>' . esc_html( $form['form_name'] ) . '</td>
-                                <td>' . esc_html( $form['post_title'] ) . '</td>
+                                <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
+                                <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
                                 <td>' . $sheet_status . '</td>
                                 <td>
                                     <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
-                                        ' . esc_html__( 'Edit Page', 'elementor-contact-form-db' ) . '
+                                        ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
                                     </a>
                                 </td>
                             </tr>';
@@ -224,10 +229,12 @@ class FDBGP_Form_To_Sheet_Settings {
                 $forms[] = [
                     'post_id'         => $post->ID,
                     'post_title'      => get_the_title( $post->ID ),
+                    'frontend_url'    => get_permalink( $post->ID ),
                     'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
                     'edit_url'        => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
                     'widget_type'     => strtoupper($element['widgetType']),
                     'spreadsheet_url' => $spreadsheet_url,
+                    'status' => in_array( 'Save Submissions in Google Sheet', $submit_actions, true ),
                 ];
             }
 
