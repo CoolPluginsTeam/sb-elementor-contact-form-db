@@ -23,6 +23,7 @@ class FDBGP_Form_To_Post_Settings {
         <div class='status-wrapper'>
         <?php
         echo '<h2>' . esc_html__( 'Forms with "Save Submissions In Post Type" Action', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<p>' . esc_html__( 'This section allows you to manage forms that are configured to save submissions as custom post types. You can view and edit the settings for each form here.', 'elementor-contact-form-db' ) . '</p>';
         if ( ! empty( $forms ) ) {
             $this->render_forms_table( $forms );
         } else {
@@ -32,6 +33,12 @@ class FDBGP_Form_To_Post_Settings {
         </div>
         <?php
     }
+    
+    /**
+     * Render page
+     *
+     * @param array $forms
+     */
 
 
     private function render_right_sidebar() {
