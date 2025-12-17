@@ -124,8 +124,48 @@
 
                 if (response.success) {
                     this.showSuccess($message, response.data.message);
-                    if (settings.sheetName === 'create_new_tab') {
-                        this.reloadSheetList($panel, settings.spreadsheetId, response.data.sheet_name);
+
+                    // If a new tab was created, reload the sheet list dropdown inline
+                    if (settings.sheetName === 'create_new_tab' && response.data.sheet_name) {
+                        const $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
+                        $sheetSelect.html('<option>Loading...</option>');
+
+                        $.ajax({
+                            url: ajaxurl,
+                            type: 'POST',
+                            data: {
+                                action: 'fdbgp_get_sheets',
+                                _nonce: elementorCommon.config.ajax.nonce,
+                                spreadsheet_id: settings.spreadsheetId
+                            },
+                            success: (res) => {
+                                if (res.success && res.data.sheets) {
+                                    $sheetSelect.empty();
+                                    $.each(res.data.sheets, function (key, text) {
+                                        $sheetSelect.append(new Option(text, key));
+                                    });
+
+                                    // Select the newly created sheet
+                                    $sheetSelect.val(response.data.sheet_name).trigger('change');
+
+                                    // Save to widget state
+                                    this.saveWidgetState(response.data.sheet_name);
+
+                                    // Update Elementor's model to persist the value
+                                    try {
+                                        const panel = elementor.getPanelView();
+                                        if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
+                                            const currentView = panel.getCurrentPageView();
+                                            if (currentView.model && currentView.model.setSetting) {
+                                                currentView.model.setSetting('fdbgp_sheet_list', response.data.sheet_name);
+                                            }
+                                        }
+                                    } catch (e) {
+                                        console.error('Error updating Elementor model:', e);
+                                    }
+                                }
+                            }
+                        });
                     }
                 } else {
                     this.showError($message, response.data.message || 'Unknown error');
@@ -175,6 +215,34 @@
                 if (response.success) {
                     this.cacheCreatedSpreadsheet(response.data);
                     this.showSuccess($message, response.data.message || 'Spreadsheet created');
+
+                    // Delay updating the UI so the message is visible
+                    setTimeout(() => {
+                        // Update the spreadsheet dropdown value dynamically
+                        const $spreadsheetSelect = $("[data-setting='fdbgp_spreadsheetid']");
+                        if ($spreadsheetSelect.length) {
+                            if ($spreadsheetSelect.find(`option[value="${response.data.spreadsheet_id}"]`).length === 0) {
+                                // Remove "Create New Spreadsheet" option temporarily
+                                const $newOption = $spreadsheetSelect.find("option[value='new']");
+                                $newOption.remove();
+
+                                // Add the new spreadsheet
+                                $spreadsheetSelect.append(new Option(response.data.spreadsheet_name, response.data.spreadsheet_id));
+
+                                // Re-add "Create New Spreadsheet" at the end
+                                $spreadsheetSelect.append($newOption);
+                            }
+
+                            // Auto-select the newly created sheet in the sheet list
+                            if (response.data.sheet_name) {
+                                const $sheetSelect = $("[data-setting='fdbgp_sheet_list']");
+                                $sheetSelect.data('auto-select', response.data.sheet_name);
+                            }
+
+                            // Update the dropdown UI
+                            $spreadsheetSelect.val(response.data.spreadsheet_id).change();
+                        }
+                    }, 2000);
                 } else {
                     this.showError($message, response.data.message || 'Unknown error');
                 }
@@ -249,22 +317,32 @@
                 if (autoSelect) {
                     $sheetSelect.val(autoSelect);
                     $sheetSelect.removeData('auto-select');
+                    // Save to widget state to persist across panel redraws
+                    this.saveWidgetState(autoSelect);
                 }
 
                 $sheetSelect.trigger('change');
-            });
+            }.bind(this));
         }
 
         reloadSheetList($panel, spreadsheetId, newSheet) {
             const $spreadsheet = $panel.find("[data-setting='fdbgp_spreadsheetid']");
             const $sheet = $panel.find("[data-setting='fdbgp_sheet_list']");
             $sheet.data('auto-select', newSheet);
+
+            // Save the new sheet to widget state before triggering change
+            this.saveWidgetState(newSheet);
+
             $spreadsheet.val(spreadsheetId).trigger('change');
         }
 
         cacheCreatedSpreadsheet(data) {
             const postId = elementor.config.document.id || 'default';
-            localStorage.setItem('fdbgp_cached_spreadsheet_' + postId, JSON.stringify(data));
+            localStorage.setItem('fdbgp_cached_spreadsheet_' + postId, JSON.stringify({
+                id: data.spreadsheet_id,
+                name: data.spreadsheet_name,
+                sheet_name: data.sheet_name || ''
+            }));
         }
 
         cacheSpreadsheetSelection($select) {
@@ -304,7 +382,9 @@
 
             const data = JSON.parse(cache);
             const $spreadsheet = $("[data-setting='fdbgp_spreadsheetid']");
-            if ($spreadsheet.val()) return;
+
+            // Don't restore if already has a value (user selected manually)
+            if ($spreadsheet.val() && $spreadsheet.val() !== '') return;
 
             if (!$spreadsheet.find(`option[value="${data.id}"]`).length) {
                 const $new = $spreadsheet.find('option[value="new"]').remove();
@@ -312,6 +392,16 @@
             }
 
             $spreadsheet.val(data.id).trigger('change');
+
+            // Restore sheet selection after sheet list loads
+            if (data.sheet_name) {
+                setTimeout(() => {
+                    const $sheet = $("[data-setting='fdbgp_sheet_list']");
+                    if ($sheet.find(`option[value="${data.sheet_name}"]`).length > 0) {
+                        $sheet.val(data.sheet_name).trigger('change');
+                    }
+                }, 1500);
+            }
         }
 
         saveWidgetState(sheet) {
