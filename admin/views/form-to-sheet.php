@@ -9,7 +9,7 @@ class FDBGP_Form_To_Sheet_Settings {
      * Render settings UI
      */
     public function __construct(){
-        $forms = $this->get_forms_with_google_sheets_action();
+        $forms = $this->get_all_forms();
         $this->render_page($forms);
     }
 
@@ -72,20 +72,27 @@ class FDBGP_Form_To_Sheet_Settings {
                     echo '<thead>
                             <tr>
                                 <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Page', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Widget', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
+                                <th>' . esc_html__( 'Google Sheet', 'elementor-contact-form-db' ) . '</th>
                                 <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
                             </tr>
                         </thead><tbody>';
 
                     foreach ( $forms as $form ) {
+                        $sheet_status = '<span>❌</span>';
+                        if ( ! empty( $form['spreadsheet_url'] ) ) {
+                            $sheet_status = '<a href="' . esc_url( $form['spreadsheet_url'] ) . '" target="_blank" class="button button-secondary">
+                                <span>✅</span> ' . esc_html__( 'View Sheet', 'elementor-contact-form-db' ) . '
+                            </a>';
+                        }
+
                         echo '<tr>
                                 <td>' . esc_html( $form['form_name'] ) . '</td>
                                 <td>' . esc_html( $form['post_title'] ) . '</td>
-                                <td>' . esc_html( $form['widget_type'] ) . '</td>
+                                <td>' . $sheet_status . '</td>
                                 <td>
-                                    <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '">
-                                        ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
+                                    <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
+                                        ' . esc_html__( 'Edit Page', 'elementor-contact-form-db' ) . '
                                     </a>
                                 </td>
                             </tr>';
@@ -143,11 +150,11 @@ class FDBGP_Form_To_Sheet_Settings {
 
 
     /**
-     * Get Elementor forms that use Register Post action
+     * Get All Elementor forms
      *
      * @return array
      */
-    private function get_forms_with_google_sheets_action() {
+    private function get_all_forms() {
 
         $forms = [];
 
@@ -187,31 +194,40 @@ class FDBGP_Form_To_Sheet_Settings {
 
         foreach ( $elements as $element ) {
             $is_found = false;
-            if (
-                isset( $element['widgetType'] ) &&
-                'form' === $element['widgetType'] &&
-                ! empty( $element['settings']['submit_actions'] ) &&
-                in_array( 'Save Submissions in Google Sheet', $element['settings']['submit_actions'], true )
-            ){
-                $is_found = true;
-            }
+            $spreadsheet_url = '';
 
-            if (
-                isset( $element['widgetType'] ) &&
-                'ehp-form' === $element['widgetType'] &&
-                ! empty( $element['settings']['cool_formkit_submit_actions'] ) &&
-                in_array( 'Save Submissions in Google Sheet', $element['settings']['cool_formkit_submit_actions'], true )
-            ){
+            if ( isset( $element['widgetType'] ) && ( 'form' === $element['widgetType'] || 'ehp-form' === $element['widgetType'] ) ) {
                 $is_found = true;
+                
+                // Check if Google Sheet action is enabled
+                $submit_actions = [];
+                if ( 'form' === $element['widgetType'] && ! empty( $element['settings']['submit_actions'] ) ) {
+                    $submit_actions = $element['settings']['submit_actions'];
+                } elseif ( 'ehp-form' === $element['widgetType'] && ! empty( $element['settings']['cool_formkit_submit_actions'] ) ) {
+                    $submit_actions = $element['settings']['cool_formkit_submit_actions'];
+                }
+
+                if ( in_array( 'Save Submissions in Google Sheet', $submit_actions, true ) ) {
+                    // Get Spreadsheet ID
+                    $spreadsheet_id = '';
+                    if ( ! empty( $element['settings']['fdbgp_spreadsheetid'] ) ) {
+                        $spreadsheet_id = $element['settings']['fdbgp_spreadsheetid'];
+                    }
+                    
+                    if ( ! empty( $spreadsheet_id ) && 'new' !== $spreadsheet_id ) {
+                        $spreadsheet_url = 'https://docs.google.com/spreadsheets/d/' . $spreadsheet_id;
+                    }
+                }
             }
 
             if ($is_found) {
                 $forms[] = [
-                    'post_id'    => $post->ID,
-                    'post_title' => get_the_title( $post->ID ),
-                    'form_name'  => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
-                    'edit_url'   => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
-                    'widget_type'   => strtoupper($element['widgetType']),
+                    'post_id'         => $post->ID,
+                    'post_title'      => get_the_title( $post->ID ),
+                    'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
+                    'edit_url'        => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
+                    'widget_type'     => strtoupper($element['widgetType']),
+                    'spreadsheet_url' => $spreadsheet_url,
                 ];
             }
 

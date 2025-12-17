@@ -41,7 +41,7 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 	 * @return string
 	 */
 	public function get_label() : string {
-		return 'Register Post/Custom Post';
+		return 'Save Submissions In Post Type';
 	}
 
 	/**
@@ -75,7 +75,7 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 		$widget->start_controls_section(
 			'eef-register-post-section',
 			[
-				'label' => \esc_html__( 'Register Post/Custom Post', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Save Submissions In Post Type', 'extensions-for-elementor-form' ),
 				'condition' => [
 					'cool_formkit_submit_actions' => $this->get_name(),
 				],
