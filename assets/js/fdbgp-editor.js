@@ -514,6 +514,28 @@
 
     // Elementor Initialization Hooks
     $(window).on('elementor:init', function () {
+
+        // Clear cache when page is published/updated
+        // Using modern API with fallback for older Elementor versions
+        if (typeof $e !== 'undefined' && $e.commands) {
+            // Modern method (Elementor 2.9.0+) - No deprecation warning
+            $e.commands.on('run:after', function (component, command, args) {
+                // The 'command' parameter already contains the full path (e.g., 'document/save/update')
+                if (command && command.indexOf('document/save/') === 0) {
+                    var postId = elementor.config.document.id || 'default';
+                    var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+                    localStorage.removeItem(cacheKey);
+                }
+            });
+        } else if (elementor && elementor.channels && elementor.channels.editor) {
+            // Fallback for older Elementor versions (< 2.9.0)
+            elementor.channels.editor.on('saved', function () {
+                var postId = elementor.config.document.id || 'default';
+                var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+                localStorage.removeItem(cacheKey);
+            });
+        }
+
         // Ensure sheet list loads if spreadsheet is already selected (Initial Load Fix)
         if (elementor && elementor.hooks) {
             elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
@@ -580,11 +602,11 @@
         });
 
         // Clear cache when page is published/updated
-        elementor.channels.data.on('document:after:save', function () {
-            var postId = elementor.config.document.id || 'default';
-            var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-            localStorage.removeItem(cacheKey);
-        });
+        // elementor.channels.data.on('document:after:save', function () {
+        //     var postId = elementor.config.document.id || 'default';
+        //     var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+        //     localStorage.removeItem(cacheKey);
+        // });
 
         // Update cache when user manually selects spreadsheet
         jQuery(document).on('change', "[data-setting='fdbgp_spreadsheetid']", function () {
