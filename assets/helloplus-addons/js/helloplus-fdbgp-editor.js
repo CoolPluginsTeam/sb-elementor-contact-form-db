@@ -1,7 +1,7 @@
 (function ($, window) {
     'use strict';
 
-    class FDBGP_Editor {
+    class HelloPlus_FDBGP_Editor {
 
         constructor() {
             this.widgetState = {};
@@ -45,7 +45,7 @@
 
             $(document).on('click', "#elementor-editor-wrapper-v2 .MuiButton-containedSizeLarge", (e) => {
                 const postId = elementor.config.document.id || 'default';
-                localStorage.removeItem('fdbgp_cached_spreadsheet_' + postId);
+                localStorage.removeItem('helloplus_fdbgp_cached_spreadsheet_' + postId);
             });
         }
 
@@ -369,7 +369,7 @@
 
         cacheCreatedSpreadsheet(data) {
             const postId = elementor.config.document.id || 'default';
-            localStorage.setItem('fdbgp_cached_spreadsheet_' + postId, JSON.stringify({
+            localStorage.setItem('helloplus_fdbgp_cached_spreadsheet_' + postId, JSON.stringify({
                 id: data.spreadsheet_id,
                 name: data.spreadsheet_name,
                 sheet_name: data.sheet_name || ''
@@ -381,7 +381,7 @@
             if (!val || val === 'new') return;
 
             const postId = elementor.config.document.id || 'default';
-            localStorage.setItem('fdbgp_cached_spreadsheet_' + postId, JSON.stringify({
+            localStorage.setItem('helloplus_fdbgp_cached_spreadsheet_' + postId, JSON.stringify({
                 id: val,
                 name: $select.find('option:selected').text(),
                 sheet_name: ''
@@ -393,7 +393,7 @@
             if (!sheet || sheet === 'create_new_tab') return;
 
             const postId = elementor.config.document.id || 'default';
-            const key = 'fdbgp_cached_spreadsheet_' + postId;
+            const key = 'helloplus_fdbgp_cached_spreadsheet_' + postId;
             const cache = localStorage.getItem(key);
 
             if (!cache) return;
@@ -408,7 +408,7 @@
 
         restoreCachedSpreadsheet() {
             const postId = elementor.config.document.id || 'default';
-            const cache = localStorage.getItem('fdbgp_cached_spreadsheet_' + postId);
+            const cache = localStorage.getItem('helloplus_fdbgp_cached_spreadsheet_' + postId);
             if (!cache) return;
 
             const data = JSON.parse(cache);
@@ -502,7 +502,7 @@
 
             elementor.channels.data.on('document:after:save', () => {
                 const postId = elementor.config.document.id || 'default';
-                localStorage.removeItem('fdbgp_cached_spreadsheet_' + postId);
+                localStorage.removeItem('helloplus_fdbgp_cached_spreadsheet_' + postId);
             });
         }
 
@@ -527,7 +527,7 @@
     }
 
     $(window).on('elementor:init', function () {
-        window.FDBGP_Editor = new FDBGP_Editor();
+        window.HelloPlus_FDBGP_Editor = new HelloPlus_FDBGP_Editor();
     });
 
     $(window).on('load', function () {

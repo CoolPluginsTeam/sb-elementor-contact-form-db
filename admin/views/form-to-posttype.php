@@ -132,8 +132,8 @@ class FDBGP_Form_To_Post_Settings {
                         echo '<tr>
                                 <td>' . esc_html( $form['form_name'] ) . '</td>
                                 <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
-                                <td>' . $post_type_status . '</td>
                                 <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
+                                <td>' . $post_type_status . '</td>
                                 <td>
                                     <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
                                         ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
