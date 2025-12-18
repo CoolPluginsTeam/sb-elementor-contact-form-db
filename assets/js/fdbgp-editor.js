@@ -320,6 +320,16 @@
                 if (autoSelect) {
                     $sheetSelect.val(autoSelect).removeData('auto-select');
                     this.saveWidgetState(autoSelect);
+                } else {
+                    // Check Elementor model for saved sheet
+                    try {
+                        const model = elementor.getPanelView()?.getCurrentPageView?.().model;
+                        const savedSheet = model?.getSetting('fdbgp_sheet_list');
+                        if (savedSheet && savedSheet !== 'create_new_tab') {
+                            $sheetSelect.val(savedSheet);
+                            this.saveWidgetState(savedSheet);
+                        }
+                    } catch (e) { }
                 }
 
                 $sheetSelect.trigger('change');
