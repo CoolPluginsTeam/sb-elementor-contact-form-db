@@ -1,719 +1,669 @@
-(function ($) {
-    /**
-     * Function to Update Sheet Headers
-     * Triggered by button click in Elementor Panel.
-     * Exposes function to global scope so it can be called via onclick or JS.
-     */
-    window.fdbgpUpdateSheetHeaders = function (confirmOverwrite, btnContext) {
-        // Determine which button triggered the event
-        var btn = btnContext || (window.event && window.event.target ? window.event.target.closest("button") : null);
-        if (!btn) return;
+(($, window) => {
+    'use strict';
 
-        var $btn = jQuery(btn);
-        var $text = $btn.find(".elementor-button-text");
+    class FDBGP_Editor {
+        constructor() {
+            this.widgetState = {};
+            this.isRestoring = false;
+            this.init();
+        }
 
-        // Store original text to restore later
-        var originalText = $btn.data("original-text") || $text.text();
-        if (!$btn.data("original-text")) $btn.data("original-text", originalText);
+        init() {
+            this.bindEvents();
+            this.registerElementorHooks();
+            this.startPollingFallback();
+            this.restoreCachedSpreadsheetDelayed();
+        }
 
-        var $message = jQuery("#fdbgp-update-message");
-        // $message.hide();
+        bindEvents() {
+            const $doc = $(document);
 
-        // Gather settings from the Elementor Panel inputs
-        var settings = {};
-        try {
-            var $panel = jQuery(btn).closest(".elementor-panel");
-            $panel.find("input, select, textarea").each(function () {
-                var $input = jQuery(this);
-                var name = $input.attr("data-setting");
-                if (name) {
-                    settings[name] = $input.val();
-                }
+            $doc.on('click', '.fdbgp-create-spreadsheet', (e) => {
+                e.preventDefault();
+                this.createSpreadsheet(e.currentTarget);
             });
 
-            var spreadsheetId = settings["fdbgp_spreadsheetid"] || "";
-            var sheetName = settings["fdbgp_sheet_list"] || "";
-            var newSheetName = settings["fdbgp_new_sheet_tab_name"] || "";
-            var sheetHeaders = settings["fdbgp_sheet_headers"] || [];
+            $doc.on('click', '.fdbgp-update-sheet', (e) => {
+                e.preventDefault();
+                this.updateSheetHeaders(false, e.currentTarget);
+            });
 
-        } catch (e) {
-            console.log(e);
-            return;
+            $doc.on('change', '.elementor-control-fdbgp_sheet_list select', (e) => {
+                this.onSheetChange($(e.currentTarget));
+            });
+
+            $doc.on('change', '.elementor-control-fdbgp_spreadsheetid select', (e) => {
+                this.onSpreadsheetChange($(e.currentTarget));
+            });
+
+            $doc.on('change', "[data-setting='fdbgp_spreadsheetid']", (e) => {
+                this.cacheSpreadsheetSelection($(e.currentTarget));
+            });
+
+            $doc.on('change', "[data-setting='fdbgp_sheet_list']", (e) => {
+                this.cacheSheetSelection($(e.currentTarget));
+            });
         }
 
-        // Validation Checks
-        if (!spreadsheetId || spreadsheetId === 'new') {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please select a Spreadsheet first").show();
-            return;
+        collectSettings($panel) {
+            const settings = {};
+            // Using arrow function, so we use the second argument 'el' instead of 'this'
+            $panel.find('input, select, textarea').each((_, el) => {
+                const key = $(el).data('setting');
+                if (key) settings[key] = $(el).val();
+            });
+
+            return {
+                spreadsheetId: settings.fdbgp_spreadsheetid || '',
+                sheetList: settings.fdbgp_sheet_list || '',
+                sheetName: settings.fdbgp_sheet_name || '',
+                newSheetName: settings.fdbgp_new_sheet_tab_name || '',
+                spreadsheetName: settings.fdbgp_new_spreadsheet_name || '',
+                sheetHeaders: settings.fdbgp_sheet_headers || []
+            };
         }
 
-        if (sheetName === 'create_new_tab' && !newSheetName) {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html(" Please enter a New Sheet Tab Name").show();
-            return;
+        showError($el, msg) {
+            $el.stop(true, true)
+                .removeClass('elementor-panel-alert-success')
+                .addClass('elementor-panel-alert-danger')
+                .css({ opacity: 1 })
+                .html(msg)
+                .show();
         }
 
-        // Lock UI
-        $btn.prop("disabled", true);
-        $text.text("Updating...");
+        showSuccess($el, msg) {
+            $el.removeClass('elementor-panel-alert-danger')
+                .addClass('elementor-panel-alert-success')
+                .html(msg)
+                .show()
+                .delay(10000)
+                .fadeOut();
+        }
 
-        // Perform AJAX Update
-        jQuery.ajax({
-            url: ajaxurl,
-            type: "POST",
-            data: {
-                action: "fdbgp_update_sheet_headers",
+        updateSheetHeaders(confirmOverwrite = false, btn) {
+            if (!btn) return;
+
+            const $btn = $(btn);
+            const $panel = $btn.closest('.elementor-panel');
+            const $text = $btn.find('.elementor-button-text');
+            const $message = $panel.find('#fdbgp-update-message');
+
+            const originalText = $btn.data('original-text') || $text.text();
+            $btn.data('original-text', originalText);
+
+            const settings = this.collectSettings($panel);
+
+            if (!settings.spreadsheetId || settings.spreadsheetId === 'new') {
+                return this.showError($message, 'Please select a Spreadsheet first');
+            }
+
+            if (settings.sheetList === 'create_new_tab' && !settings.newSheetName) {
+                return this.showError($message, 'Please enter a New Sheet Tab Name');
+            }
+
+            $btn.prop('disabled', true);
+            $text.text('Updating...');
+
+            $.post(ajaxurl, {
+                action: 'fdbgp_update_sheet_headers',
                 _nonce: elementorCommon.config.ajax.nonce,
-                spreadsheet_id: spreadsheetId,
-                sheet_name: sheetName,
-                new_sheet_name: newSheetName,
-                headers: sheetHeaders,
-                confirm_overwrite: confirmOverwrite === true ? 'true' : 'false'
-            },
-            success: function (response) {
-                if (response.success) {
-                    // Handle recursive confirmation (if file exists/needs overwrite)
-                    if (response.data.confirm_needed) {
-                        if (confirm(response.data.message)) {
-                            fdbgpUpdateSheetHeaders(true, btn);
-                            return;
-                        } else {
-                            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Cancelled.").show();
-                        }
-                    } else {
-                        // Success Message
-                        $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success");
-                        $message.html(response.data.message).show().delay(10000).fadeOut();
+                spreadsheet_id: settings.spreadsheetId,
+                sheet_name: settings.sheetList,
+                new_sheet_name: settings.newSheetName,
+                headers: settings.sheetHeaders,
+                confirm_overwrite: confirmOverwrite ? 'true' : 'false'
+            }).done((response) => {
+                const { success, data } = response;
 
-                        // If a new tab was created, reload the sheet list dropdown
-                        if (sheetName === 'create_new_tab' && response.data.sheet_name) {
-                            var $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
-                            $sheetSelect.html('<option>Loading...</option>');
+                if (success && data.confirm_needed) {
+                    if (confirm(data.message)) {
+                        this.updateSheetHeaders(true, btn);
+                    }
+                    return;
+                }
 
-                            jQuery.ajax({
-                                url: ajaxurl,
-                                type: 'POST',
-                                data: {
-                                    action: 'fdbgp_get_sheets',
-                                    _nonce: elementorCommon.config.ajax.nonce,
-                                    spreadsheet_id: spreadsheetId
-                                },
-                                success: function (res) {
-                                    if (res.success && res.data.sheets) {
-                                        $sheetSelect.empty();
-                                        jQuery.each(res.data.sheets, function (key, text) {
-                                            $sheetSelect.append(new Option(text, key));
-                                        });
-                                        // Select the newly created sheet
-                                        $sheetSelect.val(response.data.sheet_name).trigger('change');
+                if (success) {
+                    this.showSuccess($message, data.message);
 
-                                        // IMPORTANT: Update Elementor's model to persist the value
-                                        try {
-                                            var panel = elementor.getPanelView();
-                                            if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
-                                                var currentView = panel.getCurrentPageView();
-                                                if (currentView.model && currentView.model.setSetting) {
-                                                    currentView.model.setSetting('fdbgp_sheet_list', response.data.sheet_name);
-                                                }
-                                            }
-                                        } catch (e) {
-                                            console.error('Error updating Elementor model:', e);
-                                        }
+                    if (settings.sheetList === 'create_new_tab' && data.sheet_name) {
+                        const $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
+                        $sheetSelect.html('<option>Loading...</option>');
+
+                        $.post(ajaxurl, {
+                            action: 'fdbgp_get_sheets',
+                            _nonce: elementorCommon.config.ajax.nonce,
+                            spreadsheet_id: settings.spreadsheetId
+                        }).done((res) => {
+                            if (res.success && res.data.sheets) {
+                                $sheetSelect.empty();
+                                Object.entries(res.data.sheets).forEach(([key, text]) => {
+                                    $sheetSelect.append(new Option(text, key));
+                                });
+
+                                $sheetSelect.val(data.sheet_name).trigger('change');
+                                this.saveWidgetState(data.sheet_name);
+
+                                try {
+                                    const currentView = elementor.getPanelView()?.getCurrentPageView?.();
+                                    if (currentView?.model?.setSetting) {
+                                        currentView.model.setSetting('fdbgp_sheet_list', data.sheet_name);
                                     }
+                                } catch (e) {
+                                    console.error('Error updating Elementor model:', e);
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 } else {
-                    $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
-                    $message.html(response.data.message || "Unknown error").show();
+                    this.showError($message, data.message || 'Unknown error');
                 }
-            },
-            error: function () {
-                $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
-                $message.html("❌ Server error").show();
-            },
-            complete: function () {
-                $btn.prop("disabled", false);
+            }).fail(() => {
+                this.showError($message, 'Server error');
+            }).always(() => {
+                $btn.prop('disabled', false);
                 $text.text(originalText);
-            }
-        });
-    };
-
-    /**
-     * Function to Create a New Spreadsheet
-     * Exposes function to global scope.
-     */
-    window.fdbgpCreateSpreadsheet = function (btnContext) {
-        var btn = btnContext || (window.event && window.event.target ? window.event.target.closest("button") : null);
-        var $btn = jQuery(btn);
-        var $text = $btn.find(".elementor-button-text");
-        var originalText = $text.text();
-        var $message = jQuery("#fdbgp-message");
-
-        // Hide any previous messages
-        $message.hide();
-
-        // Get settings directly from the panel
-        var settings = {};
-        try {
-            var $panel = jQuery(btn).closest(".elementor-panel");
-            $panel.find("input, select, textarea").each(function () {
-                var $input = jQuery(this);
-                var name = $input.attr("data-setting");
-                if (name) {
-                    settings[name] = $input.val();
-                }
             });
-
-            var spreadsheetName = settings["fdbgp_new_spreadsheet_name"] || "";
-            var sheetName = settings["fdbgp_sheet_name"] || "";
-            var sheetHeaders = settings["fdbgp_sheet_headers"] || [];
-        } catch (e) {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Error getting form settings: " + e.message).show();
-            return;
         }
 
-        // Validation
-        if (!spreadsheetName || !spreadsheetName.trim()) {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please enter a Spreadsheet Name").show();
-            return;
-        }
-        if (!sheetName || !sheetName.trim()) {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please enter a Sheet Tab Name").show();
-            return;
-        }
-        if (!sheetHeaders || sheetHeaders.length === 0) {
-            $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("Please select at least one Sheet Header").show();
-            return;
-        }
+        createSpreadsheet(btn) {
+            const $btn = $(btn);
+            const $panel = $btn.closest('.elementor-panel');
+            const $text = $btn.find('.elementor-button-text');
+            const $message = $panel.find('#fdbgp-message');
 
-        $btn.prop("disabled", true);
-        $text.text("Creating...");
+            const settings = this.collectSettings($panel);
+            const originalText = $text.text();
 
-        jQuery.ajax({
-            url: ajaxurl,
-            type: "POST",
-            data: {
-                action: "fdbgp_create_spreadsheet",
+            if (!settings.spreadsheetName) return this.showError($message, 'Please enter a Spreadsheet Name');
+            if (!settings.sheetName) return this.showError($message, 'Please enter a Sheet Tab Name');
+            if (!settings.sheetHeaders.length) return this.showError($message, 'Please select at least one Sheet Header');
+
+            $btn.prop('disabled', true);
+            $text.text('Creating...');
+
+            $.post(ajaxurl, {
+                action: 'fdbgp_create_spreadsheet',
                 _nonce: elementorCommon.config.ajax.nonce,
-                spreadsheet_name: spreadsheetName,
-                sheet_name: sheetName,
-                headers: sheetHeaders
-            },
-            success: function (response) {
-                if (response.success) {
-                    // Get current post ID to make cache unique per page
-                    var postId = elementor.config.document.id || 'default';
-                    var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
+                spreadsheet_name: settings.spreadsheetName,
+                sheet_name: settings.sheetName,
+                headers: settings.sheetHeaders
+            }).done((response) => {
+                const { success, data } = response;
 
-                    // Cache the spreadsheet info for persistence across page reload
-                    localStorage.setItem(cacheKey, JSON.stringify({
-                        id: response.data.spreadsheet_id,
-                        name: response.data.spreadsheet_name,
-                        sheet_name: response.data.sheet_name || ''
-                    }));
+                if (success) {
+                    this.cacheCreatedSpreadsheet(data);
+                    this.showSuccess($message, data.message || 'Spreadsheet created');
 
-                    $message.removeClass("elementor-panel-alert-danger").addClass("elementor-panel-alert-success")
-                        .html(response.data.message)
-                        .show();
-
-                    // Delay updating the UI so the message is visible
-                    setTimeout(function () {
-                        // Update the spreadsheet dropdown value dynamically
-                        var $spreadsheetSelect = jQuery("[data-setting=\"fdbgp_spreadsheetid\"]");
+                    setTimeout(() => {
+                        const $spreadsheetSelect = $("[data-setting='fdbgp_spreadsheetid']");
                         if ($spreadsheetSelect.length) {
-                            if ($spreadsheetSelect.find("option[value=\"" + response.data.spreadsheet_id + "\"]").length === 0) {
-                                // Remove "Create New Spreadsheet" option temporarily
-                                var $newOption = $spreadsheetSelect.find("option[value='new']");
-                                $newOption.remove();
-
-                                // Add the new spreadsheet
-                                var newOpt = document.createElement("option");
-                                newOpt.value = response.data.spreadsheet_id;
-                                newOpt.text = response.data.spreadsheet_name;
-                                $spreadsheetSelect.append(newOpt);
-
-                                // Re-add "Create New Spreadsheet" at the end
+                            if (!$spreadsheetSelect.find(`option[value="${data.spreadsheet_id}"]`).length) {
+                                const $newOption = $spreadsheetSelect.find("option[value='new']").remove();
+                                $spreadsheetSelect.append(new Option(data.spreadsheet_name, data.spreadsheet_id));
                                 $spreadsheetSelect.append($newOption);
                             }
 
-                            // Auto-select the newly created sheet in the sheet list
-                            if (response.data.sheet_name) {
-                                var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
-                                $sheetSelect.data('auto-select', response.data.sheet_name);
+                            if (data.sheet_name) {
+                                $("[data-setting='fdbgp_sheet_list']").data('auto-select', data.sheet_name);
                             }
-
-                            // Update the dropdown UI
-                            $spreadsheetSelect.val(response.data.spreadsheet_id).change();
+                            $spreadsheetSelect.val(data.spreadsheet_id).change();
                         }
                     }, 2000);
                 } else {
-                    $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("❌ " + (response.data.message || "Unknown error")).show();
+                    this.showError($message, data.message || 'Unknown error');
                 }
-            },
-            error: function () {
-                $message.removeClass("elementor-panel-alert-success").addClass("elementor-panel-alert-danger").html("❌ Server error").show();
-            },
-            complete: function () {
-                $btn.prop("disabled", false);
+            }).fail(() => {
+                this.showError($message, 'Server error');
+            }).always(() => {
+                $btn.prop('disabled', false);
                 $text.text(originalText);
-            }
-        });
-    };
+            });
+        }
 
-    jQuery(document).ready(function ($) {
-        // Expose function to check if a sheet has content (prevents accidental overwrites)
-        window.fdbgpCheckSheetContent = function ($sheetSelect) {
-            var sheetName = $sheetSelect.val();
-            var $panel = $sheetSelect.closest('.elementor-panel');
-            var spreadsheetId = $panel.find(".elementor-control-fdbgp_spreadsheetid select").val();
-
-            var $message = $panel.find("#fdbgp-update-message");
-            // $message.hide();
+        checkSheetContent($sheetSelect) {
+            const sheetName = $sheetSelect.val();
+            const $panel = $sheetSelect.closest('.elementor-panel');
+            const spreadsheetId = $panel.find("[data-setting='fdbgp_spreadsheetid']").val();
+            const $message = $panel.find('#fdbgp-update-message');
 
             if (!sheetName || sheetName === 'create_new_tab' || !spreadsheetId || spreadsheetId === 'new') {
-                // Hide warning message for new tabs/spreadsheets
-                $message.hide();
-                return;
+                return $message.hide();
             }
 
-            jQuery.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'fdbgp_check_sheet_headers',
-                    _nonce: elementorCommon.config.ajax.nonce,
-                    spreadsheet_id: spreadsheetId,
-                    sheet_name: sheetName
-                },
-                success: function (response) {
-                    if (response.success && response.data.has_content) {
-                        $message.css({
-                            "background-color": "",
-                            "color": "",
-                            "border": ""
-                        }).removeClass("elementor-panel-alert-danger elementor-panel-alert-success").addClass("elementor-panel-alert-danger");
-                        // Stop any ongoing animations (e.g., fadeOut from success message) and show permanently
-                        $message.stop(true, true).css('opacity', '1').html(response.data.message || "Selected sheet is not empty. Backup recommended before updating.").show();
-                    } else {
-                        // Hide message if sheet is empty
-                        $message.hide();
-                    }
+            $.post(ajaxurl, {
+                action: 'fdbgp_check_sheet_headers',
+                _nonce: elementorCommon.config.ajax.nonce,
+                spreadsheet_id: spreadsheetId,
+                sheet_name: sheetName
+            }).done((response) => {
+                if (response.success && response.data.has_content) {
+                    this.showError($message, response.data.message);
+                } else {
+                    $message.hide();
                 }
             });
-        };
+        }
 
-        // --- Event Bindings ---
+        onSheetChange($select) {
+            const sheetValue = $select.val();
+            const $panel = $select.closest('.elementor-panel');
+            const spreadsheetId = $panel.find("[data-setting='fdbgp_spreadsheetid']").val();
 
-        // Attach Click Event for Create Spreadsheet Button
-        $(document).on('click', '.fdbgp-create-spreadsheet', function (e) {
-            e.preventDefault();
-            fdbgpCreateSpreadsheet(this);
-        });
-
-        // Attach Click Event for Update Sheet Button
-        $(document).on('click', '.fdbgp-update-sheet', function (e) {
-            e.preventDefault();
-            fdbgpUpdateSheetHeaders(false, this);
-        });
-
-        // Check Sheet Content on Selection Change & Handle Panel State
-        $(document).on('change', '.elementor-control-fdbgp_sheet_list select', function () {
-            var sheetValue = $(this).val();
-
-            // Logic to persist state when Elementor redraws panel
-            if (sheetValue && sheetValue !== '' && sheetValue !== 'create_new_tab') {
-                try {
-                    var panel = elementor.getPanelView();
-                    if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
-                        var widgetId = panel.getCurrentPageView().model.get('id');
-                        if (widgetId) {
-                            if (!window.fdbgpWidgetState) window.fdbgpWidgetState = {};
-                            if (!window.fdbgpWidgetState[widgetId]) window.fdbgpWidgetState[widgetId] = {};
-                            window.fdbgpWidgetState[widgetId].sheet = sheetValue;
-                        }
-                    }
-                } catch (e) { }
-            } else if (sheetValue === 'create_new_tab') {
-                // Clear saved state when user selects "Create New Tab"
-                try {
-                    var panel = elementor.getPanelView();
-                    if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
-                        var widgetId = panel.getCurrentPageView().model.get('id');
-                        if (widgetId && window.fdbgpWidgetState && window.fdbgpWidgetState[widgetId]) {
-                            delete window.fdbgpWidgetState[widgetId].sheet;
-                        }
-                    }
-                } catch (e) { }
-            }
-            window.fdbgpCheckSheetContent($(this));
-        });
-
-        // Restore sheet selection on panel changes (Elementor Hook listener)
-        elementor.channels.editor.on('change', function () {
-            setTimeout(function () {
-                var $sheetSelect = $('.elementor-control-fdbgp_sheet_list select:visible');
-                if ($sheetSelect.length === 0) return;
-
-                try {
-                    var panel = elementor.getPanelView();
-                    if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
-                        var widgetId = panel.getCurrentPageView().model.get('id');
-                        if (widgetId && window.fdbgpWidgetState && window.fdbgpWidgetState[widgetId] && window.fdbgpWidgetState[widgetId].sheet) {
-                            var savedSheet = window.fdbgpWidgetState[widgetId].sheet;
-                            var currentSheet = $sheetSelect.val();
-
-                            if (!currentSheet || currentSheet === '' || currentSheet !== savedSheet) {
-                                var optionExists = $sheetSelect.find('option[value="' + savedSheet + '"]').length > 0;
-                                var $spreadsheetSelect = $('.elementor-control-fdbgp_spreadsheetid select:visible');
-
-                                // If option doesn't exist yet, trigger spreadsheet change to load it
-                                if (!optionExists && $spreadsheetSelect.length && $spreadsheetSelect.val()) {
-                                    $sheetSelect.data('auto-select', savedSheet);
-                                    $spreadsheetSelect.trigger('change');
-                                } else if (optionExists) {
-                                    $sheetSelect.val(savedSheet);
-                                }
-                            }
-                        }
-                    }
-                } catch (e) { }
-            }, 300);
-        });
-
-        // Clear sheet state when spreadsheet changes
-        $(document).on('change', '.elementor-control-fdbgp_spreadsheetid select', function () {
             try {
-                var panel = elementor.getPanelView();
-                if (panel && panel.getCurrentPageView && panel.getCurrentPageView()) {
-                    var widgetId = panel.getCurrentPageView().model.get('id');
-                    if (widgetId && window.fdbgpWidgetState && window.fdbgpWidgetState[widgetId]) {
-                        delete window.fdbgpWidgetState[widgetId].sheet;
+                const currentView = elementor.getPanelView()?.getCurrentPageView?.();
+                const widgetId = currentView?.model?.get('id');
+
+                if (widgetId) {
+                    if (!window.fdbgpWidgetState) window.fdbgpWidgetState = {};
+
+                    if (sheetValue && sheetValue !== 'create_new_tab') {
+                        window.fdbgpWidgetState[widgetId] = { sheet: sheetValue, spreadsheet: spreadsheetId };
+
+                        if (currentView.model.setSetting) {
+                            currentView.model.setSetting('fdbgp_sheet_list', sheetValue);
+                            if (spreadsheetId) currentView.model.setSetting('fdbgp_spreadsheetid', spreadsheetId);
+                            currentView.model.trigger('change');
+                        }
+                    } else if (sheetValue === 'create_new_tab') {
+                        delete window.fdbgpWidgetState[widgetId]?.sheet;
                     }
                 }
+            } catch (e) { /* silent fail */ }
+
+            this.saveWidgetState(sheetValue);
+            this.checkSheetContent($select);
+        }
+
+        onSpreadsheetChange($select) {
+            try {
+                const widgetId = elementor.getPanelView()?.getCurrentPageView?.().model.get('id');
+                if (widgetId && window.fdbgpWidgetState?.[widgetId]) {
+                    delete window.fdbgpWidgetState[widgetId].sheet;
+                }
             } catch (e) { }
-            window.fdbgpCheckSheetContent($(this));
-        });
 
-        // Fetch Sheets when Spreadsheet ID changes
-        $(document).on('change', '.elementor-control-fdbgp_spreadsheetid select', function () {
-            var spreadsheetId = $(this).val();
-            var $panel = $(this).closest('.elementor-panel');
-            var $sheetSelect = $panel.find('.elementor-control-fdbgp_sheet_list select');
+            this.clearWidgetState();
+            this.loadSheets($select);
+            this.checkSheetContent($select);
+        }
 
+        loadSheets($spreadsheetSelect) {
+            const spreadsheetId = $spreadsheetSelect.val();
             if (!spreadsheetId || spreadsheetId === 'new') return;
+
+            const $panel = $spreadsheetSelect.closest('.elementor-panel');
+            const $sheetSelect = $panel.find("[data-setting='fdbgp_sheet_list']");
 
             $sheetSelect.html('<option>Loading...</option>');
 
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'fdbgp_get_sheets',
-                    _nonce: elementorCommon.config.ajax.nonce,
-                    spreadsheet_id: spreadsheetId
-                },
-                success: function (response) {
-                    if (response.success && response.data.sheets) {
-                        $sheetSelect.empty();
-                        $.each(response.data.sheets, function (key, text) {
-                            $sheetSelect.append(new Option(text, key));
-                        });
+            $.post(ajaxurl, {
+                action: 'fdbgp_get_sheets',
+                _nonce: elementorCommon.config.ajax.nonce,
+                spreadsheet_id: spreadsheetId
+            }).done((response) => {
+                if (!response.success) return;
 
-                        // Handle auto-selection if triggered via state restoration
-                        var autoSelect = $sheetSelect.data('auto-select');
-                        if (autoSelect) {
-                            $sheetSelect.val(autoSelect);
-                            $sheetSelect.removeData('auto-select');
-                        }
+                $sheetSelect.empty();
+                Object.entries(response.data.sheets).forEach(([key, val]) => {
+                    $sheetSelect.append(new Option(val, key));
+                });
 
-                        $sheetSelect.trigger('change');
-                    } else {
-                        $sheetSelect.html('<option>No sheets found</option>');
-                    }
-                },
-                error: function () {
-                    $sheetSelect.html('<option>Error loading sheets</option>');
-                }
-            });
-        });
-    });
-
-    // Wait for Elementor to fully initialize
-    $(window).on('load', function () {
-
-        // Define the Custom Control Logic (Backbone.js)
-        var FDBGP_DynamicSelect2 = elementor.modules.controls.BaseData.extend({
-
-            onReady: function () {
-                var self = this;
-
-                // 1. Initialize Select2
-                if (this.ui.select.length > 0) {
-                    this.ui.select.select2({
-                        placeholder: 'Select fields',
-                        allowClear: true,
-                        width: '100%'
-                    });
+                const autoSelect = $sheetSelect.data('auto-select');
+                if (autoSelect) {
+                    $sheetSelect.val(autoSelect).removeData('auto-select');
+                    this.saveWidgetState(autoSelect);
                 }
 
-                // 2. Load initial options
-                this.updateOptions();
-
-                // 3. Listen for changes in the 'form_fields' repeater
-                if (this.container.settings.has('form_fields')) {
-                    this.listenTo(this.container.settings.get('form_fields'), 'add remove change', this.updateOptions);
-                }
-            },
-
-            updateOptions: function () {
-                var self = this;
-                var formFields = this.container.settings.get('form_fields');
-                var $select = this.ui.select;
-                var currentVal = self.getControlValue();
-                var staticOptions = this.model.get('options');
-
-                $select.empty();
-
-                // Add fields from Repeater
-                if (formFields) {
-                    formFields.each(function (model) {
-                        var id = model.get('custom_id');
-                        var label = model.get('field_label');
-                        if (!label) label = id;
-
-                        var text = label + ' (' + id + ')';
-                        $select.append(new Option(text, id, false, false));
-                    });
-                }
-
-                // Add static options if any
-                if (staticOptions) {
-                    jQuery.each(staticOptions, function (key, label) {
-                        $select.append(new Option(label, key, false, false));
-                    });
-                }
-
-                if (currentVal) {
-                    $select.val(currentVal);
-                }
-
-                $select.trigger('change');
-            },
-
-            onBeforeDestroy: function () {
-                if (this.ui.select.data('select2')) {
-                    this.ui.select.select2('destroy');
-                }
-            }
-        });
-
-        // Register the View so Elementor can render our custom control
-        elementor.addControlView('fdbgp_dynamic_select2', FDBGP_DynamicSelect2);
-    });
-
-    // Elementor Initialization Hooks
-    $(window).on('elementor:init', function () {
-
-        // Clear cache when page is published/updated
-        // Using modern API with fallback for older Elementor versions
-        if (typeof $e !== 'undefined' && $e.commands) {
-            // Modern method (Elementor 2.9.0+) - No deprecation warning
-            $e.commands.on('run:after', function (component, command, args) {
-                // The 'command' parameter already contains the full path (e.g., 'document/save/update')
-                if (command && command.indexOf('document/save/') === 0) {
-                    var postId = elementor.config.document.id || 'default';
-                    var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-                    localStorage.removeItem(cacheKey);
-                }
-            });
-        } else if (elementor && elementor.channels && elementor.channels.editor) {
-            // Fallback for older Elementor versions (< 2.9.0)
-            elementor.channels.editor.on('saved', function () {
-                var postId = elementor.config.document.id || 'default';
-                var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-                localStorage.removeItem(cacheKey);
+                $sheetSelect.trigger('change');
             });
         }
 
-        // Ensure sheet list loads if spreadsheet is already selected (Initial Load Fix)
-        if (elementor && elementor.hooks) {
-            elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
-                setTimeout(function () {
-                    var $spreadsheetSelect = panel.$el.find("[data-setting='fdbgp_spreadsheetid']");
-                    var $sheetSelect = panel.$el.find("[data-setting='fdbgp_sheet_list']");
+        cacheCreatedSpreadsheet(data) {
+            const postId = elementor.config.document.id || 'default';
+            localStorage.setItem(`fdbgp_cached_spreadsheet_${postId}`, JSON.stringify({
+                id: data.spreadsheet_id,
+                name: data.spreadsheet_name,
+                sheet_name: data.sheet_name || ''
+            }));
+        }
 
-                    if ($spreadsheetSelect.length && $spreadsheetSelect.val() && $spreadsheetSelect.val() !== 'new') {
-                        // If sheet list seems unpopulated (only minimal options), trigger reload
-                        if ($sheetSelect.find('option').length <= 2) {
-                            $spreadsheetSelect.trigger('change');
+        cacheSpreadsheetSelection($select) {
+            const val = $select.val();
+            if (!val || val === 'new') return;
+
+            const postId = elementor.config.document.id || 'default';
+            localStorage.setItem(`fdbgp_cached_spreadsheet_${postId}`, JSON.stringify({
+                id: val,
+                name: $select.find('option:selected').text(),
+                sheet_name: ''
+            }));
+        }
+
+        cacheSheetSelection($select) {
+            const sheet = $select.val();
+            if (!sheet || sheet === 'create_new_tab') return;
+
+            const postId = elementor.config.document.id || 'default';
+            const key = `fdbgp_cached_spreadsheet_${postId}`;
+            const cache = localStorage.getItem(key);
+
+            if (cache) {
+                const data = JSON.parse(cache);
+                data.sheet_name = sheet;
+                localStorage.setItem(key, JSON.stringify(data));
+            }
+        }
+
+        restoreCachedSpreadsheetDelayed() {
+            setTimeout(() => this.restoreCachedSpreadsheet(), 2000);
+        }
+
+        restoreCachedSpreadsheet() {
+            const postId = elementor.config.document.id || 'default';
+            const cache = localStorage.getItem(`fdbgp_cached_spreadsheet_${postId}`);
+            if (!cache) return;
+
+            const data = JSON.parse(cache);
+            const $spreadsheet = $("[data-setting='fdbgp_spreadsheetid']");
+
+            if ($spreadsheet.val()) return;
+
+            if (!$spreadsheet.find(`option[value="${data.id}"]`).length) {
+                const $new = $spreadsheet.find('option[value="new"]').remove();
+                $spreadsheet.append(new Option(data.name, data.id)).append($new);
+            }
+
+            $spreadsheet.val(data.id).trigger('change');
+
+            if (data.sheet_name) {
+                setTimeout(() => {
+                    const $sheet = $("[data-setting='fdbgp_sheet_list']");
+                    if ($sheet.find(`option[value="${data.sheet_name}"]`).length > 0) {
+                        $sheet.val(data.sheet_name).trigger('change');
+                    }
+                }, 1500);
+            }
+        }
+
+        saveWidgetState(sheet) {
+            try {
+                const id = elementor.getPanelView().getCurrentPageView().model.get('id');
+                this.widgetState[id] = sheet;
+            } catch (e) { }
+        }
+
+        clearWidgetState() {
+            this.widgetState = {};
+        }
+
+        registerElementorHooks() {
+            elementor.hooks.addAction('panel/open_editor/widget', (panel) => {
+                setTimeout(() => {
+                    const $spreadsheet = panel.$el.find("[data-setting='fdbgp_spreadsheetid']");
+                    const $sheetSelect = panel.$el.find("[data-setting='fdbgp_sheet_list']");
+
+                    // Check if both dropdowns are empty but localStorage has data
+                    const currentSpreadsheet = $spreadsheet.val();
+                    const currentSheet = $sheetSelect.val();
+
+                    console.log('FDBGP: Panel opened - Spreadsheet:', currentSpreadsheet, 'Sheet:', currentSheet);
+
+                    if ((!currentSpreadsheet || currentSpreadsheet === '') && (!currentSheet || currentSheet === '')) {
+                        console.log('FDBGP: Both empty, checking localStorage...');
+                        // Try to restore from localStorage
+                        const postId = elementor.config.document.id || 'default';
+                        const cacheKey = `fdbgp_cached_spreadsheet_${postId}`;
+                        const cache = localStorage.getItem(cacheKey);
+
+                        console.log('FDBGP: Cache key:', cacheKey, 'Cache data:', cache);
+
+                        if (cache) {
+                            try {
+                                const data = JSON.parse(cache);
+                                console.log('FDBGP: Parsed cache:', data);
+
+                                // Add spreadsheet to dropdown if not exists
+                                if (data.id && $spreadsheet.find(`option[value="${data.id}"]`).length === 0) {
+                                    console.log('FDBGP: Adding spreadsheet to dropdown');
+                                    const $newOption = $spreadsheet.find('option[value="new"]');
+                                    $newOption.remove();
+
+                                    const newOpt = document.createElement('option');
+                                    newOpt.value = data.id;
+                                    newOpt.text = data.name;
+                                    $spreadsheet.append(newOpt);
+                                    $spreadsheet.append($newOption);
+                                }
+
+                                // Set spreadsheet value
+                                if (data.id) {
+                                    if (data.sheet_name) {
+                                        console.log('FDBGP: Setting auto-select for sheet:', data.sheet_name);
+                                        $sheetSelect.data('auto-select', data.sheet_name);
+                                    }
+                                    console.log('FDBGP: Setting spreadsheet value:', data.id);
+                                    $spreadsheet.val(data.id).trigger('change');
+                                }
+                            } catch (e) {
+                                console.log('FDBGP: Error restoring from cache:', e);
+                            }
                         } else {
-                            // Otherwise check sheet content
-                            if (window.fdbgpCheckSheetContent) {
-                                window.fdbgpCheckSheetContent($sheetSelect);
-                            }
+                            console.log('FDBGP: No cache found');
+                        }
+                    } else if (currentSpreadsheet && currentSpreadsheet !== 'new') {
+                        console.log('FDBGP: Spreadsheet already selected');
+                        if ($sheetSelect.find('option').length <= 2) {
+                            $spreadsheet.trigger('change');
+                        } else {
+                            this.checkSheetContent($sheetSelect);
                         }
                     }
-                }, 1000); // 1 second delay to ensure complete rendering
+                }, 1000);
             });
-        }
 
-        // Fallback: Polling to check if panel is already open (Page Reload)
-        var fdbgpCheckInterval = setInterval(function () {
-            // Find visible select controls
-            var $spreadsheetSelect = jQuery(".elementor-control-fdbgp_spreadsheetid select").filter(':visible');
+            if (elementor.channels?.editor) {
+                elementor.channels.editor.on('change', () => {
+                    setTimeout(() => {
+                        if (this.isRestoring) return;
 
-            if ($spreadsheetSelect.length && $spreadsheetSelect.val() && $spreadsheetSelect.val() !== 'new') {
-                var $sheetSelect = jQuery(".elementor-control-fdbgp_sheet_list select").filter(':visible');
+                        const $sheetSelect = $('.elementor-control-fdbgp_sheet_list select:visible');
+                        const $spreadsheetSelect = $('.elementor-control-fdbgp_spreadsheetid select:visible');
 
-                // Need both to be present
-                if ($sheetSelect.length) {
-                    // If we found them, stop polling
-                    clearInterval(fdbgpCheckInterval);
+                        if (!$sheetSelect.length || !$spreadsheetSelect.length) return;
 
-                    if ($sheetSelect.find('option').length <= 2) {
-                        $spreadsheetSelect.trigger('change');
-                    } else {
-                        if (window.fdbgpCheckSheetContent) {
-                            window.fdbgpCheckSheetContent($sheetSelect);
-                        }
-                    }
-                }
-            }
+                        try {
+                            const widgetId = elementor.getPanelView()?.getCurrentPageView?.().model.get('id');
+                            let savedState = window.fdbgpWidgetState?.[widgetId];
 
-            // Stop polling after 20 seconds if nothing found to save resources
-            if (performance.now() > 20000) clearInterval(fdbgpCheckInterval);
-        }, 1000);
-    });
+                            // If no widgetState, try localStorage as fallback
+                            if (!savedState) {
+                                const postId = elementor.config.document.id || 'default';
+                                const cacheKey = `fdbgp_cached_spreadsheet_${postId}`;
+                                const cache = localStorage.getItem(cacheKey);
 
-    // Restore cached spreadsheet after page load
-    jQuery(document).ready(function () {
-        setTimeout(function () {
-            restoreCachedSpreadsheet();
-        }, 2000);
-    });
-
-    // Also restore when navigating to Google Sheets section
-    if (typeof elementor !== 'undefined') {
-        elementor.channels.editor.on('section:activated', function () {
-            setTimeout(function () {
-                restoreCachedSpreadsheet();
-            }, 500);
-        });
-
-        // Clear cache when page is published/updated
-        // elementor.channels.data.on('document:after:save', function () {
-        //     var postId = elementor.config.document.id || 'default';
-        //     var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-        //     localStorage.removeItem(cacheKey);
-        // });
-
-        // Update cache when user manually selects spreadsheet
-        jQuery(document).on('change', "[data-setting='fdbgp_spreadsheetid']", function () {
-            var spreadsheetId = jQuery(this).val();
-            if (spreadsheetId && spreadsheetId !== '' && spreadsheetId !== 'new') {
-                var spreadsheetName = jQuery(this).find('option:selected').text();
-                var postId = elementor.config.document.id || 'default';
-                var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-
-                localStorage.setItem(cacheKey, JSON.stringify({
-                    id: spreadsheetId,
-                    name: spreadsheetName,
-                    sheet_name: ''
-                }));
-            }
-        });
-
-        // Update cache when user manually selects sheet tab
-        jQuery(document).on('change', "[data-setting='fdbgp_sheet_list']", function () {
-            var sheetName = jQuery(this).val();
-            if (sheetName && sheetName !== '' && sheetName !== 'create_new_tab') {
-                var postId = elementor.config.document.id || 'default';
-                var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-
-                // Get spreadsheet info
-                var $spreadsheetSelect = jQuery("[data-setting='fdbgp_spreadsheetid']");
-                var spreadsheetId = $spreadsheetSelect.val();
-                var spreadsheetName = $spreadsheetSelect.find('option:selected').text();
-
-                // Update existing cache or create new one
-                var existingCache = localStorage.getItem(cacheKey);
-                if (existingCache) {
-                    try {
-                        var cacheData = JSON.parse(existingCache);
-                        cacheData.sheet_name = sheetName;
-                        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-                    } catch (e) {
-                        console.log('Error updating cache:', e);
-                    }
-                } else if (spreadsheetId && spreadsheetId !== '' && spreadsheetId !== 'new') {
-                    // Create cache if it doesn't exist
-                    localStorage.setItem(cacheKey, JSON.stringify({
-                        id: spreadsheetId,
-                        name: spreadsheetName,
-                        sheet_name: sheetName
-                    }));
-                }
-            }
-        });
-    }
-
-    function restoreCachedSpreadsheet() {
-        var $spreadsheetSelect = jQuery("[data-setting='fdbgp_spreadsheetid']");
-
-        if ($spreadsheetSelect.length) {
-            // Don't restore if user has already manually selected a spreadsheet
-            var currentSpreadsheetVal = $spreadsheetSelect.val();
-            if (currentSpreadsheetVal && currentSpreadsheetVal !== '') {
-                // Already has a value, don't override
-                return;
-            }
-
-            // Get current post ID to retrieve the right cache
-            var postId = elementor.config.document.id || 'default';
-            var cacheKey = 'fdbgp_cached_spreadsheet_' + postId;
-
-            // Check if there's a cached spreadsheet for this page
-            var cachedSpreadsheet = localStorage.getItem(cacheKey);
-
-            if (cachedSpreadsheet) {
-                try {
-                    var spreadsheetData = JSON.parse(cachedSpreadsheet);
-
-                    // Check if this spreadsheet is not already in the dropdown
-                    if ($spreadsheetSelect.find('option[value="' + spreadsheetData.id + '"]').length === 0) {
-                        // Add it to the dropdown
-                        var $newOption = $spreadsheetSelect.find('option[value="new"]');
-                        $newOption.remove();
-
-                        var newOpt = document.createElement('option');
-                        newOpt.value = spreadsheetData.id;
-                        newOpt.text = spreadsheetData.name;
-                        $spreadsheetSelect.append(newOpt);
-
-                        $spreadsheetSelect.append($newOption);
-                    }
-
-                    // Select it
-                    $spreadsheetSelect.val(spreadsheetData.id).change();
-
-                    // If there's a cached sheet name, set it too
-                    if (spreadsheetData.sheet_name) {
-                        setTimeout(function () {
-                            var $sheetSelect = jQuery("[data-setting='fdbgp_sheet_list']");
-                            if ($sheetSelect.length && $sheetSelect.find('option[value="' + spreadsheetData.sheet_name + '"]').length > 0) {
-                                $sheetSelect.val(spreadsheetData.sheet_name).change();
-                                // Don't clear cache here - let it persist until publish/update
+                                if (cache) {
+                                    try {
+                                        const data = JSON.parse(cache);
+                                        savedState = {
+                                            spreadsheet: data.id,
+                                            sheet: data.sheet_name
+                                        };
+                                        console.log('FDBGP: Restored from localStorage:', savedState);
+                                    } catch (e) { }
+                                }
                             }
-                        }, 1000);
-                    } else {
-                        // Clear cache if no sheet name (incomplete data)
-                        localStorage.removeItem(cacheKey);
-                    }
-                } catch (e) {
-                    console.log('Error restoring spreadsheet:', e);
-                }
+
+                            if (savedState) {
+                                // Check if both dropdowns are empty
+                                const currentSpreadsheet = $spreadsheetSelect.val();
+                                const currentSheet = $sheetSelect.val();
+
+                                console.log('FDBGP: Change event - Current:', currentSpreadsheet, currentSheet, 'Saved:', savedState);
+
+                                // Restore spreadsheet first if empty
+                                if ((!currentSpreadsheet || currentSpreadsheet === '') && savedState.spreadsheet) {
+                                    // Add option if doesn't exist
+                                    if ($spreadsheetSelect.find(`option[value="${savedState.spreadsheet}"]`).length === 0) {
+                                        const cache = localStorage.getItem(`fdbgp_cached_spreadsheet_${elementor.config.document.id || 'default'}`);
+                                        if (cache) {
+                                            const data = JSON.parse(cache);
+                                            const $newOption = $spreadsheetSelect.find('option[value="new"]');
+                                            $newOption.remove();
+
+                                            const newOpt = document.createElement('option');
+                                            newOpt.value = data.id;
+                                            newOpt.text = data.name;
+                                            $spreadsheetSelect.append(newOpt);
+                                            $spreadsheetSelect.append($newOption);
+                                        }
+                                    }
+
+                                    this.isRestoring = true;
+                                    if (savedState.sheet) {
+                                        $sheetSelect.data('auto-select', savedState.sheet);
+                                    }
+                                    $spreadsheetSelect.val(savedState.spreadsheet).trigger('change');
+                                    setTimeout(() => { this.isRestoring = false; }, 1000);
+                                    return;
+                                }
+
+                                // Then restore sheet if needed
+                                if (savedState.sheet && $sheetSelect.val() !== savedState.sheet) {
+                                    const optionExists = $sheetSelect.find(`option[value="${savedState.sheet}"]`).length;
+                                    if (!optionExists && $spreadsheetSelect.val()) {
+                                        this.isRestoring = true;
+                                        $sheetSelect.data('auto-select', savedState.sheet);
+                                        $spreadsheetSelect.trigger('change');
+                                        setTimeout(() => { this.isRestoring = false; }, 1000);
+                                    } else if (optionExists) {
+                                        $sheetSelect.val(savedState.sheet).trigger('change');
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            console.error('FDBGP: Error in change handler:', e);
+                            this.isRestoring = false;
+                        }
+                    }, 300);
+                });
+            }
+
+            const clearCache = () => {
+                const postId = elementor.config.document.id || 'default';
+                localStorage.removeItem(`fdbgp_cached_spreadsheet_${postId}`);
+            };
+
+            if (typeof $e !== 'undefined' && $e.commands) {
+                $e.commands.on('run:after', (component, command) => {
+                    if (command?.startsWith('document/save/')) clearCache();
+                });
+            } else if (elementor.channels?.editor) {
+                elementor.channels.editor.on('saved', clearCache);
             }
         }
+
+        startPollingFallback() {
+            const start = performance.now();
+            const interval = setInterval(() => {
+                const $spreadsheet = $(".elementor-control-fdbgp_spreadsheetid select:visible");
+                const $sheet = $(".elementor-control-fdbgp_sheet_list select:visible");
+
+                if ($spreadsheet.length && $sheet.length && $spreadsheet.val()) {
+                    clearInterval(interval);
+                    $spreadsheet.trigger('change');
+                }
+
+                if (performance.now() - start > 20000) clearInterval(interval);
+            }, 1000);
+        }
     }
-})(jQuery);
+
+    $(window).on('elementor:init', () => {
+        window.FDBGP_Editor = new FDBGP_Editor();
+
+        // Expose global functions for backward compatibility
+        window.fdbgpUpdateSheetHeaders = (confirmOverwrite, btnContext) => {
+            if (window.FDBGP_Editor) {
+                window.FDBGP_Editor.updateSheetHeaders(confirmOverwrite, btnContext);
+            }
+        };
+
+        window.fdbgpCreateSpreadsheet = (btnContext) => {
+            if (window.FDBGP_Editor) {
+                window.FDBGP_Editor.createSpreadsheet(btnContext);
+            }
+        };
+
+        window.fdbgpCheckSheetContent = ($sheetSelect) => {
+            if (window.FDBGP_Editor) {
+                window.FDBGP_Editor.checkSheetContent($sheetSelect);
+            }
+        };
+    });
+
+    $(window).on('load', () => {
+        if (typeof elementor !== 'undefined' && elementor.modules && elementor.modules.controls) {
+
+            const FDBGP_DynamicSelect2 = elementor.modules.controls.BaseData.extend({
+
+                onReady: function () {
+                    if (this.ui.select.length > 0) {
+                        this.ui.select.select2({
+                            placeholder: 'Select fields',
+                            allowClear: true,
+                            width: '100%'
+                        });
+                    }
+
+                    this.updateOptions();
+
+                    if (this.container.settings.has('form_fields')) {
+                        this.listenTo(this.container.settings.get('form_fields'), 'add remove change', this.updateOptions);
+                    }
+                },
+
+                updateOptions: function () {
+                    const formFields = this.container.settings.get('form_fields');
+                    const $select = this.ui.select;
+                    const currentVal = this.getControlValue();
+                    const staticOptions = this.model.get('options');
+
+                    $select.empty();
+
+                    if (formFields) {
+                        formFields.each((model) => {
+                            const id = model.get('custom_id');
+                            let label = model.get('field_label');
+                            if (!label) label = id;
+
+                            const text = `${label} (${id})`;
+                            $select.append(new Option(text, id, false, false));
+                        });
+                    }
+
+                    if (staticOptions) {
+                        $.each(staticOptions, (key, label) => {
+                            $select.append(new Option(label, key, false, false));
+                        });
+                    }
+
+                    if (currentVal) {
+                        $select.val(currentVal);
+                    }
+
+                    $select.trigger('change');
+                },
+
+                onBeforeDestroy: function () {
+                    if (this.ui.select.data('select2')) {
+                        this.ui.select.select2('destroy');
+                    }
+                }
+            });
+
+            elementor.addControlView('fdbgp_dynamic_select2', FDBGP_DynamicSelect2);
+        }
+    });
+
+})(jQuery, window);
