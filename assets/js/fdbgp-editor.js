@@ -328,9 +328,19 @@
             });
         }
 
+        getCacheKey() {
+            try {
+                const postId = elementor.config.document.id || 'default';
+                const widgetId = elementor.getPanelView()?.getCurrentPageView?.().model.get('id');
+                return widgetId ? `fdbgp_cached_spreadsheet_${postId}_${widgetId}` : `fdbgp_cached_spreadsheet_${postId}`;
+            } catch (e) {
+                return `fdbgp_cached_spreadsheet_default`;
+            }
+        }
+
         cacheCreatedSpreadsheet(data) {
-            const postId = elementor.config.document.id || 'default';
-            localStorage.setItem(`fdbgp_cached_spreadsheet_${postId}`, JSON.stringify({
+            const cacheKey = this.getCacheKey();
+            localStorage.setItem(cacheKey, JSON.stringify({
                 id: data.spreadsheet_id,
                 name: data.spreadsheet_name,
                 sheet_name: data.sheet_name || ''
@@ -341,8 +351,8 @@
             const val = $select.val();
             if (!val || val === 'new') return;
 
-            const postId = elementor.config.document.id || 'default';
-            localStorage.setItem(`fdbgp_cached_spreadsheet_${postId}`, JSON.stringify({
+            const cacheKey = this.getCacheKey();
+            localStorage.setItem(cacheKey, JSON.stringify({
                 id: val,
                 name: $select.find('option:selected').text(),
                 sheet_name: ''
@@ -353,14 +363,13 @@
             const sheet = $select.val();
             if (!sheet || sheet === 'create_new_tab') return;
 
-            const postId = elementor.config.document.id || 'default';
-            const key = `fdbgp_cached_spreadsheet_${postId}`;
-            const cache = localStorage.getItem(key);
+            const cacheKey = this.getCacheKey();
+            const cache = localStorage.getItem(cacheKey);
 
             if (cache) {
                 const data = JSON.parse(cache);
                 data.sheet_name = sheet;
-                localStorage.setItem(key, JSON.stringify(data));
+                localStorage.setItem(cacheKey, JSON.stringify(data));
             }
         }
 
@@ -369,8 +378,8 @@
         }
 
         restoreCachedSpreadsheet() {
-            const postId = elementor.config.document.id || 'default';
-            const cache = localStorage.getItem(`fdbgp_cached_spreadsheet_${postId}`);
+            const cacheKey = this.getCacheKey();
+            const cache = localStorage.getItem(cacheKey);
             if (!cache) return;
 
             const data = JSON.parse(cache);
@@ -421,8 +430,7 @@
                     if ((!currentSpreadsheet || currentSpreadsheet === '') && (!currentSheet || currentSheet === '')) {
                         console.log('FDBGP: Both empty, checking localStorage...');
                         // Try to restore from localStorage
-                        const postId = elementor.config.document.id || 'default';
-                        const cacheKey = `fdbgp_cached_spreadsheet_${postId}`;
+                        const cacheKey = this.getCacheKey();
                         const cache = localStorage.getItem(cacheKey);
 
                         console.log('FDBGP: Cache key:', cacheKey, 'Cache data:', cache);
@@ -487,8 +495,7 @@
 
                             // If no widgetState, try localStorage as fallback
                             if (!savedState) {
-                                const postId = elementor.config.document.id || 'default';
-                                const cacheKey = `fdbgp_cached_spreadsheet_${postId}`;
+                                const cacheKey = this.getCacheKey();
                                 const cache = localStorage.getItem(cacheKey);
 
                                 if (cache) {
@@ -514,7 +521,7 @@
                                 if ((!currentSpreadsheet || currentSpreadsheet === '') && savedState.spreadsheet) {
                                     // Add option if doesn't exist
                                     if ($spreadsheetSelect.find(`option[value="${savedState.spreadsheet}"]`).length === 0) {
-                                        const cache = localStorage.getItem(`fdbgp_cached_spreadsheet_${elementor.config.document.id || 'default'}`);
+                                        const cache = localStorage.getItem(this.getCacheKey());
                                         if (cache) {
                                             const data = JSON.parse(cache);
                                             const $newOption = $spreadsheetSelect.find('option[value="new"]');
@@ -559,8 +566,8 @@
             }
 
             const clearCache = () => {
-                const postId = elementor.config.document.id || 'default';
-                localStorage.removeItem(`fdbgp_cached_spreadsheet_${postId}`);
+                const cacheKey = this.getCacheKey();
+                localStorage.removeItem(cacheKey);
             };
 
             if (typeof $e !== 'undefined' && $e.commands) {
