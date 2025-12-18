@@ -3,14 +3,12 @@
 
     class FDBGP_Editor {
         constructor() {
-            console.log('FDBGP: Constructor called');
             this.widgetState = {};
             this.isRestoring = false;
             this.init();
         }
 
         init() {
-            console.log('FDBGP: Init called');
             this.bindEvents();
             this.registerElementorHooks();
             this.startPollingFallback();

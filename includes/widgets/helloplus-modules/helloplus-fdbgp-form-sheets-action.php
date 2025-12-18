@@ -108,8 +108,9 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
      */
     public function render_editor_script() {
         wp_enqueue_script(
-            'helloplus-fdbgp-editor-script', // Unique Handle
-            FDBGP_PLUGIN_URL . 'assets/helloplus-addons/js/helloplus-fdbgp-editor.js', // Path to your new JS file
+            // 'helloplus-fdbgp-editor-script', // Unique Handle
+            'fdbgp-editor-script', // Unique Handle
+            FDBGP_PLUGIN_URL . 'assets/js/fdbgp-editor.js', // Path to your new JS file
             [ 'elementor-editor', 'jquery' ], // Dependencies
             FDBGP_PLUGIN_VERSION, // Version
             true // Load in footer
