@@ -187,7 +187,7 @@ class FDBGP_Form_To_Sheet_Settings {
      */
     private function render_empty_state() {
 
-        $create_form_url = admin_url( 'post-new.php?post_type=page' );
+        $create_form_url = admin_url( 'admin.php?action=fdbgp_create_elementor_page' );
         ?>
         <div class="cool-formkit-setting-table-con">
 
@@ -201,7 +201,7 @@ class FDBGP_Form_To_Sheet_Settings {
                 </p>
 
                 <p>
-                    <a class="button button-primary" href="<?php echo esc_url( $create_form_url ); ?>">
+                    <a class="button button-primary" href="<?php echo esc_url( $create_form_url ); ?>" target="_blank">
                         <?php esc_html_e( 'Create New Form', 'elementor-contact-form-db' ); ?>
                     </a>
                 </p>

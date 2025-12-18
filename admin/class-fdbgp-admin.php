@@ -38,6 +38,36 @@ if(!class_exists('FDBGP_Admin')) {
             
             add_action('admin_menu', array($this, 'add_plugin_admin_menu'), 999);
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
+            add_action('admin_action_fdbgp_create_elementor_page', array($this, 'redirect_to_elementor_builder'));
+        }
+
+        /**
+         * Create a new page and redirect to Elementor Editor
+         */
+        public function redirect_to_elementor_builder() {
+            if ( ! current_user_can( 'edit_pages' ) ) {
+                wp_die( 'Insufficient permissions' );
+            }
+
+            $post_data = array(
+                'post_title'  => 'New Elementor Form',
+                'post_type'   => 'page',
+                'post_status' => 'draft',
+            );
+            
+            $post_id = wp_insert_post($post_data);
+            
+            if($post_id && !is_wp_error($post_id)){
+                update_post_meta($post_id, '_elementor_edit_mode', 'builder');
+                
+                // Redirect to Elementor Editor
+                $redirect_url = admin_url( 'post.php?post=' . $post_id . '&action=elementor' );
+                wp_redirect($redirect_url);
+                exit;
+            }
+            
+            wp_redirect(admin_url('post-new.php?post_type=page'));
+            exit;
         }
 
         public function add_plugin_admin_menu() {

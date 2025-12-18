@@ -423,24 +423,18 @@
                     const currentSpreadsheet = $spreadsheet.val();
                     const currentSheet = $sheetSelect.val();
 
-                    console.log('FDBGP: Panel opened - Spreadsheet:', currentSpreadsheet, 'Sheet:', currentSheet);
 
                     if ((!currentSpreadsheet || currentSpreadsheet === '') && (!currentSheet || currentSheet === '')) {
-                        console.log('FDBGP: Both empty, checking localStorage...');
                         // Try to restore from localStorage
                         const cacheKey = this.getCacheKey();
                         const cache = localStorage.getItem(cacheKey);
 
-                        console.log('FDBGP: Cache key:', cacheKey, 'Cache data:', cache);
-
                         if (cache) {
                             try {
                                 const data = JSON.parse(cache);
-                                console.log('FDBGP: Parsed cache:', data);
 
                                 // Add spreadsheet to dropdown if not exists
                                 if (data.id && $spreadsheet.find(`option[value="${data.id}"]`).length === 0) {
-                                    console.log('FDBGP: Adding spreadsheet to dropdown');
                                     const $newOption = $spreadsheet.find('option[value="new"]');
                                     $newOption.remove();
 
@@ -454,20 +448,16 @@
                                 // Set spreadsheet value
                                 if (data.id) {
                                     if (data.sheet_name) {
-                                        console.log('FDBGP: Setting auto-select for sheet:', data.sheet_name);
                                         $sheetSelect.data('auto-select', data.sheet_name);
                                     }
-                                    console.log('FDBGP: Setting spreadsheet value:', data.id);
                                     $spreadsheet.val(data.id).trigger('change');
                                 }
                             } catch (e) {
                                 console.log('FDBGP: Error restoring from cache:', e);
                             }
                         } else {
-                            console.log('FDBGP: No cache found');
                         }
                     } else if (currentSpreadsheet && currentSpreadsheet !== 'new') {
-                        console.log('FDBGP: Spreadsheet already selected');
                         if ($sheetSelect.find('option').length <= 2) {
                             $spreadsheet.trigger('change');
                         } else {
@@ -503,7 +493,6 @@
                                             spreadsheet: data.id,
                                             sheet: data.sheet_name
                                         };
-                                        console.log('FDBGP: Restored from localStorage:', savedState);
                                     } catch (e) { }
                                 }
                             }
@@ -513,7 +502,6 @@
                                 const currentSpreadsheet = $spreadsheetSelect.val();
                                 const currentSheet = $sheetSelect.val();
 
-                                console.log('FDBGP: Change event - Current:', currentSpreadsheet, currentSheet, 'Saved:', savedState);
 
                                 // Restore spreadsheet first if empty
                                 if ((!currentSpreadsheet || currentSpreadsheet === '') && savedState.spreadsheet) {
