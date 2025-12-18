@@ -762,9 +762,7 @@ p.description {
   width: calc(85% - 10px);
 }
 
-.cool-formkit-right-side-info-bar {
-  width: calc(33% - 10px);
-}
+
 
 .form-table th {
   width: 40% !important;
@@ -1520,6 +1518,7 @@ span.cfkef-pro-feature a {
   box-shadow: 0px 2px 2px rgb(150 150 150 / 12%);
   display: flex;
   flex-direction: column;
+  height: fit-content;
 }
 
 .cfk-box h3 {
@@ -1848,6 +1847,116 @@ a.button-primary.upgrade-pro-btn {
   height: 0;
 }
 
+
+.fdbgp-card {
+  width: 33%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  height: fit-content;
+}
+
+.fdbgp-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3em;
+  margin-bottom: 20px;
+}
+
+.fdbgp-steps {
+  position: relative;
+  margin-left: 10px;
+}
+
+.fdbgp-step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.fdbgp-step::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 36px;
+  height: calc(100% - 36px);
+  width: 2px;
+  background: #e2e6f0;
+}
+
+.fdbgp-step:last-child::before {
+  display: none;
+}
+
+.fdbgp-step-number {
+  min-width: 32px;
+  height: 32px;
+  background: #e9f0ff;
+  color: #2f6df6;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fdbgp-step-content h3 {
+  margin: 0 0 6px;
+  font-size: 1.1em
+}
+
+.fdbgp-step-content p {
+  margin: 0;
+  color: #666;
+ font-size: 13px;
+}
+
+.fdbgp-step-content a {
+  display: inline-block;
+  margin-top: 6px;
+  color: #2f6df6;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.fdbgp-step-content a:hover {
+  text-decoration: underline;
+}
+
+.fdbgp-help-box {
+  background: #f8f9fd;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.fdbgp-help-box h4 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  color: #777;
+}
+
+.fdbgp-help-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fdbgp-help-box li {
+  font-size: 14px;
+  padding: 6px 0;
+  color: #333;
+  cursor: pointer;
+}
+
+.fdbgp-help-box li:hover {
+  color: #2f6df6;
+}
+
+
 /* End Dashboard tab styles */
 
 @media screen and (max-width: 1500px) {
@@ -1860,6 +1969,11 @@ a.button-primary.upgrade-pro-btn {
 
 @media screen and (max-width: 782px) {
 
+
+  .fdbgp-card {
+    width: 400px;
+  }
+
   .cfkef-form-element-card h4 {
     font-size: 16px;
   }
@@ -1871,11 +1985,6 @@ a.button-primary.upgrade-pro-btn {
 
   .cool-formkit-left-side-setting {
     width: 100% !important;
-  }
-
-  .cool-formkit-right-side-info-bar {
-    min-width: 300px;
-    width: 100%;
   }
 
   .form-table .site-key-td,

@@ -37,23 +37,55 @@ class FDBGP_Form_To_Sheet_Settings {
 
     private function render_google_sheets_sidebar() {
         ?>
-        <div class="cool-formkit-right-side-info-bar">
-            <div class="notice notice-info">
-                <h3><?php esc_html_e('How to use Save Submissions in Google Sheet', 'elementor-contact-form-db'); ?></h3>
-                <ol>
-                    <li>
-                        <?php esc_html_e('Configure Google API', 'elementor-contact-form-db'); ?>
-                        <a href="admin.php?page=formsdb&tab=settings">
-                            <?php esc_html_e('Here', 'elementor-contact-form-db'); ?>
-                        </a>
-                    </li>
-                    <li><?php esc_html_e('Create a page with Elementor', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Use "Save Submissions in Google Sheet" in Action After Submit', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Select Spreadsheet, sheet headers and sheet tab name', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Update the sheet', 'elementor-contact-form-db'); ?></li>
-                </ol>
+            <div class="fdbgp-card">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">🎓</span> How to use
+                </h2>
+
+                <div class="fdbgp-steps">
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">1</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Configure Google API</h3>
+                        <p>Navigate to the Settings tab and authenticate your Google Account.</p>
+                        <a href="admin.php?page=formsdb&tab=settings">Go to Settings →</a>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">2</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Edit your Form</h3>
+                        <p>Open your page in Elementor and select your form widget.</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">3</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Add Action</h3>
+                        <p>Under <strong>'Actions After Submit'</strong>, add <strong>Save Submissions in Google Sheet</strong>.</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Map Fields</h3>
+                        <p>Select your spreadsheet and map form fields to columns.</p>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="fdbgp-help-box">
+                    <h4>NEED HELP?</h4>
+                    <ul>
+                    <li>▶ Watch Video Tutorial</li>
+                    <li>📄 Read Documentation</li>
+                    <li>🎧 Contact Support</li>
+                    </ul>
+                </div>
             </div>
-        </div>
         <?php
     }
 
@@ -64,6 +96,7 @@ class FDBGP_Form_To_Sheet_Settings {
      * @param array $forms
      */
     private function render_forms_table( array $forms ) {
+
         ?>
             <div class="cool-formkit-setting-table-con">
 
@@ -171,9 +204,11 @@ class FDBGP_Form_To_Sheet_Settings {
             'meta_key'       => '_elementor_data',
         ] );
 
+        
         foreach ( $posts as $post ) {
 
             $data = get_post_meta( $post->ID, '_elementor_data', true );
+            
             if ( empty( $data ) ) {
                 continue;
             }
