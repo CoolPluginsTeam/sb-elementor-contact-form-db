@@ -278,6 +278,13 @@
         }
 
         onSpreadsheetChange($select) {
+
+            const spreadsheetId = $select.val();
+            if (spreadsheetId === 'new') {
+                const $panel = $select.closest('.elementor-panel');
+                $panel.find("[data-setting='fdbgp_new_spreadsheet_name']").val('');
+                $panel.find("[data-setting='fdbgp_sheet_name']").val('');
+            }
             try {
                 const widgetId = elementor.getPanelView()?.getCurrentPageView?.().model.get('id');
                 if (widgetId && window.fdbgpWidgetState?.[widgetId]) {
