@@ -289,7 +289,11 @@ class FDBGP_Form_To_Sheet_Settings {
                         $spreadsheet_id = $element['settings']['fdbgp_spreadsheetid'];
                     }
 
-                    $sheet_title = $element['settings']['fdbgp_sheet_list'] ?? '';
+                    if ( ! empty( $element['settings']['fdbgp_sheet_list'] ) ) {
+                        $sheet_title = $element['settings']['fdbgp_sheet_list'];
+                    }else{
+                        $sheet_title = '';
+                    }                    
                     if ( ! empty( $spreadsheet_id ) && 'new' !== $spreadsheet_id ) {
                         $spreadsheet_url = 'https://docs.google.com/spreadsheets/d/' . $spreadsheet_id;
                     }
