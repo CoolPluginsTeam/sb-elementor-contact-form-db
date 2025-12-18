@@ -42,12 +42,18 @@
             $(document).on('change', "[data-setting='fdbgp_sheet_list']", (e) => {
                 this.cacheSheetSelection($(e.currentTarget));
             });
+
+            $(document).on('click', "#elementor-editor-wrapper-v2 .MuiButton-containedSizeLarge", (e) => {
+                const postId = elementor.config.document.id || 'default';
+                localStorage.removeItem('fdbgp_cached_spreadsheet_' + postId);
+            });
         }
 
         collectSettings($panel) {
             const settings = {};
             $panel.find('input, select, textarea').each(function () {
-                const key = $(this).data('setting');
+                const key = $(this).attr("data-setting");
+                console.log('key ', key, 'value ', $(this).val());
                 if (key) settings[key] = $(this).val();
             });
 
@@ -92,13 +98,25 @@
             const originalText = $btn.data('original-text') || $text.text();
             $btn.data('original-text', originalText);
 
-            const settings = this.collectSettings($panel);
+            var settings = {};
+            $panel.find("input, select, textarea").each(function () {
+                var $input = jQuery(this);
+                var name = $input.attr("data-setting");
+                if (name) {
+                    settings[name] = $input.val();
+                }
+            });
 
-            if (!settings.spreadsheetId || settings.spreadsheetId === 'new') {
+            var spreadsheetId = settings["fdbgp_spreadsheetid"] || "";
+            var sheetName = settings["fdbgp_sheet_list"] || "";
+            var newSheetName = settings["fdbgp_new_sheet_tab_name"] || "";
+            var sheetHeaders = settings["fdbgp_sheet_headers"] || [];
+
+            if (!spreadsheetId || spreadsheetId === 'new') {
                 return this.showError($message, 'Please select a Spreadsheet first');
             }
 
-            if (settings.sheetName === 'create_new_tab' && !settings.newSheetName) {
+            if (sheetName === 'create_new_tab' && !sheetName) {
                 return this.showError($message, 'Please enter a New Sheet Tab Name');
             }
 
@@ -108,11 +126,11 @@
             $.post(ajaxurl, {
                 action: 'fdbgp_update_sheet_headers',
                 _nonce: elementorCommon.config.ajax.nonce,
-                spreadsheet_id: settings.spreadsheetId,
-                sheet_name: settings.sheetName,
-                new_sheet_name: settings.newSheetName,
-                headers: settings.sheetHeaders,
-                confirm_overwrite: confirmOverwrite ? 'true' : 'false'
+                spreadsheet_id: spreadsheetId,
+                sheet_name: sheetName,
+                new_sheet_name: newSheetName,
+                headers: sheetHeaders,
+                confirm_overwrite: confirmOverwrite === true ? 'true' : 'false'
             }).done((response) => {
 
                 if (response.success && response.data.confirm_needed) {
@@ -186,18 +204,31 @@
             const $text = $btn.find('.elementor-button-text');
             const $message = $panel.find('#fdbgp-message');
 
-            const settings = this.collectSettings($panel);
+            var settings = {};
+
+            $panel.find("input, select, textarea").each(function () {
+                var $input = jQuery(this);
+                var name = $input.attr("data-setting");
+                if (name) {
+                    settings[name] = $input.val();
+                }
+            });
+
+            var spreadsheetName = settings["fdbgp_new_spreadsheet_name"] || "";
+            var sheetName = settings["fdbgp_sheet_name"] || "";
+            var sheetHeaders = settings["fdbgp_sheet_headers"] || [];
+
             const originalText = $text.text();
 
-            if (!settings.spreadsheetName) {
+            if (!spreadsheetName) {
                 return this.showError($message, 'Please enter a Spreadsheet Name');
             }
 
-            if (!settings.sheetName) {
+            if (!sheetName) {
                 return this.showError($message, 'Please enter a Sheet Tab Name');
             }
 
-            if (!settings.sheetHeaders.length) {
+            if (!sheetHeaders.length) {
                 return this.showError($message, 'Please select at least one Sheet Header');
             }
 
@@ -207,9 +238,9 @@
             $.post(ajaxurl, {
                 action: 'fdbgp_create_spreadsheet',
                 _nonce: elementorCommon.config.ajax.nonce,
-                spreadsheet_name: settings.spreadsheetName,
-                sheet_name: settings.sheetName,
-                headers: settings.sheetHeaders
+                spreadsheet_name: spreadsheetName,
+                sheet_name: sheetName,
+                headers: sheetHeaders
             }).done((response) => {
 
                 if (response.success) {
@@ -322,7 +353,7 @@
                 }
 
                 $sheetSelect.trigger('change');
-            }.bind(this));
+            });
         }
 
         reloadSheetList($panel, spreadsheetId, newSheet) {
