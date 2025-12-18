@@ -56,8 +56,8 @@ class FDBGP_Form_To_Sheet_Settings {
         ?>
         <div class='status-wrapper'>
         <?php
-        echo '<h2>' . esc_html__( 'Forms with "Save Submissions in Google Sheet" Action', 'elementor-contact-form-db' ) . '</h2>';
-        echo '<p>' . esc_html__( 'This section displays all Elementor forms configured to save submissions directly into a Google Sheet. You can manage their settings and status here.', 'elementor-contact-form-db' ) . '</p>';
+        echo '<h2>' . esc_html__( 'Save Form Submissions to Google Sheets', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<p>' . esc_html__( 'View all your Elementor forms here and manage their connection with Google Sheets. Automatically send new form submissions to your selected Google Sheet.', 'elementor-contact-form-db' ) . '</p>';
         if ( ! empty( $forms ) ) {
             $this->render_forms_table( $forms );
         } else {

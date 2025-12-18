@@ -22,8 +22,8 @@ class FDBGP_Form_To_Post_Settings {
         ?>
         <div class='status-wrapper'>
         <?php
-        echo '<h2>' . esc_html__( 'Forms with "Save Submissions In Post Type" Action', 'elementor-contact-form-db' ) . '</h2>';
-        echo '<p>' . esc_html__( 'This section allows you to manage forms that are configured to save submissions as custom post types. You can view and edit the settings for each form here.', 'elementor-contact-form-db' ) . '</p>';
+        echo '<h2>' . esc_html__( 'Send Form Submissions to Post Types', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<p>' . esc_html__( 'View all your Elementor forms here and connect them to WordPress posts, pages, or custom post types. Use form submissions to create content directly from the frontend.', 'elementor-contact-form-db' ) . '</p>';
         if ( ! empty( $forms ) ) {
             $this->render_forms_table( $forms );
         } else {
