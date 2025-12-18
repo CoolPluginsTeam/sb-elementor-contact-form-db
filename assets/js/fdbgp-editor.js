@@ -579,7 +579,7 @@
         }
     }
 
-    $(window).on('elementor:init', () => {
+    $(window).on('load', () => {
         window.FDBGP_Editor = new FDBGP_Editor();
 
         // Expose global functions for backward compatibility
