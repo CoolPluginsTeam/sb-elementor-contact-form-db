@@ -43,15 +43,54 @@ class FDBGP_Form_To_Post_Settings {
 
     private function render_right_sidebar() {
         ?>
-            <div class="cool-formkit-right-side-info-bar">
-                <div class="notice notice-info">
-                    <h3><?php esc_html_e('How to use Save Submissions In Post Type', 'elementor-contact-form-db'); ?></h3>
-                    <ol>
-                        <li><?php esc_html_e('Create a page with Elementor', 'elementor-contact-form-db'); ?></li>
-                        <li><?php esc_html_e('Use "Save Submissions In Post Type" in Actions After Submit', 'elementor-contact-form-db'); ?></li>
-                        <li><?php esc_html_e('Select post type and post status in settings', 'elementor-contact-form-db'); ?></li>
-                        <li><?php esc_html_e('Update the page', 'elementor-contact-form-db'); ?></li>
-                    </ol>
+
+
+            <div class="fdbgp-card">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">🎓</span> How to use
+                </h2>
+
+                <div class="fdbgp-steps">
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">1</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Create Page</h3>
+                        <p>Create a page with Elementor</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">2</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Edit your Form</h3>
+                        <p>Open your page in Elementor and select your form widget.</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">3</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Add Action</h3>
+                        <p>Under <strong>'Actions After Submit'</strong>, add <strong>Save Submissions In Post Type</strong>.</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Post Type</h3>
+                        <p>Select post type and post status in settings.</p>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="fdbgp-help-box">
+                    <h4>NEED HELP?</h4>
+                    <ul>
+                    <li>▶ Watch Video Tutorial</li>
+                    <li>📄 Read Documentation</li>
+                    <li>🎧 Contact Support</li>
+                    </ul>
                 </div>
             </div>
         <?php

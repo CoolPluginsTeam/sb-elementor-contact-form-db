@@ -184,10 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                             <?php endif; ?>
                         </table>
                     </div>
-                </div>
 
-                <hr>
-                <div class="fdbgp-submit">
                     <?php wp_nonce_field('fdbgp_settings_action', 'fdbgp_settings_nonce'); ?>
                     <button type="submit" name="save_google_settings" class="button button-primary">
                         <?php esc_html_e('Save Settings', 'elementor-contact-form-db'); ?>
@@ -198,38 +195,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                             <?php esc_html_e('Reset Google Settings', 'elementor-contact-form-db'); ?>
                         </button>
                     <?php endif; ?>
+
                 </div>
+
             </form>
         </div>
 
 
 
-        <div class="cfk-right">
-            <!-- Configuration Instructions -->
-            <div class="notice notice-info">
-                <h3><?php esc_html_e('Google API Configuration Instructions', 'elementor-contact-form-db'); ?></h3>
-                <ol>
-                    <li><?php esc_html_e('Go to', 'elementor-contact-form-db'); ?>
-                        <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">
-                            Google Cloud Console
-                        </a>
-                    </li>
-                    <li><?php esc_html_e('Create a new project or select existing one', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Enable Google Sheets API and Google Drive API', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Create OAuth 2.0 credentials', 'elementor-contact-form-db'); ?></li>
-                    <li><?php esc_html_e('Add Authorized Domain:', 'elementor-contact-form-db'); ?>
+        <div class="fdbgp-card">
+            <h2 class="fdbgp-card-title">
+                <span class="fdbgp-icon">🎓</span> Google API Configuration Instructions
+            </h2>
+
+            <div class="fdbgp-steps">
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">1</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Go to</h3>
+                        <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console →</a>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">2</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Create project</h3>
+                        <p>Create a new project or select existing one.</p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">3</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Google API</h3>
+                        <p>Enable Google Sheets API and Google Drive API.</p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Add Authorized Domain</h3>
                         <code id="auth-domain"><?php echo esc_html($site_domain); ?></code>
                         <button type="button" class="button button-small copy-btn" data-clipboard-target="#auth-domain">
                             <?php esc_html_e('Copy', 'elementor-contact-form-db'); ?>
                         </button>
-                    </li>
-                    <li><?php esc_html_e('Add Authorized Redirect URI:', 'elementor-contact-form-db'); ?>
-                        <div class="cool-formkit-site-url-con"><code id="redirect-uri"><?php echo esc_url($redirect_uri); ?></code></div>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Add Authorized Redirect URI</h3>
+                        <code id="redirect-uri"><?php echo esc_url($redirect_uri); ?></code>
                         <button type="button" class="button button-small copy-btn" data-clipboard-target="#redirect-uri">
                             <?php esc_html_e('Copy', 'elementor-contact-form-db'); ?>
                         </button>
-                    </li>
-                </ol>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Google OAuth</h3>
+                        <p>Create OAuth 2.0 credentials.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="fdbgp-help-box">
+                <h4>NEED HELP?</h4>
+                <ul>
+                    <li>▶ Watch Video Tutorial</li>
+                    <li>📄 Read Documentation</li>
+                    <li>🎧 Contact Support</li>
+                </ul>
             </div>
         </div>
     </div>
