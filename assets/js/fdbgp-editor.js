@@ -105,13 +105,55 @@
             $btn.prop('disabled', true);
             $text.text('Updating...');
 
+            // Resolve headers to labels (use Label if validation, otherwise ID)
+            let headersToSend = settings.sheetHeaders;
+            try {
+                if (typeof elementor !== 'undefined' && elementor.getPanelView) {
+                    const view = elementor.getPanelView().getCurrentPageView();
+                    if (view && view.model) {
+                        const formFields = view.model.get('settings').get('form_fields');
+
+                        if (headersToSend && Array.isArray(headersToSend)) {
+                            headersToSend = headersToSend.map(headerId => {
+                                // System fields mapping
+                                const systemLabels = {
+                                    'user_ip': 'User IP',
+                                    'user_agent': 'User Agent',
+                                    'page_url': 'Page URL',
+                                    'submission_date': 'Submission Date',
+                                    // 'referer_url': 'Referer URL',
+                                    // 'post_id': 'Post ID'
+                                };
+
+                                if (systemLabels[headerId]) {
+                                    return systemLabels[headerId];
+                                }
+
+                                // Find in form fields
+                                if (formFields && formFields.findWhere) {
+                                    const field = formFields.findWhere({ custom_id: headerId });
+                                    if (field) {
+                                        const label = field.get('field_label');
+                                        return label && label.trim() !== '' ? label : headerId;
+                                    }
+                                }
+
+                                return headerId;
+                            });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('FDBGP: Error resolving header labels:', e);
+            }
+
             $.post(ajaxurl, {
                 action: 'fdbgp_update_sheet_headers',
                 _nonce: elementorCommon.config.ajax.nonce,
                 spreadsheet_id: settings.spreadsheetId,
                 sheet_name: settings.sheetList,
                 new_sheet_name: settings.newSheetName,
-                headers: settings.sheetHeaders,
+                headers: headersToSend,
                 confirm_overwrite: confirmOverwrite ? 'true' : 'false'
             }).done((response) => {
                 const { success, data } = response;
