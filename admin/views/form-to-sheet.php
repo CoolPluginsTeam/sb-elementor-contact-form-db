@@ -13,6 +13,40 @@ class FDBGP_Form_To_Sheet_Settings {
         $this->render_page($forms);
     }
 
+    private function get_spreadsheet_tab_url( $spreadsheet_id, $sheet_title ) {
+        if ( empty( $spreadsheet_id ) || empty( $sheet_title ) ) {
+            return '';
+        }
+
+        try {
+            $api = new \Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions();
+            $client = $api->getClient();
+
+            $service = new \Google_Service_Sheets( $client );
+            $spreadsheet = $service->spreadsheets->get( $spreadsheet_id );
+
+            foreach ( $spreadsheet->getSheets() as $sheet ) {
+                $properties = $sheet->getProperties();
+
+                if ( $properties->getTitle() === $sheet_title ) {
+                    $sheet_id = $properties->getSheetId();
+
+                    return sprintf(
+                        'https://docs.google.com/spreadsheets/d/%s/edit#gid=%d',
+                        $spreadsheet_id,
+                        $sheet_id
+                    );
+                }
+            }
+
+        } catch ( \Exception $e ) {
+            // Optional: log error for debugging
+            error_log( 'Google Sheet URL error: ' . $e->getMessage() );
+        }
+
+        return '';
+    }
+
     /**
      * Render page
      *
@@ -254,10 +288,16 @@ class FDBGP_Form_To_Sheet_Settings {
                     if ( ! empty( $element['settings']['fdbgp_spreadsheetid'] ) ) {
                         $spreadsheet_id = $element['settings']['fdbgp_spreadsheetid'];
                     }
-                    
+
+                    $sheet_title = $element['settings']['fdbgp_sheet_list'];
                     if ( ! empty( $spreadsheet_id ) && 'new' !== $spreadsheet_id ) {
                         $spreadsheet_url = 'https://docs.google.com/spreadsheets/d/' . $spreadsheet_id;
                     }
+
+                    $spreadsheet_url = $this->get_spreadsheet_tab_url(
+                        $spreadsheet_id,
+                        $sheet_title
+                    );
                 }
             }
 
