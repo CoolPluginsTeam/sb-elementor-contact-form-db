@@ -3,12 +3,14 @@
 
     class FDBGP_Editor {
         constructor() {
+            console.log('FDBGP: Constructor called');
             this.widgetState = {};
             this.isRestoring = false;
             this.init();
         }
 
         init() {
+            console.log('FDBGP: Init called');
             this.bindEvents();
             this.registerElementorHooks();
             this.startPollingFallback();
@@ -579,27 +581,27 @@
         }
     }
 
-    $(window).on('elementor:init', () => {
+    $(window).on('load', () => {
         window.FDBGP_Editor = new FDBGP_Editor();
 
         // Expose global functions for backward compatibility
-        window.fdbgpUpdateSheetHeaders = (confirmOverwrite, btnContext) => {
-            if (window.FDBGP_Editor) {
-                window.FDBGP_Editor.updateSheetHeaders(confirmOverwrite, btnContext);
-            }
-        };
+        // window.fdbgpUpdateSheetHeaders = (confirmOverwrite, btnContext) => {
+        //     if (window.FDBGP_Editor) {
+        //         window.FDBGP_Editor.updateSheetHeaders(confirmOverwrite, btnContext);
+        //     }
+        // };
 
-        window.fdbgpCreateSpreadsheet = (btnContext) => {
-            if (window.FDBGP_Editor) {
-                window.FDBGP_Editor.createSpreadsheet(btnContext);
-            }
-        };
+        // window.fdbgpCreateSpreadsheet = (btnContext) => {
+        //     if (window.FDBGP_Editor) {
+        //         window.FDBGP_Editor.createSpreadsheet(btnContext);
+        //     }
+        // };
 
-        window.fdbgpCheckSheetContent = ($sheetSelect) => {
-            if (window.FDBGP_Editor) {
-                window.FDBGP_Editor.checkSheetContent($sheetSelect);
-            }
-        };
+        // window.fdbgpCheckSheetContent = ($sheetSelect) => {
+        //     if (window.FDBGP_Editor) {
+        //         window.FDBGP_Editor.checkSheetContent($sheetSelect);
+        //     }
+        // };
     });
 
     $(window).on('load', () => {
