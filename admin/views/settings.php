@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                 <div class="wrapper-header">
                     <div class="fdbgp-save-all">
                         <div class="fdbgp-title-desc">
-                            <h2><?php esc_html_e('Cool FormKit Settings', 'elementor-contact-form-db'); ?></h2>
+                            <h2><?php esc_html_e('Settings', 'elementor-contact-form-db'); ?></h2>
                         </div>
                         <div class="fdbgp-save-controls">
                             <button type="submit" name="save_google_settings" class="button button-primary">

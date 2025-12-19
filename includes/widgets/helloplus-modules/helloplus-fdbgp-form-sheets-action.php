@@ -460,7 +460,14 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
                         if ( isset( $element['settings']['form_fields'] ) ) {
                             foreach ( $element['settings']['form_fields'] as $formdata ) {
                                 if ( ! isset( $formdata['field_type'] ) || ( isset( $formdata['field_type'] ) && ! in_array( $formdata['field_type'], $fdbgp_exclude_headertype, true ) ) ) {
-                                    $local_headers[ $formdata['custom_id'] ] = isset( $formdata['field_label'] ) && $formdata['field_label'] ? $formdata['field_label'] : ucfirst( $formdata['custom_id'] );
+                                    if ( empty( $formdata['custom_id'] ) ) {
+                                        return;
+                                    }
+                                    $custom_id = (string) $formdata['custom_id'];
+                                    $label = ! empty( $formdata['field_label'] )
+                                        ? $formdata['field_label']
+                                        : ucfirst( $custom_id );
+                                    $local_headers[ $custom_id ] = $label;
                                 }
                             }
                         }

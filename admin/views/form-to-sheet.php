@@ -8,9 +8,25 @@ class FDBGP_Form_To_Sheet_Settings {
     /**
      * Render settings UI
      */
-    public function __construct(){
+    private $per_page = 10;
+
+    /**
+     * Render settings UI
+     */
+    public function __construct() {
         $forms = $this->get_all_forms();
-        $this->render_page($forms);
+        
+        $total_items = count( $forms );
+        $current_page = $this->get_current_page();
+        $offset = ( $current_page - 1 ) * $this->per_page;
+        
+        $forms_to_show = array_slice( $forms, $offset, $this->per_page );
+        $this->render_page( $forms_to_show, $total_items, $current_page );
+    }
+
+    private function get_current_page() {
+        $paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+        return max( 1, $paged );
     }
 
     private function get_spreadsheet_tab_url( $spreadsheet_id, $sheet_title ) {
@@ -52,14 +68,21 @@ class FDBGP_Form_To_Sheet_Settings {
      *
      * @param array $forms
      */
-    private function render_page( array $forms ) {
+    /**
+     * Render page
+     *
+     * @param array $forms
+     * @param int $total_items
+     * @param int $current_page
+     */
+    private function render_page( array $forms, $total_items = 0, $current_page = 1 ) {
         ?>
         <div class='status-wrapper'>
         <?php
-        echo '<h2>' . esc_html__( 'Save Form Submissions to Google Sheets', 'elementor-contact-form-db' ) . '</h2>';
+        echo '<h1>' . esc_html__( 'Save Form Submissions to Google Sheets', 'elementor-contact-form-db' ) . '</h1>';
         echo '<p>' . esc_html__( 'View all your Elementor forms here and manage their connection with Google Sheets. Automatically send new form submissions to your selected Google Sheet.', 'elementor-contact-form-db' ) . '</p>';
-        if ( ! empty( $forms ) ) {
-            $this->render_forms_table( $forms );
+        if ( ! empty( $forms ) || $total_items > 0 ) {
+            $this->render_forms_table( $forms ,$total_items, $current_page);
         } else {
             $this->render_empty_state();
         }
@@ -129,7 +152,7 @@ class FDBGP_Form_To_Sheet_Settings {
      *
      * @param array $forms
      */
-    private function render_forms_table( array $forms ) {
+    private function render_forms_table( array $forms ,$total_items, $current_page) {
 
         ?>
             <div class="cool-formkit-setting-table-con">
@@ -172,6 +195,7 @@ class FDBGP_Form_To_Sheet_Settings {
                     }
 
                     echo '</tbody></table>';
+                    $this->render_pagination( $total_items, $current_page );
                     ?>
                 </div>
 
@@ -227,7 +251,18 @@ class FDBGP_Form_To_Sheet_Settings {
      *
      * @return array
      */
+    /**
+     * Get All Elementor forms
+     *
+     * @return array
+     */
     private function get_all_forms() {
+        
+        // Try to get from cache first
+        $cached_forms = get_transient( 'fdbgp_forms_sheet_data' );
+        if ( false !== $cached_forms ) {
+            return $cached_forms;
+        }
 
         $forms = [];
 
@@ -254,6 +289,9 @@ class FDBGP_Form_To_Sheet_Settings {
 
             $this->walk_elements( $elements, $post, $forms );
         }
+
+        // Cache the result for 24 hours (will be flushed on save)
+        set_transient( 'fdbgp_forms_sheet_data', $forms, DAY_IN_SECONDS );
 
         return $forms;
     }
@@ -321,6 +359,31 @@ class FDBGP_Form_To_Sheet_Settings {
             if ( ! empty( $element['elements'] ) ) {
                 $this->walk_elements( $element['elements'], $post, $forms );
             }
+        }
+    }
+
+    /**
+     * Render pagination
+     *
+     * @param int $total_items
+     * @param int $current_page
+     */
+    private function render_pagination( $total_items, $current_page ) {
+        $total_pages = ceil( $total_items / $this->per_page );
+
+        if ( $total_pages > 1 ) {
+            $pagination_args = [
+                'base'      => add_query_arg( 'paged', '%#%' ),
+                'format'    => '',
+                'current'   => $current_page,
+                'total'     => $total_pages,
+                'prev_text' => '&laquo;',
+                'next_text' => '&raquo;',
+            ];
+
+            echo '<div class="formsdb-tablenav bottom"><div class="tablenav-pages" style="margin: 1em 0;">';
+            echo paginate_links( $pagination_args );
+            echo '</div></div>';
         }
     }
 }

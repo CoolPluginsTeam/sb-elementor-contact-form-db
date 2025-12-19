@@ -89,13 +89,11 @@ if(!class_exists('FDBGP_Admin')) {
                 <div class="fdbgp-header">
                     <div class="fdbgp-header-logo">
                         <a href="?page=formsdb">
-                            <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/logo-cool-formkit.png'); ?>" alt="Cool FormKit Logo">
+                            <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/formsDB-logo.svg'); ?>" alt="Cool FormKit Logo">
                         </a>
                     </div>
                     <div class="fdbgp-header-buttons">
-                        <p><?php esc_html_e('Advanced Elementor Form Builder.', 'elementor-contact-form-db'); ?></p>
-                        <a href="https://docs.coolplugins.net/plugin/cool-formkit-for-elementor-form/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_header" class="button" target="_blank"><?php esc_html_e('Check Docs', 'elementor-contact-form-db'); ?></a>
-                        <a href="https://coolformkit.com/features/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('View Form Demos', 'elementor-contact-form-db'); ?></a>
+                        <a href="https://coolformkit.com/features/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder Demos', 'elementor-contact-form-db'); ?></a>
                     </div>
                 </div>
                 <h2 class="nav-tab-wrapper">

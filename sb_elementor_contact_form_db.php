@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Plugin Name: FormsDB - Save Elementor Forms to Google Sheets & Post Type
+ * Plugin Name: FormsDB - Elementor Google Spreadsheet Addon
  * Plugin URI:  https://webacetechs.in
  * Description: A simple plugin to save contact form submissions in the database, designed for the Elementor Form Module
  * Author:      Cool Plugins
@@ -117,6 +117,7 @@ if(!class_exists('FDBGP_Main')) {
 		private function includes() {
 
 			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-loader.php';
+			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-cache-manager.php';
 		}
 
 		public function autoload( $class_name ) {

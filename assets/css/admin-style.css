@@ -384,7 +384,7 @@ body.elementor_page_cfkef-entries {
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
-  padding: 10px 30px;
+  padding: 5px 30px;
   border-bottom: 1px solid #ddd;
   height: 60px;
   width: calc(100% + 20px);
@@ -403,7 +403,8 @@ body.elementor_page_cfkef-entries {
 }
 
 .fdbgp-header-logo img {
-  max-height: 32px;
+  max-height: 44px;
+  display: block;
 }
 
 .fdbgp-header-buttons {
@@ -836,11 +837,26 @@ p.description {
   display: none;
 }
 
+/* status wrapper form to post and form to sheet page */
 .status-wrapper {
-  margin: 20px 0px;
   padding: 10px;
   background-color: white;
 }
+
+.status-wrapper h1 {
+  font-size: 23px;
+  font-weight: 400;
+  margin: 0;
+  padding: 9px 0 4px;
+  line-height: 1.3;
+}
+
+.status-wrapper p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 1em 0;
+}
+
 
 /* Updated CSS for Toggle Switch */
 .cfkef-toggle-switch {
@@ -2016,6 +2032,68 @@ a.button-primary.upgrade-pro-btn {
 
 .fdbgp-help-box li:hover {
   color: #2f6df6;
+}
+
+
+/* Pagination wrapper */
+.formsdb-tablenav .tablenav-pages {
+  margin: 1em 0;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+}
+
+.formsdb-tablenav .tablenav-pages .page-numbers:focus {
+  box-shadow: 0 0 0 2px #3f415e;
+}
+
+/* Page numbers (links + span) */
+.formsdb-tablenav .tablenav-pages .page-numbers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid #ccd0d4;
+  border-radius: 3px;
+  background: #fff;
+  color: #3f415e;
+  text-decoration: none;
+  line-height: 1;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover state */
+.formsdb-tablenav .tablenav-pages a.page-numbers:hover {
+  background: #f0f6fc;
+  border-color: #3f415e;
+  color: #3f415e;
+}
+
+/* Current page */
+.formsdb-tablenav .tablenav-pages .page-numbers.current {
+  background: #3f415e;
+  border-color: #3f415e;
+  color: #fff;
+  cursor: default;
+  font-weight: 600;
+}
+
+/* Next / Prev arrows */
+.formsdb-tablenav .tablenav-pages .page-numbers.next,
+.formsdb-tablenav .tablenav-pages .page-numbers.prev {
+  font-size: 14px;
+  padding: 0 10px;
+}
+
+/* Disabled links (if you add them later) */
+.formsdb-tablenav .tablenav-pages .page-numbers.disabled {
+  color: #a7aaad;
+  background: #f6f7f7;
+  border-color: #dcdcde;
+  pointer-events: none;
 }
 
 

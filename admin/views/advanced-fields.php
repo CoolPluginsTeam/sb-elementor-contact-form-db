@@ -387,7 +387,7 @@ $input_form_mask_features = array(
                 </div>
 
                 <div class="cfk-right">
-                    <a href="https://www.trustpilot.com/review/coolplugins.net" target="_blank" class="cfk-box review">
+                    <a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db/reviews/#new-post" target="_blank" class="cfk-box review">
                         Are you enjoying using our addon to upgrade features inside your Elementor form? Please submit your review as it boosts our energy to work on future updates.
                         <span>Submit Review ★★★★★</span>
                     </a>

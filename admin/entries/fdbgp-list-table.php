@@ -112,7 +112,7 @@ class FDBGP_List_Table extends WP_List_Table {
             $email = 'N/A';
         }
 
-        return sprintf('<a href="%s">%s</a>', esc_url($edit_url), esc_html($email));
+        return sprintf('<a href="%s" title="View Submission">%s</a>', esc_url($edit_url), esc_html($email));
     }
 
     public function column_form_url($item) {
@@ -124,7 +124,7 @@ class FDBGP_List_Table extends WP_List_Table {
         $form_name = empty($form_name) ? 'N/A' : $form_name;
 
         if($form_post_id && !empty($form_post_id)){
-            return sprintf('<a href="%s" target="_blank">%s</a>', esc_url($page_editor_url), esc_html($form_name));
+            return sprintf('<a href="%s" target="_blank" title="View Form">%s</a>', esc_url($page_editor_url), esc_html($form_name));
         }
 
         return esc_html($form_name);
@@ -145,7 +145,7 @@ class FDBGP_List_Table extends WP_List_Table {
         $page_url= isset($meta_details['page_url']['value']) ? $meta_details['page_url']['value'] : '';
 
         if(!empty($value)){
-            return sprintf('<a href="%s" target="_blank">%s</a>', esc_url($page_url), esc_html($value));
+            return sprintf('<a href="%s" target="_blank" title="View Page">%s</a>', esc_url($page_url), esc_html($value));
         }
 
         return esc_html($value);
@@ -165,12 +165,12 @@ class FDBGP_List_Table extends WP_List_Table {
         $actions           = array();
         if($view === 'all'){
             $edit_url = admin_url('post.php?post='.intval($item->ID).'&action=edit');
-            $actions['View']   = sprintf('<a href="%s" class="row-title">View</a>', $edit_url);
-            $actions['Trash'] = sprintf('<a href="?page=cfkef-entries&action=trash&entry_id=%s&_wpnonce=%s" class="row-title submitdelete">Trash</a>', $item->ID, wp_create_nonce('bulk-entries'));
+            $actions['View']   = sprintf('<a href="%s" >View</a>', $edit_url);
+            $actions['Trash'] = sprintf('<a href="?page=cfkef-entries&action=trash&entry_id=%s&_wpnonce=%s" class="submitdelete">Trash</a>', $item->ID, wp_create_nonce('bulk-entries'));
         }
         if($view === 'trash'){
-            $actions['Restore'] = sprintf('<a href="?page=cfkef-entries&action=restore&entry_id=%s&_wpnonce=%s" class="row-title">Restore</a>', $item->ID, wp_create_nonce('bulk-entries'));
-            $actions['Delete'] = sprintf('<a href="?page=cfkef-entries&action=delete&entry_id=%s&_wpnonce=%s" class="row-title submitdelete">Delete</a>', $item->ID, wp_create_nonce('bulk-entries'));
+            $actions['Restore'] = sprintf('<a href="?page=cfkef-entries&action=restore&entry_id=%s&_wpnonce=%s">Restore</a>', $item->ID, wp_create_nonce('bulk-entries'));
+            $actions['Delete'] = sprintf('<a href="?page=cfkef-entries&action=delete&entry_id=%s&_wpnonce=%s" class="submitdelete">Delete</a>', $item->ID, wp_create_nonce('bulk-entries'));
         }
 
         return $this->row_actions($actions);
