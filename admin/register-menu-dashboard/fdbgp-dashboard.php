@@ -244,17 +244,17 @@ class FDBGP_Dashboard {
             ),
             array(
                 'title' => 'Forms To Post Type',
-                'position' => 3,
+                'position' => 2,
                 'slug' => 'formsdb&tab=post-type',
             ),
             array(
                 'title' => 'Settings',
-                'position' => 3,
+                'position' => 4,
                 'slug' => 'formsdb&tab=settings',
             ),
             array(
                 'title' => 'Advanced Fields',
-                'position' => 3,
+                'position' => 5,
                 'slug' => 'formsdb&tab=advanced',
             ),
         );
