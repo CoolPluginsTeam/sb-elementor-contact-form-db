@@ -41,28 +41,37 @@ class HelloPlus_Widget_Loader {
                 }
             });
 
-            add_action('elementor/element/ehp-form/section_integration/after_section_end',array($this,'show_actions_on_editor_side') , 10, 2 );
-
-            // hook for compatibility with cool formkit pro plugin
-            add_action('elementor/element/ehp-form/section_integration/after_section_end',array($this,'show_actions_on_editor_side_in_delay') , 20, 2 );
+            if(! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) && ! is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' )){
+                add_action('elementor/element/ehp-form/section_integration/after_section_end',array($this,'show_actions_on_editor_side') , 10, 2 );
+            }else{
+                // hook for compatibility with cool formkit pro plugin
+                add_action('elementor/element/ehp-form/section_integration/after_section_end',array($this,'show_actions_on_editor_side_in_delay') , 20, 2 );
+            }
             
             $this->load_actions();
         }
     }
 
-    public function load_actions(){
+    public function load_actions() {
+        $is_conflicting_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-register-post.php';
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-sheets-action.php';
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/action/collect-entries.php';
         require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/action/save-form-data.php';
 
-        new Save_Form_Data();
-        if (class_exists('HelloPlus\Modules\Forms\Module')) {
+        if ( ! $is_conflicting_active ) {
+            new Save_Form_Data();
+        }
+
+        if ( class_exists( 'HelloPlus\Modules\Forms\Module' ) ) {
             $forms_module = \HelloPlus\Modules\Forms\Module::instance();
-            if ($forms_module && isset($forms_module->actions_registrar)) {
-                $forms_module->actions_registrar->register(new HelloPlus_FDBGP_Register_Post());
-                $forms_module->actions_registrar->register(new HelloPlus_Collect_Entries());
-                $forms_module->actions_registrar->register(new HelloPlus_FDBGP_Form_Sheets_Action());
+            if ( $forms_module && isset( $forms_module->actions_registrar ) ) {
+                $forms_module->actions_registrar->register( new HelloPlus_FDBGP_Register_Post() );
+                if ( ! $is_conflicting_active ) {
+                    $forms_module->actions_registrar->register( new HelloPlus_Collect_Entries() );
+                }
+                $forms_module->actions_registrar->register( new HelloPlus_FDBGP_Form_Sheets_Action() );
             }
         }
     }
