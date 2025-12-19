@@ -51,6 +51,16 @@ input:checked+.fdbgp-slider::before {
   transform: translate(1.1em, -50%);
 }
 
+
+.notice p{
+  margin-bottom: 0px !important;
+}
+
+.notice button{
+ padding: 0px !important;
+}
+
+
 /* nav tab css */
 .fdbgp-wrapper h2.nav-tab-wrapper,
 .fdbgp-wrapper .tab-content {
@@ -1061,7 +1071,6 @@ input.cfkef-element-toggle:disabled {
 
 .cfk-promo p {
   margin-top: 0;
-  margin-bottom: 27px;
 }
 
 .cfk-promo .cfk-left {
