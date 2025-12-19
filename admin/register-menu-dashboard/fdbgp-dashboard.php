@@ -29,13 +29,15 @@ class FDBGP_Dashboard {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
 
-        $dashboard_pages = array(
-            'cfkef-entries' => array(
+        $dashboard_pages = array();
+
+        if ($this->should_show_entries()) {
+            $dashboard_pages['cfkef-entries'] = array(
                 'title' => '↳ Entries',
                 'position' => 46,
                 'slug' => 'cfkef-entries', // Retained the original slug with post-new.php?post_type=
-            )
-        );
+            );
+        }
 
         $dashboard_pages = apply_filters('fdbgp_dashboard_pages', $dashboard_pages);
 
@@ -47,6 +49,16 @@ class FDBGP_Dashboard {
 
         add_action('elementor/admin-top-bar/is-active', [$this, 'hide_elementor_top_bar']);
         add_action('admin_print_scripts', [$this, 'hide_unrelated_notices']);
+    }
+
+    private function should_show_entries() {
+        if ( ! function_exists( 'is_plugin_active' ) ) {
+            include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
+
+        return is_plugin_active( 'hello-plus/hello-plus.php' ) &&
+               ! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) &&
+               ! is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
     }
 
     public function add_menu_page($slug, $title, $callback, $position = 99)
@@ -236,11 +248,6 @@ class FDBGP_Dashboard {
                 'slug' => 'formsdb&tab=post-type',
             ),
             array(
-                'title' => 'Hello+ Form Entries',
-                'position' => 3,
-                'slug' => 'cfkef-entries',
-            ),
-            array(
                 'title' => 'Settings',
                 'position' => 3,
                 'slug' => 'formsdb&tab=settings',
@@ -251,6 +258,14 @@ class FDBGP_Dashboard {
                 'slug' => 'formsdb&tab=advanced',
             ),
         );
+
+        if ($this->should_show_entries()) {
+            $default_tabs[] = array(
+                'title' => 'Hello+ Form Entries',
+                'position' => 3,
+                'slug' => 'cfkef-entries',
+            );
+        }
 
         $tabs = apply_filters('fdbgp_dashboard_tabs', $default_tabs);
         // Set the index of tabs based on their position

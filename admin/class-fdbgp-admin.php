@@ -99,11 +99,21 @@ if(!class_exists('FDBGP_Admin')) {
                 <h2 class="nav-tab-wrapper">
                     <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'elementor-contact-form-db'); ?></a>
                     <a href="?page=formsdb&tab=post-type" class="nav-tab <?php echo $tab == 'post-type' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Post Type', 'elementor-contact-form-db'); ?></a>
-                    <?php if(is_plugin_active( 'hello-plus/hello-plus.php' )): ?>
+                    <?php
+                    if (
+                        is_plugin_active( 'hello-plus/hello-plus.php' ) &&
+                        ! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) &&
+                        ! is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' )
+                    ) :
+                    ?>
                         <a href="?page=cfkef-entries" class="nav-tab <?php echo $tab == 'cfkef-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
                     <a href="?page=formsdb&tab=settings" class="nav-tab <?php echo $tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'elementor-contact-form-db'); ?></a>
-                    <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'elementor-contact-form-db'); ?></a>
+                    <?php
+                    if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
+                    ?>
+                        <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'elementor-contact-form-db'); ?></a>
+                    <?php endif; ?>
                 </h2>
                 <div class="tab-content">
                     <?php
@@ -132,6 +142,19 @@ if(!class_exists('FDBGP_Admin')) {
 
         public function enqueue_admin_styles() {
             wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
+            $screen = get_current_screen();
+            if ( $screen && 'elementor_page_e-form-submissions' === $screen->id ) {
+                $button_text = __('Save Form Submissions To Google Sheet', 'elementor-contact-form-db');
+                $button_url = admin_url('admin.php?page=formsdb');
+                
+                $custom_js = "
+                    jQuery(document).ready(function($) {
+                        var button = '<a href=\"{$button_url}\" target=\"_blank\" class=\"button button-primary\">{$button_text}</a>';
+                        $('#e-form-submissions .e-form-submissions-search').prepend(button);
+                    });
+                ";
+                wp_add_inline_script('jquery-core', $custom_js);
+            }
 
             if (isset($_GET['page']) && (strpos($_GET['page'], 'formsdb') !== false || strpos($_GET['page'], 'cfkef-entries') !== false)) {
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');

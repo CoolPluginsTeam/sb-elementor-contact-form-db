@@ -4,8 +4,8 @@ if (!defined('ABSPATH')) {
     die;
 }
 
-if(!class_exists('HelloPlus_Addons_Loader')) { 
-class HelloPlus_Addons_Loader {
+if(!class_exists('HelloPlus_Widget_Loader')) { 
+class HelloPlus_Widget_Loader {
 
     protected $plugin_name;
 
@@ -24,7 +24,7 @@ class HelloPlus_Addons_Loader {
      *
      * @since    1.0.0
      * @access   private
-     * @var      HelloPlus_Addons_Loader    $instance    The loader instance.
+     * @var      HelloPlus_Widget_Loader    $instance    The loader instance.
      */
     private static $instance = null;
 

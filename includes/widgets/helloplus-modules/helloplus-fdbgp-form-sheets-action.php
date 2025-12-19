@@ -30,6 +30,7 @@ add_action( 'elementor/controls/register', function ( $controls_manager ) {
                 <label class="elementor-control-title">{{{ data.label }}}</label>
                 <div class="elementor-control-input-wrapper">
                     <select class="elementor-control-dynamic-select2" data-setting="{{ data.name }}" multiple="multiple" style="width:100%">
+                        <# console.log(data) #>
                         <# if ( data.options ) { 
                             _.each( data.options, function( option_title, option_value ) { #>
                                 <option value="{{ option_value }}">{{{ option_title }}}</option>

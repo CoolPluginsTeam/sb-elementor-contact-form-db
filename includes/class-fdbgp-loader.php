@@ -39,8 +39,8 @@ if(!class_exists('FDBGP_Loader')) {
             require_once FDBGP_PLUGIN_DIR . 'includes/widgets/class-widgets-loader.php';
             new FDBGP_Widgets_Loader($this->get_plugin_name(), $this->get_version());
 
-            require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-addons-loader.php';
-            new HelloPlus_Addons_Loader();
+            require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-widget-loader.php';
+            new HelloPlus_Widget_Loader();
         }
 
         private function admin_menu_dashboard() {
