@@ -20,10 +20,6 @@ namespace Google\Service\Sheets;
 class UpdateNamedRangeRequest extends \Google\Model
 {
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `namedRange` is implied and should not be specified. A single
-   * `"*"` can be used as short-hand for listing every field.
-   *
    * @var string
    */
   public $fields;
@@ -31,11 +27,7 @@ class UpdateNamedRangeRequest extends \Google\Model
   protected $namedRangeDataType = '';
 
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `namedRange` is implied and should not be specified. A single
-   * `"*"` can be used as short-hand for listing every field.
-   *
-   * @param string $fields
+   * @param string
    */
   public function setFields($fields)
   {
@@ -49,9 +41,7 @@ class UpdateNamedRangeRequest extends \Google\Model
     return $this->fields;
   }
   /**
-   * The named range to update with the new properties.
-   *
-   * @param NamedRange $namedRange
+   * @param NamedRange
    */
   public function setNamedRange(NamedRange $namedRange)
   {

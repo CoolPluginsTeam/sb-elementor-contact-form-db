@@ -23,9 +23,7 @@ class DuplicateFilterViewResponse extends \Google\Model
   protected $filterDataType = '';
 
   /**
-   * The newly created filter.
-   *
-   * @param FilterView $filter
+   * @param FilterView
    */
   public function setFilter(FilterView $filter)
   {

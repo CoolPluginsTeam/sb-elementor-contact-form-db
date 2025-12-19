@@ -20,22 +20,16 @@ namespace Google\Service\Sheets;
 class DeleteConditionalFormatRuleRequest extends \Google\Model
 {
   /**
-   * The zero-based index of the rule to be deleted.
-   *
    * @var int
    */
   public $index;
   /**
-   * The sheet the rule is being deleted from.
-   *
    * @var int
    */
   public $sheetId;
 
   /**
-   * The zero-based index of the rule to be deleted.
-   *
-   * @param int $index
+   * @param int
    */
   public function setIndex($index)
   {
@@ -49,9 +43,7 @@ class DeleteConditionalFormatRuleRequest extends \Google\Model
     return $this->index;
   }
   /**
-   * The sheet the rule is being deleted from.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {

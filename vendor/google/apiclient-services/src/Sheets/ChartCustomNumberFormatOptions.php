@@ -20,25 +20,16 @@ namespace Google\Service\Sheets;
 class ChartCustomNumberFormatOptions extends \Google\Model
 {
   /**
-   * Custom prefix to be prepended to the chart attribute. This field is
-   * optional.
-   *
    * @var string
    */
   public $prefix;
   /**
-   * Custom suffix to be appended to the chart attribute. This field is
-   * optional.
-   *
    * @var string
    */
   public $suffix;
 
   /**
-   * Custom prefix to be prepended to the chart attribute. This field is
-   * optional.
-   *
-   * @param string $prefix
+   * @param string
    */
   public function setPrefix($prefix)
   {
@@ -52,10 +43,7 @@ class ChartCustomNumberFormatOptions extends \Google\Model
     return $this->prefix;
   }
   /**
-   * Custom suffix to be appended to the chart attribute. This field is
-   * optional.
-   *
-   * @param string $suffix
+   * @param string
    */
   public function setSuffix($suffix)
   {

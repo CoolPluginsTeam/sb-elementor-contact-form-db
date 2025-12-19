@@ -20,16 +20,10 @@ namespace Google\Service\Sheets;
 class CancelDataSourceRefreshRequest extends \Google\Model
 {
   /**
-   * Reference to a DataSource. If specified, cancels all associated data source
-   * object refreshes for this data source.
-   *
    * @var string
    */
   public $dataSourceId;
   /**
-   * Cancels all existing data source object refreshes for all data sources in
-   * the spreadsheet.
-   *
    * @var bool
    */
   public $isAll;
@@ -37,10 +31,7 @@ class CancelDataSourceRefreshRequest extends \Google\Model
   protected $referencesDataType = '';
 
   /**
-   * Reference to a DataSource. If specified, cancels all associated data source
-   * object refreshes for this data source.
-   *
-   * @param string $dataSourceId
+   * @param string
    */
   public function setDataSourceId($dataSourceId)
   {
@@ -54,10 +45,7 @@ class CancelDataSourceRefreshRequest extends \Google\Model
     return $this->dataSourceId;
   }
   /**
-   * Cancels all existing data source object refreshes for all data sources in
-   * the spreadsheet.
-   *
-   * @param bool $isAll
+   * @param bool
    */
   public function setIsAll($isAll)
   {
@@ -71,9 +59,7 @@ class CancelDataSourceRefreshRequest extends \Google\Model
     return $this->isAll;
   }
   /**
-   * References to data source objects whose refreshes are to be cancelled.
-   *
-   * @param DataSourceObjectReferences $references
+   * @param DataSourceObjectReferences
    */
   public function setReferences(DataSourceObjectReferences $references)
   {

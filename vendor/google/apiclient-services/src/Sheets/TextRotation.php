@@ -20,32 +20,16 @@ namespace Google\Service\Sheets;
 class TextRotation extends \Google\Model
 {
   /**
-   * The angle between the standard orientation and the desired orientation.
-   * Measured in degrees. Valid values are between -90 and 90. Positive angles
-   * are angled upwards, negative are angled downwards. Note: For LTR text
-   * direction positive angles are in the counterclockwise direction, whereas
-   * for RTL they are in the clockwise direction
-   *
    * @var int
    */
   public $angle;
   /**
-   * If true, text reads top to bottom, but the orientation of individual
-   * characters is unchanged. For example: | V | | e | | r | | t | | i | | c | |
-   * a | | l |
-   *
    * @var bool
    */
   public $vertical;
 
   /**
-   * The angle between the standard orientation and the desired orientation.
-   * Measured in degrees. Valid values are between -90 and 90. Positive angles
-   * are angled upwards, negative are angled downwards. Note: For LTR text
-   * direction positive angles are in the counterclockwise direction, whereas
-   * for RTL they are in the clockwise direction
-   *
-   * @param int $angle
+   * @param int
    */
   public function setAngle($angle)
   {
@@ -59,11 +43,7 @@ class TextRotation extends \Google\Model
     return $this->angle;
   }
   /**
-   * If true, text reads top to bottom, but the orientation of individual
-   * characters is unchanged. For example: | V | | e | | r | | t | | i | | c | |
-   * a | | l |
-   *
-   * @param bool $vertical
+   * @param bool
    */
   public function setVertical($vertical)
   {

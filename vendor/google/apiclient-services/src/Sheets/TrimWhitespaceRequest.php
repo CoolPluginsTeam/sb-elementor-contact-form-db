@@ -23,9 +23,7 @@ class TrimWhitespaceRequest extends \Google\Model
   protected $rangeDataType = '';
 
   /**
-   * The range whose cells to trim.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {

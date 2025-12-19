@@ -21,26 +21,16 @@ class BatchClearValuesResponse extends \Google\Collection
 {
   protected $collection_key = 'clearedRanges';
   /**
-   * The ranges that were cleared, in A1 notation. If the requests are for an
-   * unbounded range or a ranger larger than the bounds of the sheet, this is
-   * the actual ranges that were cleared, bounded to the sheet's limits.
-   *
    * @var string[]
    */
   public $clearedRanges;
   /**
-   * The spreadsheet the updates were applied to.
-   *
    * @var string
    */
   public $spreadsheetId;
 
   /**
-   * The ranges that were cleared, in A1 notation. If the requests are for an
-   * unbounded range or a ranger larger than the bounds of the sheet, this is
-   * the actual ranges that were cleared, bounded to the sheet's limits.
-   *
-   * @param string[] $clearedRanges
+   * @param string[]
    */
   public function setClearedRanges($clearedRanges)
   {
@@ -54,9 +44,7 @@ class BatchClearValuesResponse extends \Google\Collection
     return $this->clearedRanges;
   }
   /**
-   * The spreadsheet the updates were applied to.
-   *
-   * @param string $spreadsheetId
+   * @param string
    */
   public function setSpreadsheetId($spreadsheetId)
   {

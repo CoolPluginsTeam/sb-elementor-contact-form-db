@@ -1,12 +1,20 @@
 {
+    "name": "coolplugins/elementor-contact-form-db",
+    "description": "FormsDB - Elementor Google Spreadsheet Addon",
+    "type": "wordpress-plugin",
     "require": {
-        "google/apiclient": "^2.15",
-        "google/apiclient-services": "^0.423.0"
+        "google/apiclient": "^2.15.0"
     },
-    "extra": {
-        "google/apiclient-services": [
-            "Sheets",
-            "Drive"
-        ]
-    }
+    "config": {
+        "platform": {
+            "php": "7.4.33"
+        }
+    },
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Cool Plugins",
+            "homepage": "https://coolplugins.net/"
+        }
+    ]
 }

@@ -23,9 +23,7 @@ class CandlestickSeries extends \Google\Model
   protected $dataDataType = '';
 
   /**
-   * The data of the CandlestickSeries.
-   *
-   * @param ChartData $data
+   * @param ChartData
    */
   public function setData(ChartData $data)
   {

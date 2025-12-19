@@ -23,9 +23,7 @@ class AddDataSourceRequest extends \Google\Model
   protected $dataSourceDataType = '';
 
   /**
-   * The data source to add.
-   *
-   * @param DataSource $dataSource
+   * @param DataSource
    */
   public function setDataSource(DataSource $dataSource)
   {

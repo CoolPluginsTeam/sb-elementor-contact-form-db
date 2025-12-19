@@ -19,69 +19,27 @@ namespace Google\Service\Sheets;
 
 class InterpolationPoint extends \Google\Model
 {
-  /**
-   * The default value, do not use.
-   */
-  public const TYPE_INTERPOLATION_POINT_TYPE_UNSPECIFIED = 'INTERPOLATION_POINT_TYPE_UNSPECIFIED';
-  /**
-   * The interpolation point uses the minimum value in the cells over the range
-   * of the conditional format.
-   */
-  public const TYPE_MIN = 'MIN';
-  /**
-   * The interpolation point uses the maximum value in the cells over the range
-   * of the conditional format.
-   */
-  public const TYPE_MAX = 'MAX';
-  /**
-   * The interpolation point uses exactly the value in InterpolationPoint.value.
-   */
-  public const TYPE_NUMBER = 'NUMBER';
-  /**
-   * The interpolation point is the given percentage over all the cells in the
-   * range of the conditional format. This is equivalent to `NUMBER` if the
-   * value was: `=(MAX(FLATTEN(range)) * (value / 100)) + (MIN(FLATTEN(range)) *
-   * (1 - (value / 100)))` (where errors in the range are ignored when
-   * flattening).
-   */
-  public const TYPE_PERCENT = 'PERCENT';
-  /**
-   * The interpolation point is the given percentile over all the cells in the
-   * range of the conditional format. This is equivalent to `NUMBER` if the
-   * value was: `=PERCENTILE(FLATTEN(range), value / 100)` (where errors in the
-   * range are ignored when flattening).
-   */
-  public const TYPE_PERCENTILE = 'PERCENTILE';
   protected $colorType = Color::class;
   protected $colorDataType = '';
   protected $colorStyleType = ColorStyle::class;
   protected $colorStyleDataType = '';
   /**
-   * How the value should be interpreted.
-   *
    * @var string
    */
   public $type;
   /**
-   * The value this interpolation point uses. May be a formula. Unused if type
-   * is MIN or MAX.
-   *
    * @var string
    */
   public $value;
 
   /**
-   * The color this interpolation point should use. Deprecated: Use color_style.
-   *
-   * @deprecated
-   * @param Color $color
+   * @param Color
    */
   public function setColor(Color $color)
   {
     $this->color = $color;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getColor()
@@ -89,10 +47,7 @@ class InterpolationPoint extends \Google\Model
     return $this->color;
   }
   /**
-   * The color this interpolation point should use. If color is also set, this
-   * field takes precedence.
-   *
-   * @param ColorStyle $colorStyle
+   * @param ColorStyle
    */
   public function setColorStyle(ColorStyle $colorStyle)
   {
@@ -106,29 +61,21 @@ class InterpolationPoint extends \Google\Model
     return $this->colorStyle;
   }
   /**
-   * How the value should be interpreted.
-   *
-   * Accepted values: INTERPOLATION_POINT_TYPE_UNSPECIFIED, MIN, MAX, NUMBER,
-   * PERCENT, PERCENTILE
-   *
-   * @param self::TYPE_* $type
+   * @param string
    */
   public function setType($type)
   {
     $this->type = $type;
   }
   /**
-   * @return self::TYPE_*
+   * @return string
    */
   public function getType()
   {
     return $this->type;
   }
   /**
-   * The value this interpolation point uses. May be a formula. Unused if type
-   * is MIN or MAX.
-   *
-   * @param string $value
+   * @param string
    */
   public function setValue($value)
   {

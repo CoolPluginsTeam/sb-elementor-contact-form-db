@@ -20,68 +20,42 @@ namespace Google\Service\Sheets;
 class FindReplaceRequest extends \Google\Model
 {
   /**
-   * True to find/replace over all sheets.
-   *
    * @var bool
    */
   public $allSheets;
   /**
-   * The value to search.
-   *
    * @var string
    */
   public $find;
   /**
-   * True if the search should include cells with formulas. False to skip cells
-   * with formulas.
-   *
    * @var bool
    */
   public $includeFormulas;
   /**
-   * True if the search is case sensitive.
-   *
    * @var bool
    */
   public $matchCase;
   /**
-   * True if the find value should match the entire cell.
-   *
    * @var bool
    */
   public $matchEntireCell;
   protected $rangeType = GridRange::class;
   protected $rangeDataType = '';
   /**
-   * The value to use as the replacement.
-   *
    * @var string
    */
   public $replacement;
   /**
-   * True if the find value is a regex. The regular expression and replacement
-   * should follow Java regex rules at
-   * https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html. The
-   * replacement string is allowed to refer to capturing groups. For example, if
-   * one cell has the contents `"Google Sheets"` and another has `"Google
-   * Docs"`, then searching for `"o.* (.*)"` with a replacement of `"$1 Rocks"`
-   * would change the contents of the cells to `"GSheets Rocks"` and `"GDocs
-   * Rocks"` respectively.
-   *
    * @var bool
    */
   public $searchByRegex;
   /**
-   * The sheet to find/replace over.
-   *
    * @var int
    */
   public $sheetId;
 
   /**
-   * True to find/replace over all sheets.
-   *
-   * @param bool $allSheets
+   * @param bool
    */
   public function setAllSheets($allSheets)
   {
@@ -95,9 +69,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->allSheets;
   }
   /**
-   * The value to search.
-   *
-   * @param string $find
+   * @param string
    */
   public function setFind($find)
   {
@@ -111,10 +83,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->find;
   }
   /**
-   * True if the search should include cells with formulas. False to skip cells
-   * with formulas.
-   *
-   * @param bool $includeFormulas
+   * @param bool
    */
   public function setIncludeFormulas($includeFormulas)
   {
@@ -128,9 +97,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->includeFormulas;
   }
   /**
-   * True if the search is case sensitive.
-   *
-   * @param bool $matchCase
+   * @param bool
    */
   public function setMatchCase($matchCase)
   {
@@ -144,9 +111,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->matchCase;
   }
   /**
-   * True if the find value should match the entire cell.
-   *
-   * @param bool $matchEntireCell
+   * @param bool
    */
   public function setMatchEntireCell($matchEntireCell)
   {
@@ -160,9 +125,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->matchEntireCell;
   }
   /**
-   * The range to find/replace over.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {
@@ -176,9 +139,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->range;
   }
   /**
-   * The value to use as the replacement.
-   *
-   * @param string $replacement
+   * @param string
    */
   public function setReplacement($replacement)
   {
@@ -192,16 +153,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->replacement;
   }
   /**
-   * True if the find value is a regex. The regular expression and replacement
-   * should follow Java regex rules at
-   * https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html. The
-   * replacement string is allowed to refer to capturing groups. For example, if
-   * one cell has the contents `"Google Sheets"` and another has `"Google
-   * Docs"`, then searching for `"o.* (.*)"` with a replacement of `"$1 Rocks"`
-   * would change the contents of the cells to `"GSheets Rocks"` and `"GDocs
-   * Rocks"` respectively.
-   *
-   * @param bool $searchByRegex
+   * @param bool
    */
   public function setSearchByRegex($searchByRegex)
   {
@@ -215,9 +167,7 @@ class FindReplaceRequest extends \Google\Model
     return $this->searchByRegex;
   }
   /**
-   * The sheet to find/replace over.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {

@@ -24,24 +24,18 @@ class WaterfallChartColumnStyle extends \Google\Model
   protected $colorStyleType = ColorStyle::class;
   protected $colorStyleDataType = '';
   /**
-   * The label of the column's legend.
-   *
    * @var string
    */
   public $label;
 
   /**
-   * The color of the column. Deprecated: Use color_style.
-   *
-   * @deprecated
-   * @param Color $color
+   * @param Color
    */
   public function setColor(Color $color)
   {
     $this->color = $color;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getColor()
@@ -49,9 +43,7 @@ class WaterfallChartColumnStyle extends \Google\Model
     return $this->color;
   }
   /**
-   * The color of the column. If color is also set, this field takes precedence.
-   *
-   * @param ColorStyle $colorStyle
+   * @param ColorStyle
    */
   public function setColorStyle(ColorStyle $colorStyle)
   {
@@ -65,9 +57,7 @@ class WaterfallChartColumnStyle extends \Google\Model
     return $this->colorStyle;
   }
   /**
-   * The label of the column's legend.
-   *
-   * @param string $label
+   * @param string
    */
   public function setLabel($label)
   {

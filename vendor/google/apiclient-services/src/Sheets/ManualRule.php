@@ -24,10 +24,7 @@ class ManualRule extends \Google\Collection
   protected $groupsDataType = 'array';
 
   /**
-   * The list of group names and the corresponding items from the source data
-   * that map to each group name.
-   *
-   * @param ManualRuleGroup[] $groups
+   * @param ManualRuleGroup[]
    */
   public function setGroups($groups)
   {

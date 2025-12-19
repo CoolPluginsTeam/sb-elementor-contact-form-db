@@ -26,10 +26,7 @@ class ManualRuleGroup extends \Google\Collection
   protected $itemsDataType = 'array';
 
   /**
-   * The group name, which must be a string. Each group in a given ManualRule
-   * must have a unique group name.
-   *
-   * @param ExtendedValue $groupName
+   * @param ExtendedValue
    */
   public function setGroupName(ExtendedValue $groupName)
   {
@@ -43,12 +40,7 @@ class ManualRuleGroup extends \Google\Collection
     return $this->groupName;
   }
   /**
-   * The items in the source data that should be placed into this group. Each
-   * item may be a string, number, or boolean. Items may appear in at most one
-   * group within a given ManualRule. Items that do not appear in any group will
-   * appear on their own.
-   *
-   * @param ExtendedValue[] $items
+   * @param ExtendedValue[]
    */
   public function setItems($items)
   {

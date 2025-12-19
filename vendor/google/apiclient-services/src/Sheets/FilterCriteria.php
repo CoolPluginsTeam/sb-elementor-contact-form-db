@@ -23,8 +23,6 @@ class FilterCriteria extends \Google\Collection
   protected $conditionType = BooleanCondition::class;
   protected $conditionDataType = '';
   /**
-   * Values that should be hidden.
-   *
    * @var string[]
    */
   public $hiddenValues;
@@ -38,11 +36,7 @@ class FilterCriteria extends \Google\Collection
   protected $visibleForegroundColorStyleDataType = '';
 
   /**
-   * A condition that must be true for values to be shown. (This does not
-   * override hidden_values -- if a value is listed there, it will still be
-   * hidden.)
-   *
-   * @param BooleanCondition $condition
+   * @param BooleanCondition
    */
   public function setCondition(BooleanCondition $condition)
   {
@@ -56,9 +50,7 @@ class FilterCriteria extends \Google\Collection
     return $this->condition;
   }
   /**
-   * Values that should be hidden.
-   *
-   * @param string[] $hiddenValues
+   * @param string[]
    */
   public function setHiddenValues($hiddenValues)
   {
@@ -72,19 +64,13 @@ class FilterCriteria extends \Google\Collection
     return $this->hiddenValues;
   }
   /**
-   * The background fill color to filter by; only cells with this fill color are
-   * shown. Mutually exclusive with visible_foreground_color. Deprecated: Use
-   * visible_background_color_style.
-   *
-   * @deprecated
-   * @param Color $visibleBackgroundColor
+   * @param Color
    */
   public function setVisibleBackgroundColor(Color $visibleBackgroundColor)
   {
     $this->visibleBackgroundColor = $visibleBackgroundColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getVisibleBackgroundColor()
@@ -92,12 +78,7 @@ class FilterCriteria extends \Google\Collection
     return $this->visibleBackgroundColor;
   }
   /**
-   * The background fill color to filter by; only cells with this fill color are
-   * shown. This field is mutually exclusive with visible_foreground_color, and
-   * must be set to an RGB-type color. If visible_background_color is also set,
-   * this field takes precedence.
-   *
-   * @param ColorStyle $visibleBackgroundColorStyle
+   * @param ColorStyle
    */
   public function setVisibleBackgroundColorStyle(ColorStyle $visibleBackgroundColorStyle)
   {
@@ -111,19 +92,13 @@ class FilterCriteria extends \Google\Collection
     return $this->visibleBackgroundColorStyle;
   }
   /**
-   * The foreground color to filter by; only cells with this foreground color
-   * are shown. Mutually exclusive with visible_background_color. Deprecated:
-   * Use visible_foreground_color_style.
-   *
-   * @deprecated
-   * @param Color $visibleForegroundColor
+   * @param Color
    */
   public function setVisibleForegroundColor(Color $visibleForegroundColor)
   {
     $this->visibleForegroundColor = $visibleForegroundColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getVisibleForegroundColor()
@@ -131,12 +106,7 @@ class FilterCriteria extends \Google\Collection
     return $this->visibleForegroundColor;
   }
   /**
-   * The foreground color to filter by; only cells with this foreground color
-   * are shown. This field is mutually exclusive with visible_background_color,
-   * and must be set to an RGB-type color. If visible_foreground_color is also
-   * set, this field takes precedence.
-   *
-   * @param ColorStyle $visibleForegroundColorStyle
+   * @param ColorStyle
    */
   public function setVisibleForegroundColorStyle(ColorStyle $visibleForegroundColorStyle)
   {

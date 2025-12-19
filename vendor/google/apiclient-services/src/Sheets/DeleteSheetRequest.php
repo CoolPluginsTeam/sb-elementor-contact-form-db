@@ -20,18 +20,12 @@ namespace Google\Service\Sheets;
 class DeleteSheetRequest extends \Google\Model
 {
   /**
-   * The ID of the sheet to delete. If the sheet is of DATA_SOURCE type, the
-   * associated DataSource is also deleted.
-   *
    * @var int
    */
   public $sheetId;
 
   /**
-   * The ID of the sheet to delete. If the sheet is of DATA_SOURCE type, the
-   * associated DataSource is also deleted.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {

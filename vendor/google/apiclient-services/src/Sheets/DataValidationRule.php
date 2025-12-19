@@ -22,29 +22,20 @@ class DataValidationRule extends \Google\Model
   protected $conditionType = BooleanCondition::class;
   protected $conditionDataType = '';
   /**
-   * A message to show the user when adding data to the cell.
-   *
    * @var string
    */
   public $inputMessage;
   /**
-   * True if the UI should be customized based on the kind of condition. If
-   * true, "List" conditions will show a dropdown.
-   *
    * @var bool
    */
   public $showCustomUi;
   /**
-   * True if invalid data should be rejected.
-   *
    * @var bool
    */
   public $strict;
 
   /**
-   * The condition that data in the cell must match.
-   *
-   * @param BooleanCondition $condition
+   * @param BooleanCondition
    */
   public function setCondition(BooleanCondition $condition)
   {
@@ -58,9 +49,7 @@ class DataValidationRule extends \Google\Model
     return $this->condition;
   }
   /**
-   * A message to show the user when adding data to the cell.
-   *
-   * @param string $inputMessage
+   * @param string
    */
   public function setInputMessage($inputMessage)
   {
@@ -74,10 +63,7 @@ class DataValidationRule extends \Google\Model
     return $this->inputMessage;
   }
   /**
-   * True if the UI should be customized based on the kind of condition. If
-   * true, "List" conditions will show a dropdown.
-   *
-   * @param bool $showCustomUi
+   * @param bool
    */
   public function setShowCustomUi($showCustomUi)
   {
@@ -91,9 +77,7 @@ class DataValidationRule extends \Google\Model
     return $this->showCustomUi;
   }
   /**
-   * True if invalid data should be rejected.
-   *
-   * @param bool $strict
+   * @param bool
    */
   public function setStrict($strict)
   {

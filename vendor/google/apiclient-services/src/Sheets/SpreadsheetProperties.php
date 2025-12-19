@@ -20,92 +20,48 @@ namespace Google\Service\Sheets;
 class SpreadsheetProperties extends \Google\Model
 {
   /**
-   * Default value. This value must not be used.
-   */
-  public const AUTO_RECALC_RECALCULATION_INTERVAL_UNSPECIFIED = 'RECALCULATION_INTERVAL_UNSPECIFIED';
-  /**
-   * Volatile functions are updated on every change.
-   */
-  public const AUTO_RECALC_ON_CHANGE = 'ON_CHANGE';
-  /**
-   * Volatile functions are updated on every change and every minute.
-   */
-  public const AUTO_RECALC_MINUTE = 'MINUTE';
-  /**
-   * Volatile functions are updated on every change and hourly.
-   */
-  public const AUTO_RECALC_HOUR = 'HOUR';
-  /**
-   * The amount of time to wait before volatile functions are recalculated.
-   *
    * @var string
    */
   public $autoRecalc;
   protected $defaultFormatType = CellFormat::class;
   protected $defaultFormatDataType = '';
   /**
-   * Whether to allow external URL access for image and import functions. Read
-   * only when true. When false, you can set to true. This value will be
-   * bypassed and always return true if the admin has enabled the [allowlisting
-   * feature](https://support.google.com/a?p=url_allowlist).
-   *
    * @var bool
    */
   public $importFunctionsExternalUrlAccessAllowed;
   protected $iterativeCalculationSettingsType = IterativeCalculationSettings::class;
   protected $iterativeCalculationSettingsDataType = '';
   /**
-   * The locale of the spreadsheet in one of the following formats: * an ISO
-   * 639-1 language code such as `en` * an ISO 639-2 language code such as
-   * `fil`, if no 639-1 code exists * a combination of the ISO language code and
-   * country code, such as `en_US` Note: when updating this field, not all
-   * locales/languages are supported.
-   *
    * @var string
    */
   public $locale;
   protected $spreadsheetThemeType = SpreadsheetTheme::class;
   protected $spreadsheetThemeDataType = '';
   /**
-   * The time zone of the spreadsheet, in CLDR format such as
-   * `America/New_York`. If the time zone isn't recognized, this may be a custom
-   * time zone such as `GMT-07:00`.
-   *
    * @var string
    */
   public $timeZone;
   /**
-   * The title of the spreadsheet.
-   *
    * @var string
    */
   public $title;
 
   /**
-   * The amount of time to wait before volatile functions are recalculated.
-   *
-   * Accepted values: RECALCULATION_INTERVAL_UNSPECIFIED, ON_CHANGE, MINUTE,
-   * HOUR
-   *
-   * @param self::AUTO_RECALC_* $autoRecalc
+   * @param string
    */
   public function setAutoRecalc($autoRecalc)
   {
     $this->autoRecalc = $autoRecalc;
   }
   /**
-   * @return self::AUTO_RECALC_*
+   * @return string
    */
   public function getAutoRecalc()
   {
     return $this->autoRecalc;
   }
   /**
-   * The default format of all cells in the spreadsheet.
-   * CellData.effectiveFormat will not be set if the cell's format is equal to
-   * this default format. This field is read-only.
-   *
-   * @param CellFormat $defaultFormat
+   * @param CellFormat
    */
   public function setDefaultFormat(CellFormat $defaultFormat)
   {
@@ -119,12 +75,7 @@ class SpreadsheetProperties extends \Google\Model
     return $this->defaultFormat;
   }
   /**
-   * Whether to allow external URL access for image and import functions. Read
-   * only when true. When false, you can set to true. This value will be
-   * bypassed and always return true if the admin has enabled the [allowlisting
-   * feature](https://support.google.com/a?p=url_allowlist).
-   *
-   * @param bool $importFunctionsExternalUrlAccessAllowed
+   * @param bool
    */
   public function setImportFunctionsExternalUrlAccessAllowed($importFunctionsExternalUrlAccessAllowed)
   {
@@ -138,11 +89,7 @@ class SpreadsheetProperties extends \Google\Model
     return $this->importFunctionsExternalUrlAccessAllowed;
   }
   /**
-   * Determines whether and how circular references are resolved with iterative
-   * calculation. Absence of this field means that circular references result in
-   * calculation errors.
-   *
-   * @param IterativeCalculationSettings $iterativeCalculationSettings
+   * @param IterativeCalculationSettings
    */
   public function setIterativeCalculationSettings(IterativeCalculationSettings $iterativeCalculationSettings)
   {
@@ -156,13 +103,7 @@ class SpreadsheetProperties extends \Google\Model
     return $this->iterativeCalculationSettings;
   }
   /**
-   * The locale of the spreadsheet in one of the following formats: * an ISO
-   * 639-1 language code such as `en` * an ISO 639-2 language code such as
-   * `fil`, if no 639-1 code exists * a combination of the ISO language code and
-   * country code, such as `en_US` Note: when updating this field, not all
-   * locales/languages are supported.
-   *
-   * @param string $locale
+   * @param string
    */
   public function setLocale($locale)
   {
@@ -176,9 +117,7 @@ class SpreadsheetProperties extends \Google\Model
     return $this->locale;
   }
   /**
-   * Theme applied to the spreadsheet.
-   *
-   * @param SpreadsheetTheme $spreadsheetTheme
+   * @param SpreadsheetTheme
    */
   public function setSpreadsheetTheme(SpreadsheetTheme $spreadsheetTheme)
   {
@@ -192,11 +131,7 @@ class SpreadsheetProperties extends \Google\Model
     return $this->spreadsheetTheme;
   }
   /**
-   * The time zone of the spreadsheet, in CLDR format such as
-   * `America/New_York`. If the time zone isn't recognized, this may be a custom
-   * time zone such as `GMT-07:00`.
-   *
-   * @param string $timeZone
+   * @param string
    */
   public function setTimeZone($timeZone)
   {
@@ -210,9 +145,7 @@ class SpreadsheetProperties extends \Google\Model
     return $this->timeZone;
   }
   /**
-   * The title of the spreadsheet.
-   *
-   * @param string $title
+   * @param string
    */
   public function setTitle($title)
   {

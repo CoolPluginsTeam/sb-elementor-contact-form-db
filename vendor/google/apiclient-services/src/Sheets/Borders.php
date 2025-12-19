@@ -29,9 +29,7 @@ class Borders extends \Google\Model
   protected $topDataType = '';
 
   /**
-   * The bottom border of the cell.
-   *
-   * @param Border $bottom
+   * @param Border
    */
   public function setBottom(Border $bottom)
   {
@@ -45,9 +43,7 @@ class Borders extends \Google\Model
     return $this->bottom;
   }
   /**
-   * The left border of the cell.
-   *
-   * @param Border $left
+   * @param Border
    */
   public function setLeft(Border $left)
   {
@@ -61,9 +57,7 @@ class Borders extends \Google\Model
     return $this->left;
   }
   /**
-   * The right border of the cell.
-   *
-   * @param Border $right
+   * @param Border
    */
   public function setRight(Border $right)
   {
@@ -77,9 +71,7 @@ class Borders extends \Google\Model
     return $this->right;
   }
   /**
-   * The top border of the cell.
-   *
-   * @param Border $top
+   * @param Border
    */
   public function setTop(Border $top)
   {

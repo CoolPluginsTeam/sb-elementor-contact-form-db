@@ -20,16 +20,12 @@ namespace Google\Service\Sheets;
 class DeleteFilterViewRequest extends \Google\Model
 {
   /**
-   * The ID of the filter to delete.
-   *
    * @var int
    */
   public $filterId;
 
   /**
-   * The ID of the filter to delete.
-   *
-   * @param int $filterId
+   * @param int
    */
   public function setFilterId($filterId)
   {

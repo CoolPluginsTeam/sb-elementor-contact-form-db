@@ -23,9 +23,7 @@ class DuplicateSheetResponse extends \Google\Model
   protected $propertiesDataType = '';
 
   /**
-   * The properties of the duplicate sheet.
-   *
-   * @param SheetProperties $properties
+   * @param SheetProperties
    */
   public function setProperties(SheetProperties $properties)
   {

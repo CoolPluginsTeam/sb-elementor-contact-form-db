@@ -19,53 +19,23 @@ namespace Google\Service\Sheets;
 
 class DeveloperMetadataLocation extends \Google\Model
 {
-  /**
-   * Default value.
-   */
-  public const LOCATION_TYPE_DEVELOPER_METADATA_LOCATION_TYPE_UNSPECIFIED = 'DEVELOPER_METADATA_LOCATION_TYPE_UNSPECIFIED';
-  /**
-   * Developer metadata associated on an entire row dimension.
-   */
-  public const LOCATION_TYPE_ROW = 'ROW';
-  /**
-   * Developer metadata associated on an entire column dimension.
-   */
-  public const LOCATION_TYPE_COLUMN = 'COLUMN';
-  /**
-   * Developer metadata associated on an entire sheet.
-   */
-  public const LOCATION_TYPE_SHEET = 'SHEET';
-  /**
-   * Developer metadata associated on the entire spreadsheet.
-   */
-  public const LOCATION_TYPE_SPREADSHEET = 'SPREADSHEET';
   protected $dimensionRangeType = DimensionRange::class;
   protected $dimensionRangeDataType = '';
   /**
-   * The type of location this object represents. This field is read-only.
-   *
    * @var string
    */
   public $locationType;
   /**
-   * The ID of the sheet when metadata is associated with an entire sheet.
-   *
    * @var int
    */
   public $sheetId;
   /**
-   * True when metadata is associated with an entire spreadsheet.
-   *
    * @var bool
    */
   public $spreadsheet;
 
   /**
-   * Represents the row or column when metadata is associated with a dimension.
-   * The specified DimensionRange must represent a single row or column; it
-   * cannot be unbounded or span multiple rows or columns.
-   *
-   * @param DimensionRange $dimensionRange
+   * @param DimensionRange
    */
   public function setDimensionRange(DimensionRange $dimensionRange)
   {
@@ -79,28 +49,21 @@ class DeveloperMetadataLocation extends \Google\Model
     return $this->dimensionRange;
   }
   /**
-   * The type of location this object represents. This field is read-only.
-   *
-   * Accepted values: DEVELOPER_METADATA_LOCATION_TYPE_UNSPECIFIED, ROW, COLUMN,
-   * SHEET, SPREADSHEET
-   *
-   * @param self::LOCATION_TYPE_* $locationType
+   * @param string
    */
   public function setLocationType($locationType)
   {
     $this->locationType = $locationType;
   }
   /**
-   * @return self::LOCATION_TYPE_*
+   * @return string
    */
   public function getLocationType()
   {
     return $this->locationType;
   }
   /**
-   * The ID of the sheet when metadata is associated with an entire sheet.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {
@@ -114,9 +77,7 @@ class DeveloperMetadataLocation extends \Google\Model
     return $this->sheetId;
   }
   /**
-   * True when metadata is associated with an entire spreadsheet.
-   *
-   * @param bool $spreadsheet
+   * @param bool
    */
   public function setSpreadsheet($spreadsheet)
   {

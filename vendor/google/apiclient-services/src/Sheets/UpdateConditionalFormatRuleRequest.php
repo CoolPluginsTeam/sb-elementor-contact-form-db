@@ -20,31 +20,22 @@ namespace Google\Service\Sheets;
 class UpdateConditionalFormatRuleRequest extends \Google\Model
 {
   /**
-   * The zero-based index of the rule that should be replaced or moved.
-   *
    * @var int
    */
   public $index;
   /**
-   * The zero-based new index the rule should end up at.
-   *
    * @var int
    */
   public $newIndex;
   protected $ruleType = ConditionalFormatRule::class;
   protected $ruleDataType = '';
   /**
-   * The sheet of the rule to move. Required if new_index is set, unused
-   * otherwise.
-   *
    * @var int
    */
   public $sheetId;
 
   /**
-   * The zero-based index of the rule that should be replaced or moved.
-   *
-   * @param int $index
+   * @param int
    */
   public function setIndex($index)
   {
@@ -58,9 +49,7 @@ class UpdateConditionalFormatRuleRequest extends \Google\Model
     return $this->index;
   }
   /**
-   * The zero-based new index the rule should end up at.
-   *
-   * @param int $newIndex
+   * @param int
    */
   public function setNewIndex($newIndex)
   {
@@ -74,9 +63,7 @@ class UpdateConditionalFormatRuleRequest extends \Google\Model
     return $this->newIndex;
   }
   /**
-   * The rule that should replace the rule at the given index.
-   *
-   * @param ConditionalFormatRule $rule
+   * @param ConditionalFormatRule
    */
   public function setRule(ConditionalFormatRule $rule)
   {
@@ -90,10 +77,7 @@ class UpdateConditionalFormatRuleRequest extends \Google\Model
     return $this->rule;
   }
   /**
-   * The sheet of the rule to move. Required if new_index is set, unused
-   * otherwise.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {

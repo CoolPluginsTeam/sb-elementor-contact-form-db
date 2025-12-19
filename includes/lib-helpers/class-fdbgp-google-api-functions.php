@@ -58,11 +58,10 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @since 1.0.0
 	 */
 	public function fdbgp_load_library() {
-		if ( ! class_exists( 'ComposerAutoloaderInita672e4231f706419bd66ef535c4ab40e' ) ) {
-			require_once FDBGP_PLUGIN_DIR . 'vendor/autoload.php';
-		}
-	}
-
+			if ( file_exists( FDBGP_PLUGIN_DIR . 'vendor/autoload.php' ) ) {
+				require_once FDBGP_PLUGIN_DIR . 'vendor/autoload.php';
+			}
+    }
 	/**
 	 * Get Google Sheets Service Object.
 	 *
@@ -71,7 +70,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	public function get_client_object() {
 		if ( null === self::$instance_service ) {
 			$client                 = self::getClient();
-			self::$instance_service = new \Google_Service_Sheets( $client );
+			self::$instance_service = new \Google\Service\Sheets( $client );
 		}
 		return self::$instance_service;
 	}
@@ -94,7 +93,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	public function get_drive_object() {
 		if ( null === self::$instance_drive ) {
 			$client               = self::getClient();
-			self::$instance_drive = new \Google_Service_Drive( $client );
+			self::$instance_drive = new \Google\Service\Drive( $client );
 		}
 		return self::$instance_drive;
 	}
@@ -158,11 +157,11 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		$clientid                     = isset( $fdbgp_google_settings_value['client_id'] ) ? $fdbgp_google_settings_value['client_id'] : '';
 		$clientsecert                 = isset( $fdbgp_google_settings_value['client_secret'] ) ? $fdbgp_google_settings_value['client_secret'] : '';
 		$auth_token                   = isset( $fdbgp_google_settings_value['client_token'] ) ? $fdbgp_google_settings_value['client_token'] : '';
-		$client       = new \Google_Client();
+		$client       = new \Google\Client();
 		$client->setApplicationName( 'FormsDB - Elementor Google Spreadsheet Addon' );
-		$client->setScopes( \Google_Service_Sheets::SPREADSHEETS_READONLY );
-		$client->setScopes( \Google_Service_Drive::DRIVE_METADATA_READONLY );
-		$client->addScope( \Google_Service_Sheets::SPREADSHEETS );
+		$client->setScopes( \Google\Service\Sheets::SPREADSHEETS_READONLY );
+		$client->setScopes( \Google\Service\Drive::DRIVE_METADATA_READONLY );
+		$client->addScope( \Google\Service\Sheets::SPREADSHEETS );
 		$client->setClientId( $clientid );
 		$client->setClientSecret( $clientsecert );
 		$client->setRedirectUri(admin_url( 'admin.php?page=formsdb&tab=settings' ));
@@ -334,7 +333,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return object.
 	 */
 	public function freezeobject( $sheetid = 0, $fdbgp_freeze = 0 ) {
-		$requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+		$requestbody = new \Google\Service\Sheets\BatchUpdateSpreadsheetRequest(
 			array(
 				'requests' => array(
 					'updateSheetProperties' => array(
@@ -362,7 +361,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return object.
 	 */
 	public function newspreadsheetobject( $spreadsheetname = '', $sheetname = '' ) {
-		$requestbody = new \Google_Service_Sheets_Spreadsheet(
+		$requestbody = new \Google\Service\Sheets\Spreadsheet(
 			array(
 				'properties' => array(
 					'title' => $spreadsheetname,
@@ -408,7 +407,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return object.
 	 */
 	public function valuerangeobject( $values_data = array() ) {
-		$requestbody = new \Google_Service_Sheets_ValueRange( array( 'values' => $values_data ) );
+		$requestbody = new \Google\Service\Sheets\ValueRange( array( 'values' => $values_data ) );
 		return $requestbody;
 	}
 
@@ -421,7 +420,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return object.
 	 */
 	public function createsheetobject( $fdbgp_sheetname = '' ) {
-		$fdbgp_requestbody = new \Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+		$fdbgp_requestbody = new \Google\Service\Sheets\BatchUpdateSpreadsheetRequest(
 			array(
 				'requests' => array(
 					'addSheet' => array(
@@ -443,7 +442,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 * @return object.
 	 */
 	public function clearobject() {
-		$requestbody = new \Google_Service_Sheets_ClearValuesRequest();
+		$requestbody = new \Google\Service\Sheets\ClearValuesRequest();
 		return $requestbody;
 	}
 

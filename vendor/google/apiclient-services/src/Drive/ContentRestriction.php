@@ -20,59 +20,34 @@ namespace Google\Service\Drive;
 class ContentRestriction extends \Google\Model
 {
   /**
-   * Whether the content restriction can only be modified or removed by a user
-   * who owns the file. For files in shared drives, any user with `organizer`
-   * capabilities can modify or remove this content restriction.
-   *
    * @var bool
    */
   public $ownerRestricted;
   /**
-   * Whether the content of the file is read-only. If a file is read-only, a new
-   * revision of the file may not be added, comments may not be added or
-   * modified, and the title of the file may not be modified.
-   *
    * @var bool
    */
   public $readOnly;
   /**
-   * Reason for why the content of the file is restricted. This is only mutable
-   * on requests that also set `readOnly=true`.
-   *
    * @var string
    */
   public $reason;
   protected $restrictingUserType = User::class;
   protected $restrictingUserDataType = '';
   /**
-   * The time at which the content restriction was set (formatted RFC 3339
-   * timestamp). Only populated if readOnly is true.
-   *
    * @var string
    */
   public $restrictionTime;
   /**
-   * Output only. Whether the content restriction was applied by the system, for
-   * example due to an esignature. Users cannot modify or remove system
-   * restricted content restrictions.
-   *
    * @var bool
    */
   public $systemRestricted;
   /**
-   * Output only. The type of the content restriction. Currently the only
-   * possible value is `globalContentRestriction`.
-   *
    * @var string
    */
   public $type;
 
   /**
-   * Whether the content restriction can only be modified or removed by a user
-   * who owns the file. For files in shared drives, any user with `organizer`
-   * capabilities can modify or remove this content restriction.
-   *
-   * @param bool $ownerRestricted
+   * @param bool
    */
   public function setOwnerRestricted($ownerRestricted)
   {
@@ -86,11 +61,7 @@ class ContentRestriction extends \Google\Model
     return $this->ownerRestricted;
   }
   /**
-   * Whether the content of the file is read-only. If a file is read-only, a new
-   * revision of the file may not be added, comments may not be added or
-   * modified, and the title of the file may not be modified.
-   *
-   * @param bool $readOnly
+   * @param bool
    */
   public function setReadOnly($readOnly)
   {
@@ -104,10 +75,7 @@ class ContentRestriction extends \Google\Model
     return $this->readOnly;
   }
   /**
-   * Reason for why the content of the file is restricted. This is only mutable
-   * on requests that also set `readOnly=true`.
-   *
-   * @param string $reason
+   * @param string
    */
   public function setReason($reason)
   {
@@ -121,10 +89,7 @@ class ContentRestriction extends \Google\Model
     return $this->reason;
   }
   /**
-   * Output only. The user who set the content restriction. Only populated if
-   * `readOnly=true`.
-   *
-   * @param User $restrictingUser
+   * @param User
    */
   public function setRestrictingUser(User $restrictingUser)
   {
@@ -138,10 +103,7 @@ class ContentRestriction extends \Google\Model
     return $this->restrictingUser;
   }
   /**
-   * The time at which the content restriction was set (formatted RFC 3339
-   * timestamp). Only populated if readOnly is true.
-   *
-   * @param string $restrictionTime
+   * @param string
    */
   public function setRestrictionTime($restrictionTime)
   {
@@ -155,11 +117,7 @@ class ContentRestriction extends \Google\Model
     return $this->restrictionTime;
   }
   /**
-   * Output only. Whether the content restriction was applied by the system, for
-   * example due to an esignature. Users cannot modify or remove system
-   * restricted content restrictions.
-   *
-   * @param bool $systemRestricted
+   * @param bool
    */
   public function setSystemRestricted($systemRestricted)
   {
@@ -173,10 +131,7 @@ class ContentRestriction extends \Google\Model
     return $this->systemRestricted;
   }
   /**
-   * Output only. The type of the content restriction. Currently the only
-   * possible value is `globalContentRestriction`.
-   *
-   * @param string $type
+   * @param string
    */
   public function setType($type)
   {

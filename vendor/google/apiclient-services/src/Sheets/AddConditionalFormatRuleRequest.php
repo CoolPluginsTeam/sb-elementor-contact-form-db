@@ -20,8 +20,6 @@ namespace Google\Service\Sheets;
 class AddConditionalFormatRuleRequest extends \Google\Model
 {
   /**
-   * The zero-based index where the rule should be inserted.
-   *
    * @var int
    */
   public $index;
@@ -29,9 +27,7 @@ class AddConditionalFormatRuleRequest extends \Google\Model
   protected $ruleDataType = '';
 
   /**
-   * The zero-based index where the rule should be inserted.
-   *
-   * @param int $index
+   * @param int
    */
   public function setIndex($index)
   {
@@ -45,9 +41,7 @@ class AddConditionalFormatRuleRequest extends \Google\Model
     return $this->index;
   }
   /**
-   * The rule to add.
-   *
-   * @param ConditionalFormatRule $rule
+   * @param ConditionalFormatRule
    */
   public function setRule(ConditionalFormatRule $rule)
   {

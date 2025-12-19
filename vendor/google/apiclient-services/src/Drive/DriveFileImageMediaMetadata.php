@@ -20,134 +20,90 @@ namespace Google\Service\Drive;
 class DriveFileImageMediaMetadata extends \Google\Model
 {
   /**
-   * Output only. The aperture used to create the photo (f-number).
-   *
    * @var float
    */
   public $aperture;
   /**
-   * Output only. The make of the camera used to create the photo.
-   *
    * @var string
    */
   public $cameraMake;
   /**
-   * Output only. The model of the camera used to create the photo.
-   *
    * @var string
    */
   public $cameraModel;
   /**
-   * Output only. The color space of the photo.
-   *
    * @var string
    */
   public $colorSpace;
   /**
-   * Output only. The exposure bias of the photo (APEX value).
-   *
    * @var float
    */
   public $exposureBias;
   /**
-   * Output only. The exposure mode used to create the photo.
-   *
    * @var string
    */
   public $exposureMode;
   /**
-   * Output only. The length of the exposure, in seconds.
-   *
    * @var float
    */
   public $exposureTime;
   /**
-   * Output only. Whether a flash was used to create the photo.
-   *
    * @var bool
    */
   public $flashUsed;
   /**
-   * Output only. The focal length used to create the photo, in millimeters.
-   *
    * @var float
    */
   public $focalLength;
   /**
-   * Output only. The height of the image in pixels.
-   *
    * @var int
    */
   public $height;
   /**
-   * Output only. The ISO speed used to create the photo.
-   *
    * @var int
    */
   public $isoSpeed;
   /**
-   * Output only. The lens used to create the photo.
-   *
    * @var string
    */
   public $lens;
   protected $locationType = DriveFileImageMediaMetadataLocation::class;
   protected $locationDataType = '';
   /**
-   * Output only. The smallest f-number of the lens at the focal length used to
-   * create the photo (APEX value).
-   *
    * @var float
    */
   public $maxApertureValue;
   /**
-   * Output only. The metering mode used to create the photo.
-   *
    * @var string
    */
   public $meteringMode;
   /**
-   * Output only. The number of clockwise 90 degree rotations applied from the
-   * image's original orientation.
-   *
    * @var int
    */
   public $rotation;
   /**
-   * Output only. The type of sensor used to create the photo.
-   *
    * @var string
    */
   public $sensor;
   /**
-   * Output only. The distance to the subject of the photo, in meters.
-   *
    * @var int
    */
   public $subjectDistance;
   /**
-   * Output only. The date and time the photo was taken (EXIF DateTime).
-   *
    * @var string
    */
   public $time;
   /**
-   * Output only. The white balance mode used to create the photo.
-   *
    * @var string
    */
   public $whiteBalance;
   /**
-   * Output only. The width of the image in pixels.
-   *
    * @var int
    */
   public $width;
 
   /**
-   * Output only. The aperture used to create the photo (f-number).
-   *
-   * @param float $aperture
+   * @param float
    */
   public function setAperture($aperture)
   {
@@ -161,9 +117,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->aperture;
   }
   /**
-   * Output only. The make of the camera used to create the photo.
-   *
-   * @param string $cameraMake
+   * @param string
    */
   public function setCameraMake($cameraMake)
   {
@@ -177,9 +131,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->cameraMake;
   }
   /**
-   * Output only. The model of the camera used to create the photo.
-   *
-   * @param string $cameraModel
+   * @param string
    */
   public function setCameraModel($cameraModel)
   {
@@ -193,9 +145,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->cameraModel;
   }
   /**
-   * Output only. The color space of the photo.
-   *
-   * @param string $colorSpace
+   * @param string
    */
   public function setColorSpace($colorSpace)
   {
@@ -209,9 +159,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->colorSpace;
   }
   /**
-   * Output only. The exposure bias of the photo (APEX value).
-   *
-   * @param float $exposureBias
+   * @param float
    */
   public function setExposureBias($exposureBias)
   {
@@ -225,9 +173,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->exposureBias;
   }
   /**
-   * Output only. The exposure mode used to create the photo.
-   *
-   * @param string $exposureMode
+   * @param string
    */
   public function setExposureMode($exposureMode)
   {
@@ -241,9 +187,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->exposureMode;
   }
   /**
-   * Output only. The length of the exposure, in seconds.
-   *
-   * @param float $exposureTime
+   * @param float
    */
   public function setExposureTime($exposureTime)
   {
@@ -257,9 +201,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->exposureTime;
   }
   /**
-   * Output only. Whether a flash was used to create the photo.
-   *
-   * @param bool $flashUsed
+   * @param bool
    */
   public function setFlashUsed($flashUsed)
   {
@@ -273,9 +215,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->flashUsed;
   }
   /**
-   * Output only. The focal length used to create the photo, in millimeters.
-   *
-   * @param float $focalLength
+   * @param float
    */
   public function setFocalLength($focalLength)
   {
@@ -289,9 +229,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->focalLength;
   }
   /**
-   * Output only. The height of the image in pixels.
-   *
-   * @param int $height
+   * @param int
    */
   public function setHeight($height)
   {
@@ -305,9 +243,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->height;
   }
   /**
-   * Output only. The ISO speed used to create the photo.
-   *
-   * @param int $isoSpeed
+   * @param int
    */
   public function setIsoSpeed($isoSpeed)
   {
@@ -321,9 +257,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->isoSpeed;
   }
   /**
-   * Output only. The lens used to create the photo.
-   *
-   * @param string $lens
+   * @param string
    */
   public function setLens($lens)
   {
@@ -337,9 +271,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->lens;
   }
   /**
-   * Output only. Geographic location information stored in the image.
-   *
-   * @param DriveFileImageMediaMetadataLocation $location
+   * @param DriveFileImageMediaMetadataLocation
    */
   public function setLocation(DriveFileImageMediaMetadataLocation $location)
   {
@@ -353,10 +285,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->location;
   }
   /**
-   * Output only. The smallest f-number of the lens at the focal length used to
-   * create the photo (APEX value).
-   *
-   * @param float $maxApertureValue
+   * @param float
    */
   public function setMaxApertureValue($maxApertureValue)
   {
@@ -370,9 +299,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->maxApertureValue;
   }
   /**
-   * Output only. The metering mode used to create the photo.
-   *
-   * @param string $meteringMode
+   * @param string
    */
   public function setMeteringMode($meteringMode)
   {
@@ -386,10 +313,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->meteringMode;
   }
   /**
-   * Output only. The number of clockwise 90 degree rotations applied from the
-   * image's original orientation.
-   *
-   * @param int $rotation
+   * @param int
    */
   public function setRotation($rotation)
   {
@@ -403,9 +327,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->rotation;
   }
   /**
-   * Output only. The type of sensor used to create the photo.
-   *
-   * @param string $sensor
+   * @param string
    */
   public function setSensor($sensor)
   {
@@ -419,9 +341,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->sensor;
   }
   /**
-   * Output only. The distance to the subject of the photo, in meters.
-   *
-   * @param int $subjectDistance
+   * @param int
    */
   public function setSubjectDistance($subjectDistance)
   {
@@ -435,9 +355,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->subjectDistance;
   }
   /**
-   * Output only. The date and time the photo was taken (EXIF DateTime).
-   *
-   * @param string $time
+   * @param string
    */
   public function setTime($time)
   {
@@ -451,9 +369,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->time;
   }
   /**
-   * Output only. The white balance mode used to create the photo.
-   *
-   * @param string $whiteBalance
+   * @param string
    */
   public function setWhiteBalance($whiteBalance)
   {
@@ -467,9 +383,7 @@ class DriveFileImageMediaMetadata extends \Google\Model
     return $this->whiteBalance;
   }
   /**
-   * Output only. The width of the image in pixels.
-   *
-   * @param int $width
+   * @param int
    */
   public function setWidth($width)
   {

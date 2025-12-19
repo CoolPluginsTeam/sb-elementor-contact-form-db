@@ -20,22 +20,16 @@ namespace Google\Service\Drive;
 class DriveFileLinkShareMetadata extends \Google\Model
 {
   /**
-   * Output only. Whether the file is eligible for security update.
-   *
    * @var bool
    */
   public $securityUpdateEligible;
   /**
-   * Output only. Whether the security update is enabled for this file.
-   *
    * @var bool
    */
   public $securityUpdateEnabled;
 
   /**
-   * Output only. Whether the file is eligible for security update.
-   *
-   * @param bool $securityUpdateEligible
+   * @param bool
    */
   public function setSecurityUpdateEligible($securityUpdateEligible)
   {
@@ -49,9 +43,7 @@ class DriveFileLinkShareMetadata extends \Google\Model
     return $this->securityUpdateEligible;
   }
   /**
-   * Output only. Whether the security update is enabled for this file.
-   *
-   * @param bool $securityUpdateEnabled
+   * @param bool
    */
   public function setSecurityUpdateEnabled($securityUpdateEnabled)
   {

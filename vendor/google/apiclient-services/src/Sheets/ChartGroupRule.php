@@ -25,9 +25,7 @@ class ChartGroupRule extends \Google\Model
   protected $histogramRuleDataType = '';
 
   /**
-   * A ChartDateTimeRule.
-   *
-   * @param ChartDateTimeRule $dateTimeRule
+   * @param ChartDateTimeRule
    */
   public function setDateTimeRule(ChartDateTimeRule $dateTimeRule)
   {
@@ -41,9 +39,7 @@ class ChartGroupRule extends \Google\Model
     return $this->dateTimeRule;
   }
   /**
-   * A ChartHistogramRule
-   *
-   * @param ChartHistogramRule $histogramRule
+   * @param ChartHistogramRule
    */
   public function setHistogramRule(ChartHistogramRule $histogramRule)
   {

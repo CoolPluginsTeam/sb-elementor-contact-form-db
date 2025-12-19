@@ -20,8 +20,6 @@ namespace Google\Service\Sheets;
 class FilterSpec extends \Google\Model
 {
   /**
-   * The zero-based column index.
-   *
    * @var int
    */
   public $columnIndex;
@@ -31,9 +29,7 @@ class FilterSpec extends \Google\Model
   protected $filterCriteriaDataType = '';
 
   /**
-   * The zero-based column index.
-   *
-   * @param int $columnIndex
+   * @param int
    */
   public function setColumnIndex($columnIndex)
   {
@@ -47,9 +43,7 @@ class FilterSpec extends \Google\Model
     return $this->columnIndex;
   }
   /**
-   * Reference to a data source column.
-   *
-   * @param DataSourceColumnReference $dataSourceColumnReference
+   * @param DataSourceColumnReference
    */
   public function setDataSourceColumnReference(DataSourceColumnReference $dataSourceColumnReference)
   {
@@ -63,9 +57,7 @@ class FilterSpec extends \Google\Model
     return $this->dataSourceColumnReference;
   }
   /**
-   * The criteria for the column.
-   *
-   * @param FilterCriteria $filterCriteria
+   * @param FilterCriteria
    */
   public function setFilterCriteria(FilterCriteria $filterCriteria)
   {

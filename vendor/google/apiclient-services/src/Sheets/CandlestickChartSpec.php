@@ -26,9 +26,7 @@ class CandlestickChartSpec extends \Google\Collection
   protected $domainDataType = '';
 
   /**
-   * The Candlestick chart data. Only one CandlestickData is supported.
-   *
-   * @param CandlestickData[] $data
+   * @param CandlestickData[]
    */
   public function setData($data)
   {
@@ -42,11 +40,7 @@ class CandlestickChartSpec extends \Google\Collection
     return $this->data;
   }
   /**
-   * The domain data (horizontal axis) for the candlestick chart. String data
-   * will be treated as discrete labels, other data will be treated as
-   * continuous values.
-   *
-   * @param CandlestickDomain $domain
+   * @param CandlestickDomain
    */
   public function setDomain(CandlestickDomain $domain)
   {

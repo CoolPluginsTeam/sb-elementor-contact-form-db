@@ -21,20 +21,10 @@ class ReplyList extends \Google\Collection
 {
   protected $collection_key = 'replies';
   /**
-   * Identifies what kind of resource this is. Value: the fixed string
-   * `"drive#replyList"`.
-   *
    * @var string
    */
   public $kind;
   /**
-   * The page token for the next page of replies. This will be absent if the end
-   * of the replies list has been reached. If the token is rejected for any
-   * reason, it should be discarded, and pagination should be restarted from the
-   * first page of results. The page token is typically valid for several hours.
-   * However, if new items are added or removed, your expected results might
-   * differ.
-   *
    * @var string
    */
   public $nextPageToken;
@@ -42,10 +32,7 @@ class ReplyList extends \Google\Collection
   protected $repliesDataType = 'array';
 
   /**
-   * Identifies what kind of resource this is. Value: the fixed string
-   * `"drive#replyList"`.
-   *
-   * @param string $kind
+   * @param string
    */
   public function setKind($kind)
   {
@@ -59,14 +46,7 @@ class ReplyList extends \Google\Collection
     return $this->kind;
   }
   /**
-   * The page token for the next page of replies. This will be absent if the end
-   * of the replies list has been reached. If the token is rejected for any
-   * reason, it should be discarded, and pagination should be restarted from the
-   * first page of results. The page token is typically valid for several hours.
-   * However, if new items are added or removed, your expected results might
-   * differ.
-   *
-   * @param string $nextPageToken
+   * @param string
    */
   public function setNextPageToken($nextPageToken)
   {
@@ -80,10 +60,7 @@ class ReplyList extends \Google\Collection
     return $this->nextPageToken;
   }
   /**
-   * The list of replies. If nextPageToken is populated, then this list may be
-   * incomplete and an additional page of results should be fetched.
-   *
-   * @param Reply[] $replies
+   * @param Reply[]
    */
   public function setReplies($replies)
   {

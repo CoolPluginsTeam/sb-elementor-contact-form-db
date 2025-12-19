@@ -23,9 +23,7 @@ class AddFilterViewResponse extends \Google\Model
   protected $filterDataType = '';
 
   /**
-   * The newly added filter view.
-   *
-   * @param FilterView $filter
+   * @param FilterView
    */
   public function setFilter(FilterView $filter)
   {

@@ -23,10 +23,7 @@ class DeleteDeveloperMetadataRequest extends \Google\Model
   protected $dataFilterDataType = '';
 
   /**
-   * The data filter describing the criteria used to select which developer
-   * metadata entry to delete.
-   *
-   * @param DataFilter $dataFilter
+   * @param DataFilter
    */
   public function setDataFilter(DataFilter $dataFilter)
   {

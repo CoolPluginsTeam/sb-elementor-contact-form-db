@@ -23,9 +23,7 @@ class AddSlicerResponse extends \Google\Model
   protected $slicerDataType = '';
 
   /**
-   * The newly added slicer.
-   *
-   * @param Slicer $slicer
+   * @param Slicer
    */
   public function setSlicer(Slicer $slicer)
   {

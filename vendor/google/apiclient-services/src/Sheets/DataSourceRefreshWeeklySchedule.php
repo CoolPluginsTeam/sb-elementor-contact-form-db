@@ -21,8 +21,6 @@ class DataSourceRefreshWeeklySchedule extends \Google\Collection
 {
   protected $collection_key = 'daysOfWeek';
   /**
-   * Days of the week to refresh. At least one day must be specified.
-   *
    * @var string[]
    */
   public $daysOfWeek;
@@ -30,9 +28,7 @@ class DataSourceRefreshWeeklySchedule extends \Google\Collection
   protected $startTimeDataType = '';
 
   /**
-   * Days of the week to refresh. At least one day must be specified.
-   *
-   * @param string[] $daysOfWeek
+   * @param string[]
    */
   public function setDaysOfWeek($daysOfWeek)
   {
@@ -46,11 +42,7 @@ class DataSourceRefreshWeeklySchedule extends \Google\Collection
     return $this->daysOfWeek;
   }
   /**
-   * The start time of a time interval in which a data source refresh is
-   * scheduled. Only `hours` part is used. The time interval size defaults to
-   * that in the Sheets editor.
-   *
-   * @param TimeOfDay $startTime
+   * @param TimeOfDay
    */
   public function setStartTime(TimeOfDay $startTime)
   {

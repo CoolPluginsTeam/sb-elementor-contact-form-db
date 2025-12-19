@@ -23,9 +23,7 @@ class DeleteDimensionGroupRequest extends \Google\Model
   protected $rangeDataType = '';
 
   /**
-   * The range of the group to be deleted.
-   *
-   * @param DimensionRange $range
+   * @param DimensionRange
    */
   public function setRange(DimensionRange $range)
   {

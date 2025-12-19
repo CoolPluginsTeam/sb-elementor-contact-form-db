@@ -20,17 +20,12 @@ namespace Google\Service\Sheets;
 class UpdateConditionalFormatRuleResponse extends \Google\Model
 {
   /**
-   * The index of the new rule.
-   *
    * @var int
    */
   public $newIndex;
   protected $newRuleType = ConditionalFormatRule::class;
   protected $newRuleDataType = '';
   /**
-   * The old index of the rule. Not set if a rule was replaced (because it is
-   * the same as new_index).
-   *
    * @var int
    */
   public $oldIndex;
@@ -38,9 +33,7 @@ class UpdateConditionalFormatRuleResponse extends \Google\Model
   protected $oldRuleDataType = '';
 
   /**
-   * The index of the new rule.
-   *
-   * @param int $newIndex
+   * @param int
    */
   public function setNewIndex($newIndex)
   {
@@ -54,10 +47,7 @@ class UpdateConditionalFormatRuleResponse extends \Google\Model
     return $this->newIndex;
   }
   /**
-   * The new rule that replaced the old rule (if replacing), or the rule that
-   * was moved (if moved)
-   *
-   * @param ConditionalFormatRule $newRule
+   * @param ConditionalFormatRule
    */
   public function setNewRule(ConditionalFormatRule $newRule)
   {
@@ -71,10 +61,7 @@ class UpdateConditionalFormatRuleResponse extends \Google\Model
     return $this->newRule;
   }
   /**
-   * The old index of the rule. Not set if a rule was replaced (because it is
-   * the same as new_index).
-   *
-   * @param int $oldIndex
+   * @param int
    */
   public function setOldIndex($oldIndex)
   {
@@ -88,10 +75,7 @@ class UpdateConditionalFormatRuleResponse extends \Google\Model
     return $this->oldIndex;
   }
   /**
-   * The old (deleted) rule. Not set if a rule was moved (because it is the same
-   * as new_rule).
-   *
-   * @param ConditionalFormatRule $oldRule
+   * @param ConditionalFormatRule
    */
   public function setOldRule(ConditionalFormatRule $oldRule)
   {

@@ -24,18 +24,12 @@ class AutoFillRequest extends \Google\Model
   protected $sourceAndDestinationType = SourceAndDestination::class;
   protected $sourceAndDestinationDataType = '';
   /**
-   * True if we should generate data with the "alternate" series. This differs
-   * based on the type and amount of source data.
-   *
    * @var bool
    */
   public $useAlternateSeries;
 
   /**
-   * The range to autofill. This will examine the range and detect the location
-   * that has data and automatically fill that data in to the rest of the range.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {
@@ -49,10 +43,7 @@ class AutoFillRequest extends \Google\Model
     return $this->range;
   }
   /**
-   * The source and destination areas to autofill. This explicitly lists the
-   * source of the autofill and where to extend that data.
-   *
-   * @param SourceAndDestination $sourceAndDestination
+   * @param SourceAndDestination
    */
   public function setSourceAndDestination(SourceAndDestination $sourceAndDestination)
   {
@@ -66,10 +57,7 @@ class AutoFillRequest extends \Google\Model
     return $this->sourceAndDestination;
   }
   /**
-   * True if we should generate data with the "alternate" series. This differs
-   * based on the type and amount of source data.
-   *
-   * @param bool $useAlternateSeries
+   * @param bool
    */
   public function setUseAlternateSeries($useAlternateSeries)
   {

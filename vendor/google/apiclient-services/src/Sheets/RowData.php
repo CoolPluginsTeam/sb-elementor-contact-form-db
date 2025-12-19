@@ -24,9 +24,7 @@ class RowData extends \Google\Collection
   protected $valuesDataType = 'array';
 
   /**
-   * The values in the row, one per column.
-   *
-   * @param CellData[] $values
+   * @param CellData[]
    */
   public function setValues($values)
   {

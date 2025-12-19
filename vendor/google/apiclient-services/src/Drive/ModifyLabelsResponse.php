@@ -21,8 +21,6 @@ class ModifyLabelsResponse extends \Google\Collection
 {
   protected $collection_key = 'modifiedLabels';
   /**
-   * This is always `"drive#modifyLabelsResponse"`.
-   *
    * @var string
    */
   public $kind;
@@ -30,9 +28,7 @@ class ModifyLabelsResponse extends \Google\Collection
   protected $modifiedLabelsDataType = 'array';
 
   /**
-   * This is always `"drive#modifyLabelsResponse"`.
-   *
-   * @param string $kind
+   * @param string
    */
   public function setKind($kind)
   {
@@ -46,9 +42,7 @@ class ModifyLabelsResponse extends \Google\Collection
     return $this->kind;
   }
   /**
-   * The list of labels which were added or updated by the request.
-   *
-   * @param Label[] $modifiedLabels
+   * @param Label[]
    */
   public function setModifiedLabels($modifiedLabels)
   {

@@ -20,53 +20,28 @@ namespace Google\Service\Drive;
 class DriveRestrictions extends \Google\Model
 {
   /**
-   * Whether administrative privileges on this shared drive are required to
-   * modify restrictions.
-   *
    * @var bool
    */
   public $adminManagedRestrictions;
   /**
-   * Whether the options to copy, print, or download files inside this shared
-   * drive, should be disabled for readers and commenters. When this restriction
-   * is set to `true`, it will override the similarly named field to `true` for
-   * any file inside this shared drive.
-   *
    * @var bool
    */
   public $copyRequiresWriterPermission;
   /**
-   * Whether access to this shared drive and items inside this shared drive is
-   * restricted to users of the domain to which this shared drive belongs. This
-   * restriction may be overridden by other sharing policies controlled outside
-   * of this shared drive.
-   *
    * @var bool
    */
   public $domainUsersOnly;
-  protected $downloadRestrictionType = DownloadRestriction::class;
-  protected $downloadRestrictionDataType = '';
   /**
-   * Whether access to items inside this shared drive is restricted to its
-   * members.
-   *
    * @var bool
    */
   public $driveMembersOnly;
   /**
-   * If true, only users with the organizer role can share folders. If false,
-   * users with either the organizer role or the file organizer role can share
-   * folders.
-   *
    * @var bool
    */
   public $sharingFoldersRequiresOrganizerPermission;
 
   /**
-   * Whether administrative privileges on this shared drive are required to
-   * modify restrictions.
-   *
-   * @param bool $adminManagedRestrictions
+   * @param bool
    */
   public function setAdminManagedRestrictions($adminManagedRestrictions)
   {
@@ -80,12 +55,7 @@ class DriveRestrictions extends \Google\Model
     return $this->adminManagedRestrictions;
   }
   /**
-   * Whether the options to copy, print, or download files inside this shared
-   * drive, should be disabled for readers and commenters. When this restriction
-   * is set to `true`, it will override the similarly named field to `true` for
-   * any file inside this shared drive.
-   *
-   * @param bool $copyRequiresWriterPermission
+   * @param bool
    */
   public function setCopyRequiresWriterPermission($copyRequiresWriterPermission)
   {
@@ -99,12 +69,7 @@ class DriveRestrictions extends \Google\Model
     return $this->copyRequiresWriterPermission;
   }
   /**
-   * Whether access to this shared drive and items inside this shared drive is
-   * restricted to users of the domain to which this shared drive belongs. This
-   * restriction may be overridden by other sharing policies controlled outside
-   * of this shared drive.
-   *
-   * @param bool $domainUsersOnly
+   * @param bool
    */
   public function setDomainUsersOnly($domainUsersOnly)
   {
@@ -118,26 +83,7 @@ class DriveRestrictions extends \Google\Model
     return $this->domainUsersOnly;
   }
   /**
-   * Download restrictions applied by shared drive managers.
-   *
-   * @param DownloadRestriction $downloadRestriction
-   */
-  public function setDownloadRestriction(DownloadRestriction $downloadRestriction)
-  {
-    $this->downloadRestriction = $downloadRestriction;
-  }
-  /**
-   * @return DownloadRestriction
-   */
-  public function getDownloadRestriction()
-  {
-    return $this->downloadRestriction;
-  }
-  /**
-   * Whether access to items inside this shared drive is restricted to its
-   * members.
-   *
-   * @param bool $driveMembersOnly
+   * @param bool
    */
   public function setDriveMembersOnly($driveMembersOnly)
   {
@@ -151,11 +97,7 @@ class DriveRestrictions extends \Google\Model
     return $this->driveMembersOnly;
   }
   /**
-   * If true, only users with the organizer role can share folders. If false,
-   * users with either the organizer role or the file organizer role can share
-   * folders.
-   *
-   * @param bool $sharingFoldersRequiresOrganizerPermission
+   * @param bool
    */
   public function setSharingFoldersRequiresOrganizerPermission($sharingFoldersRequiresOrganizerPermission)
   {

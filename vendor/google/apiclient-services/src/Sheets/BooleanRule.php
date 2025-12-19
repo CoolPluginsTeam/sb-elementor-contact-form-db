@@ -25,10 +25,7 @@ class BooleanRule extends \Google\Model
   protected $formatDataType = '';
 
   /**
-   * The condition of the rule. If the condition evaluates to true, the format
-   * is applied.
-   *
-   * @param BooleanCondition $condition
+   * @param BooleanCondition
    */
   public function setCondition(BooleanCondition $condition)
   {
@@ -42,11 +39,7 @@ class BooleanRule extends \Google\Model
     return $this->condition;
   }
   /**
-   * The format to apply. Conditional formatting can only apply a subset of
-   * formatting: bold, italic, strikethrough, foreground color and, background
-   * color.
-   *
-   * @param CellFormat $format
+   * @param CellFormat
    */
   public function setFormat(CellFormat $format)
   {

@@ -23,33 +23,20 @@ class ChangeList extends \Google\Collection
   protected $changesType = Change::class;
   protected $changesDataType = 'array';
   /**
-   * Identifies what kind of resource this is. Value: the fixed string
-   * `"drive#changeList"`.
-   *
    * @var string
    */
   public $kind;
   /**
-   * The starting page token for future changes. This will be present only if
-   * the end of the current changes list has been reached. The page token
-   * doesn't expire.
-   *
    * @var string
    */
   public $newStartPageToken;
   /**
-   * The page token for the next page of changes. This will be absent if the end
-   * of the changes list has been reached. The page token doesn't expire.
-   *
    * @var string
    */
   public $nextPageToken;
 
   /**
-   * The list of changes. If nextPageToken is populated, then this list may be
-   * incomplete and an additional page of results should be fetched.
-   *
-   * @param Change[] $changes
+   * @param Change[]
    */
   public function setChanges($changes)
   {
@@ -63,10 +50,7 @@ class ChangeList extends \Google\Collection
     return $this->changes;
   }
   /**
-   * Identifies what kind of resource this is. Value: the fixed string
-   * `"drive#changeList"`.
-   *
-   * @param string $kind
+   * @param string
    */
   public function setKind($kind)
   {
@@ -80,11 +64,7 @@ class ChangeList extends \Google\Collection
     return $this->kind;
   }
   /**
-   * The starting page token for future changes. This will be present only if
-   * the end of the current changes list has been reached. The page token
-   * doesn't expire.
-   *
-   * @param string $newStartPageToken
+   * @param string
    */
   public function setNewStartPageToken($newStartPageToken)
   {
@@ -98,10 +78,7 @@ class ChangeList extends \Google\Collection
     return $this->newStartPageToken;
   }
   /**
-   * The page token for the next page of changes. This will be absent if the end
-   * of the changes list has been reached. The page token doesn't expire.
-   *
-   * @param string $nextPageToken
+   * @param string
    */
   public function setNextPageToken($nextPageToken)
   {

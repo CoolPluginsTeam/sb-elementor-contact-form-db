@@ -23,8 +23,6 @@ class BatchUpdateSpreadsheetResponse extends \Google\Collection
   protected $repliesType = Response::class;
   protected $repliesDataType = 'array';
   /**
-   * The spreadsheet the updates were applied to.
-   *
    * @var string
    */
   public $spreadsheetId;
@@ -32,10 +30,7 @@ class BatchUpdateSpreadsheetResponse extends \Google\Collection
   protected $updatedSpreadsheetDataType = '';
 
   /**
-   * The reply of the updates. This maps 1:1 with the updates, although replies
-   * to some requests may be empty.
-   *
-   * @param Response[] $replies
+   * @param Response[]
    */
   public function setReplies($replies)
   {
@@ -49,9 +44,7 @@ class BatchUpdateSpreadsheetResponse extends \Google\Collection
     return $this->replies;
   }
   /**
-   * The spreadsheet the updates were applied to.
-   *
-   * @param string $spreadsheetId
+   * @param string
    */
   public function setSpreadsheetId($spreadsheetId)
   {
@@ -65,10 +58,7 @@ class BatchUpdateSpreadsheetResponse extends \Google\Collection
     return $this->spreadsheetId;
   }
   /**
-   * The spreadsheet after updates were applied. This is only set if
-   * BatchUpdateSpreadsheetRequest.include_spreadsheet_in_response is `true`.
-   *
-   * @param Spreadsheet $updatedSpreadsheet
+   * @param Spreadsheet
    */
   public function setUpdatedSpreadsheet(Spreadsheet $updatedSpreadsheet)
   {

@@ -21,10 +21,6 @@ class UpdateCellsRequest extends \Google\Collection
 {
   protected $collection_key = 'rows';
   /**
-   * The fields of CellData that should be updated. At least one field must be
-   * specified. The root is the CellData; 'row.values.' should not be specified.
-   * A single `"*"` can be used as short-hand for listing every field.
-   *
    * @var string
    */
   public $fields;
@@ -36,11 +32,7 @@ class UpdateCellsRequest extends \Google\Collection
   protected $startDataType = '';
 
   /**
-   * The fields of CellData that should be updated. At least one field must be
-   * specified. The root is the CellData; 'row.values.' should not be specified.
-   * A single `"*"` can be used as short-hand for listing every field.
-   *
-   * @param string $fields
+   * @param string
    */
   public function setFields($fields)
   {
@@ -54,10 +46,7 @@ class UpdateCellsRequest extends \Google\Collection
     return $this->fields;
   }
   /**
-   * The range to write data to. If the data in rows does not cover the entire
-   * requested range, the fields matching those set in fields will be cleared.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {
@@ -71,9 +60,7 @@ class UpdateCellsRequest extends \Google\Collection
     return $this->range;
   }
   /**
-   * The data to write.
-   *
-   * @param RowData[] $rows
+   * @param RowData[]
    */
   public function setRows($rows)
   {
@@ -87,10 +74,7 @@ class UpdateCellsRequest extends \Google\Collection
     return $this->rows;
   }
   /**
-   * The coordinate to start writing data at. Any number of rows and columns
-   * (including a different number of columns per row) may be written.
-   *
-   * @param GridCoordinate $start
+   * @param GridCoordinate
    */
   public function setStart(GridCoordinate $start)
   {

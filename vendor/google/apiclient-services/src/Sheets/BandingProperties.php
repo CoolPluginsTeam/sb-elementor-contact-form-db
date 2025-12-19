@@ -37,18 +37,13 @@ class BandingProperties extends \Google\Model
   protected $secondBandColorStyleDataType = '';
 
   /**
-   * The first color that is alternating. (Required) Deprecated: Use
-   * first_band_color_style.
-   *
-   * @deprecated
-   * @param Color $firstBandColor
+   * @param Color
    */
   public function setFirstBandColor(Color $firstBandColor)
   {
     $this->firstBandColor = $firstBandColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getFirstBandColor()
@@ -56,10 +51,7 @@ class BandingProperties extends \Google\Model
     return $this->firstBandColor;
   }
   /**
-   * The first color that is alternating. (Required) If first_band_color is also
-   * set, this field takes precedence.
-   *
-   * @param ColorStyle $firstBandColorStyle
+   * @param ColorStyle
    */
   public function setFirstBandColorStyle(ColorStyle $firstBandColorStyle)
   {
@@ -73,20 +65,13 @@ class BandingProperties extends \Google\Model
     return $this->firstBandColorStyle;
   }
   /**
-   * The color of the last row or column. If this field is not set, the last row
-   * or column is filled with either first_band_color or second_band_color,
-   * depending on the color of the previous row or column. Deprecated: Use
-   * footer_color_style.
-   *
-   * @deprecated
-   * @param Color $footerColor
+   * @param Color
    */
   public function setFooterColor(Color $footerColor)
   {
     $this->footerColor = $footerColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getFooterColor()
@@ -94,12 +79,7 @@ class BandingProperties extends \Google\Model
     return $this->footerColor;
   }
   /**
-   * The color of the last row or column. If this field is not set, the last row
-   * or column is filled with either first_band_color or second_band_color,
-   * depending on the color of the previous row or column. If footer_color is
-   * also set, this field takes precedence.
-   *
-   * @param ColorStyle $footerColorStyle
+   * @param ColorStyle
    */
   public function setFooterColorStyle(ColorStyle $footerColorStyle)
   {
@@ -113,22 +93,13 @@ class BandingProperties extends \Google\Model
     return $this->footerColorStyle;
   }
   /**
-   * The color of the first row or column. If this field is set, the first row
-   * or column is filled with this color and the colors alternate between
-   * first_band_color and second_band_color starting from the second row or
-   * column. Otherwise, the first row or column is filled with first_band_color
-   * and the colors proceed to alternate as they normally would. Deprecated: Use
-   * header_color_style.
-   *
-   * @deprecated
-   * @param Color $headerColor
+   * @param Color
    */
   public function setHeaderColor(Color $headerColor)
   {
     $this->headerColor = $headerColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getHeaderColor()
@@ -136,14 +107,7 @@ class BandingProperties extends \Google\Model
     return $this->headerColor;
   }
   /**
-   * The color of the first row or column. If this field is set, the first row
-   * or column is filled with this color and the colors alternate between
-   * first_band_color and second_band_color starting from the second row or
-   * column. Otherwise, the first row or column is filled with first_band_color
-   * and the colors proceed to alternate as they normally would. If header_color
-   * is also set, this field takes precedence.
-   *
-   * @param ColorStyle $headerColorStyle
+   * @param ColorStyle
    */
   public function setHeaderColorStyle(ColorStyle $headerColorStyle)
   {
@@ -157,18 +121,13 @@ class BandingProperties extends \Google\Model
     return $this->headerColorStyle;
   }
   /**
-   * The second color that is alternating. (Required) Deprecated: Use
-   * second_band_color_style.
-   *
-   * @deprecated
-   * @param Color $secondBandColor
+   * @param Color
    */
   public function setSecondBandColor(Color $secondBandColor)
   {
     $this->secondBandColor = $secondBandColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getSecondBandColor()
@@ -176,10 +135,7 @@ class BandingProperties extends \Google\Model
     return $this->secondBandColor;
   }
   /**
-   * The second color that is alternating. (Required) If second_band_color is
-   * also set, this field takes precedence.
-   *
-   * @param ColorStyle $secondBandColorStyle
+   * @param ColorStyle
    */
   public function setSecondBandColorStyle(ColorStyle $secondBandColorStyle)
   {

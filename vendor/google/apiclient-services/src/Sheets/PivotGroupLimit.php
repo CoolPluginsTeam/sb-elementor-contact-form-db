@@ -20,32 +20,16 @@ namespace Google\Service\Sheets;
 class PivotGroupLimit extends \Google\Model
 {
   /**
-   * The order in which the group limit is applied to the pivot table. Pivot
-   * group limits are applied from lower to higher order number. Order numbers
-   * are normalized to consecutive integers from 0. For write request, to fully
-   * customize the applying orders, all pivot group limits should have this
-   * field set with an unique number. Otherwise, the order is determined by the
-   * index in the PivotTable.rows list and then the PivotTable.columns list.
-   *
    * @var int
    */
   public $applyOrder;
   /**
-   * The count limit.
-   *
    * @var int
    */
   public $countLimit;
 
   /**
-   * The order in which the group limit is applied to the pivot table. Pivot
-   * group limits are applied from lower to higher order number. Order numbers
-   * are normalized to consecutive integers from 0. For write request, to fully
-   * customize the applying orders, all pivot group limits should have this
-   * field set with an unique number. Otherwise, the order is determined by the
-   * index in the PivotTable.rows list and then the PivotTable.columns list.
-   *
-   * @param int $applyOrder
+   * @param int
    */
   public function setApplyOrder($applyOrder)
   {
@@ -59,9 +43,7 @@ class PivotGroupLimit extends \Google\Model
     return $this->applyOrder;
   }
   /**
-   * The count limit.
-   *
-   * @param int $countLimit
+   * @param int
    */
   public function setCountLimit($countLimit)
   {

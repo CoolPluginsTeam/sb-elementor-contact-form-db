@@ -23,16 +23,12 @@ class DataSourceSheetDimensionRange extends \Google\Collection
   protected $columnReferencesType = DataSourceColumnReference::class;
   protected $columnReferencesDataType = 'array';
   /**
-   * The ID of the data source sheet the range is on.
-   *
    * @var int
    */
   public $sheetId;
 
   /**
-   * The columns on the data source sheet.
-   *
-   * @param DataSourceColumnReference[] $columnReferences
+   * @param DataSourceColumnReference[]
    */
   public function setColumnReferences($columnReferences)
   {
@@ -46,9 +42,7 @@ class DataSourceSheetDimensionRange extends \Google\Collection
     return $this->columnReferences;
   }
   /**
-   * The ID of the data source sheet the range is on.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {

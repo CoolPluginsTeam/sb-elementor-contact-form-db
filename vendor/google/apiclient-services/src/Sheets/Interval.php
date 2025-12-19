@@ -20,25 +20,16 @@ namespace Google\Service\Sheets;
 class Interval extends \Google\Model
 {
   /**
-   * Optional. Exclusive end of the interval. If specified, a Timestamp matching
-   * this interval will have to be before the end.
-   *
    * @var string
    */
   public $endTime;
   /**
-   * Optional. Inclusive start of the interval. If specified, a Timestamp
-   * matching this interval will have to be the same or after the start.
-   *
    * @var string
    */
   public $startTime;
 
   /**
-   * Optional. Exclusive end of the interval. If specified, a Timestamp matching
-   * this interval will have to be before the end.
-   *
-   * @param string $endTime
+   * @param string
    */
   public function setEndTime($endTime)
   {
@@ -52,10 +43,7 @@ class Interval extends \Google\Model
     return $this->endTime;
   }
   /**
-   * Optional. Inclusive start of the interval. If specified, a Timestamp
-   * matching this interval will have to be the same or after the start.
-   *
-   * @param string $startTime
+   * @param string
    */
   public function setStartTime($startTime)
   {

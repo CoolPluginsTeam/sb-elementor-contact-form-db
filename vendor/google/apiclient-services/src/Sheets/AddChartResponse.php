@@ -23,9 +23,7 @@ class AddChartResponse extends \Google\Model
   protected $chartDataType = '';
 
   /**
-   * The newly added chart.
-   *
-   * @param EmbeddedChart $chart
+   * @param EmbeddedChart
    */
   public function setChart(EmbeddedChart $chart)
   {

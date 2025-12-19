@@ -33,22 +33,16 @@ class Spreadsheet extends \Google\Collection
   protected $sheetsType = Sheet::class;
   protected $sheetsDataType = 'array';
   /**
-   * The ID of the spreadsheet. This field is read-only.
-   *
    * @var string
    */
   public $spreadsheetId;
   /**
-   * The url of the spreadsheet. This field is read-only.
-   *
    * @var string
    */
   public $spreadsheetUrl;
 
   /**
-   * Output only. A list of data source refresh schedules.
-   *
-   * @param DataSourceRefreshSchedule[] $dataSourceSchedules
+   * @param DataSourceRefreshSchedule[]
    */
   public function setDataSourceSchedules($dataSourceSchedules)
   {
@@ -62,9 +56,7 @@ class Spreadsheet extends \Google\Collection
     return $this->dataSourceSchedules;
   }
   /**
-   * A list of external data sources connected with the spreadsheet.
-   *
-   * @param DataSource[] $dataSources
+   * @param DataSource[]
    */
   public function setDataSources($dataSources)
   {
@@ -78,9 +70,7 @@ class Spreadsheet extends \Google\Collection
     return $this->dataSources;
   }
   /**
-   * The developer metadata associated with a spreadsheet.
-   *
-   * @param DeveloperMetadata[] $developerMetadata
+   * @param DeveloperMetadata[]
    */
   public function setDeveloperMetadata($developerMetadata)
   {
@@ -94,9 +84,7 @@ class Spreadsheet extends \Google\Collection
     return $this->developerMetadata;
   }
   /**
-   * The named ranges defined in a spreadsheet.
-   *
-   * @param NamedRange[] $namedRanges
+   * @param NamedRange[]
    */
   public function setNamedRanges($namedRanges)
   {
@@ -110,9 +98,7 @@ class Spreadsheet extends \Google\Collection
     return $this->namedRanges;
   }
   /**
-   * Overall properties of a spreadsheet.
-   *
-   * @param SpreadsheetProperties $properties
+   * @param SpreadsheetProperties
    */
   public function setProperties(SpreadsheetProperties $properties)
   {
@@ -126,9 +112,7 @@ class Spreadsheet extends \Google\Collection
     return $this->properties;
   }
   /**
-   * The sheets that are part of a spreadsheet.
-   *
-   * @param Sheet[] $sheets
+   * @param Sheet[]
    */
   public function setSheets($sheets)
   {
@@ -142,9 +126,7 @@ class Spreadsheet extends \Google\Collection
     return $this->sheets;
   }
   /**
-   * The ID of the spreadsheet. This field is read-only.
-   *
-   * @param string $spreadsheetId
+   * @param string
    */
   public function setSpreadsheetId($spreadsheetId)
   {
@@ -158,9 +140,7 @@ class Spreadsheet extends \Google\Collection
     return $this->spreadsheetId;
   }
   /**
-   * The url of the spreadsheet. This field is read-only.
-   *
-   * @param string $spreadsheetUrl
+   * @param string
    */
   public function setSpreadsheetUrl($spreadsheetUrl)
   {

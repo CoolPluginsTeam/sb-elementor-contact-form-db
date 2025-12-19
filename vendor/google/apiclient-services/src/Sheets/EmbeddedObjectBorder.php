@@ -25,17 +25,13 @@ class EmbeddedObjectBorder extends \Google\Model
   protected $colorStyleDataType = '';
 
   /**
-   * The color of the border. Deprecated: Use color_style.
-   *
-   * @deprecated
-   * @param Color $color
+   * @param Color
    */
   public function setColor(Color $color)
   {
     $this->color = $color;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getColor()
@@ -43,9 +39,7 @@ class EmbeddedObjectBorder extends \Google\Model
     return $this->color;
   }
   /**
-   * The color of the border. If color is also set, this field takes precedence.
-   *
-   * @param ColorStyle $colorStyle
+   * @param ColorStyle
    */
   public function setColorStyle(ColorStyle $colorStyle)
   {

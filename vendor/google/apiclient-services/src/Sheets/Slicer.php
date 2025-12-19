@@ -22,8 +22,6 @@ class Slicer extends \Google\Model
   protected $positionType = EmbeddedObjectPosition::class;
   protected $positionDataType = '';
   /**
-   * The ID of the slicer.
-   *
    * @var int
    */
   public $slicerId;
@@ -31,11 +29,7 @@ class Slicer extends \Google\Model
   protected $specDataType = '';
 
   /**
-   * The position of the slicer. Note that slicer can be positioned only on
-   * existing sheet. Also, width and height of slicer can be automatically
-   * adjusted to keep it within permitted limits.
-   *
-   * @param EmbeddedObjectPosition $position
+   * @param EmbeddedObjectPosition
    */
   public function setPosition(EmbeddedObjectPosition $position)
   {
@@ -49,9 +43,7 @@ class Slicer extends \Google\Model
     return $this->position;
   }
   /**
-   * The ID of the slicer.
-   *
-   * @param int $slicerId
+   * @param int
    */
   public function setSlicerId($slicerId)
   {
@@ -65,9 +57,7 @@ class Slicer extends \Google\Model
     return $this->slicerId;
   }
   /**
-   * The specification of the slicer.
-   *
-   * @param SlicerSpec $spec
+   * @param SlicerSpec
    */
   public function setSpec(SlicerSpec $spec)
   {

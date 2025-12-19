@@ -21,33 +21,22 @@ class BatchUpdateSpreadsheetRequest extends \Google\Collection
 {
   protected $collection_key = 'responseRanges';
   /**
-   * Determines if the update response should include the spreadsheet resource.
-   *
    * @var bool
    */
   public $includeSpreadsheetInResponse;
   protected $requestsType = Request::class;
   protected $requestsDataType = 'array';
   /**
-   * True if grid data should be returned. Meaningful only if
-   * include_spreadsheet_in_response is 'true'. This parameter is ignored if a
-   * field mask was set in the request.
-   *
    * @var bool
    */
   public $responseIncludeGridData;
   /**
-   * Limits the ranges included in the response spreadsheet. Meaningful only if
-   * include_spreadsheet_in_response is 'true'.
-   *
    * @var string[]
    */
   public $responseRanges;
 
   /**
-   * Determines if the update response should include the spreadsheet resource.
-   *
-   * @param bool $includeSpreadsheetInResponse
+   * @param bool
    */
   public function setIncludeSpreadsheetInResponse($includeSpreadsheetInResponse)
   {
@@ -61,11 +50,7 @@ class BatchUpdateSpreadsheetRequest extends \Google\Collection
     return $this->includeSpreadsheetInResponse;
   }
   /**
-   * A list of updates to apply to the spreadsheet. Requests will be applied in
-   * the order they are specified. If any request is not valid, no requests will
-   * be applied.
-   *
-   * @param Request[] $requests
+   * @param Request[]
    */
   public function setRequests($requests)
   {
@@ -79,11 +64,7 @@ class BatchUpdateSpreadsheetRequest extends \Google\Collection
     return $this->requests;
   }
   /**
-   * True if grid data should be returned. Meaningful only if
-   * include_spreadsheet_in_response is 'true'. This parameter is ignored if a
-   * field mask was set in the request.
-   *
-   * @param bool $responseIncludeGridData
+   * @param bool
    */
   public function setResponseIncludeGridData($responseIncludeGridData)
   {
@@ -97,10 +78,7 @@ class BatchUpdateSpreadsheetRequest extends \Google\Collection
     return $this->responseIncludeGridData;
   }
   /**
-   * Limits the ranges included in the response spreadsheet. Meaningful only if
-   * include_spreadsheet_in_response is 'true'.
-   *
-   * @param string[] $responseRanges
+   * @param string[]
    */
   public function setResponseRanges($responseRanges)
   {

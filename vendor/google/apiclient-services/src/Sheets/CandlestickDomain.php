@@ -22,16 +22,12 @@ class CandlestickDomain extends \Google\Model
   protected $dataType = ChartData::class;
   protected $dataDataType = '';
   /**
-   * True to reverse the order of the domain values (horizontal axis).
-   *
    * @var bool
    */
   public $reversed;
 
   /**
-   * The data of the CandlestickDomain.
-   *
-   * @param ChartData $data
+   * @param ChartData
    */
   public function setData(ChartData $data)
   {
@@ -45,9 +41,7 @@ class CandlestickDomain extends \Google\Model
     return $this->data;
   }
   /**
-   * True to reverse the order of the domain values (horizontal axis).
-   *
-   * @param bool $reversed
+   * @param bool
    */
   public function setReversed($reversed)
   {

@@ -20,42 +20,24 @@ namespace Google\Service\Drive;
 class PermissionPermissionDetails extends \Google\Model
 {
   /**
-   * Output only. Whether this permission is inherited. This field is always
-   * populated. This is an output-only field.
-   *
    * @var bool
    */
   public $inherited;
   /**
-   * Output only. The ID of the item from which this permission is inherited.
-   * This is only populated for items in shared drives.
-   *
    * @var string
    */
   public $inheritedFrom;
   /**
-   * Output only. The permission type for this user. Supported values include: *
-   * `file` * `member`
-   *
    * @var string
    */
   public $permissionType;
   /**
-   * Output only. The primary role for this user. Supported values include: *
-   * `owner` * `organizer` * `fileOrganizer` * `writer` * `commenter` * `reader`
-   * For more information, see [Roles and
-   * permissions](https://developers.google.com/workspace/drive/api/guides/ref-
-   * roles).
-   *
    * @var string
    */
   public $role;
 
   /**
-   * Output only. Whether this permission is inherited. This field is always
-   * populated. This is an output-only field.
-   *
-   * @param bool $inherited
+   * @param bool
    */
   public function setInherited($inherited)
   {
@@ -69,10 +51,7 @@ class PermissionPermissionDetails extends \Google\Model
     return $this->inherited;
   }
   /**
-   * Output only. The ID of the item from which this permission is inherited.
-   * This is only populated for items in shared drives.
-   *
-   * @param string $inheritedFrom
+   * @param string
    */
   public function setInheritedFrom($inheritedFrom)
   {
@@ -86,10 +65,7 @@ class PermissionPermissionDetails extends \Google\Model
     return $this->inheritedFrom;
   }
   /**
-   * Output only. The permission type for this user. Supported values include: *
-   * `file` * `member`
-   *
-   * @param string $permissionType
+   * @param string
    */
   public function setPermissionType($permissionType)
   {
@@ -103,13 +79,7 @@ class PermissionPermissionDetails extends \Google\Model
     return $this->permissionType;
   }
   /**
-   * Output only. The primary role for this user. Supported values include: *
-   * `owner` * `organizer` * `fileOrganizer` * `writer` * `commenter` * `reader`
-   * For more information, see [Roles and
-   * permissions](https://developers.google.com/workspace/drive/api/guides/ref-
-   * roles).
-   *
-   * @param string $role
+   * @param string
    */
   public function setRole($role)
   {

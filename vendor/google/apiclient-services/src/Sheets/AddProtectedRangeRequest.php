@@ -23,11 +23,7 @@ class AddProtectedRangeRequest extends \Google\Model
   protected $protectedRangeDataType = '';
 
   /**
-   * The protected range to be added. The protectedRangeId field is optional; if
-   * one is not set, an id will be randomly generated. (It is an error to
-   * specify the ID of a range that already exists.)
-   *
-   * @param ProtectedRange $protectedRange
+   * @param ProtectedRange
    */
   public function setProtectedRange(ProtectedRange $protectedRange)
   {

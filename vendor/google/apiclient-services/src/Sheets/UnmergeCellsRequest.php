@@ -23,11 +23,7 @@ class UnmergeCellsRequest extends \Google\Model
   protected $rangeDataType = '';
 
   /**
-   * The range within which all cells should be unmerged. If the range spans
-   * multiple merges, all will be unmerged. The range must not partially span
-   * any merge.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {

@@ -23,12 +23,7 @@ class AddSlicerRequest extends \Google\Model
   protected $slicerDataType = '';
 
   /**
-   * The slicer that should be added to the spreadsheet, including the position
-   * where it should be placed. The slicerId field is optional; if one is not
-   * set, an id will be randomly generated. (It is an error to specify the ID of
-   * a slicer that already exists.)
-   *
-   * @param Slicer $slicer
+   * @param Slicer
    */
   public function setSlicer(Slicer $slicer)
   {

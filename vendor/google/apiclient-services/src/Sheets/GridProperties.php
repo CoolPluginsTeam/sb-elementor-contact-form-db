@@ -20,52 +20,36 @@ namespace Google\Service\Sheets;
 class GridProperties extends \Google\Model
 {
   /**
-   * The number of columns in the grid.
-   *
    * @var int
    */
   public $columnCount;
   /**
-   * True if the column grouping control toggle is shown after the group.
-   *
    * @var bool
    */
   public $columnGroupControlAfter;
   /**
-   * The number of columns that are frozen in the grid.
-   *
    * @var int
    */
   public $frozenColumnCount;
   /**
-   * The number of rows that are frozen in the grid.
-   *
    * @var int
    */
   public $frozenRowCount;
   /**
-   * True if the grid isn't showing gridlines in the UI.
-   *
    * @var bool
    */
   public $hideGridlines;
   /**
-   * The number of rows in the grid.
-   *
    * @var int
    */
   public $rowCount;
   /**
-   * True if the row grouping control toggle is shown after the group.
-   *
    * @var bool
    */
   public $rowGroupControlAfter;
 
   /**
-   * The number of columns in the grid.
-   *
-   * @param int $columnCount
+   * @param int
    */
   public function setColumnCount($columnCount)
   {
@@ -79,9 +63,7 @@ class GridProperties extends \Google\Model
     return $this->columnCount;
   }
   /**
-   * True if the column grouping control toggle is shown after the group.
-   *
-   * @param bool $columnGroupControlAfter
+   * @param bool
    */
   public function setColumnGroupControlAfter($columnGroupControlAfter)
   {
@@ -95,9 +77,7 @@ class GridProperties extends \Google\Model
     return $this->columnGroupControlAfter;
   }
   /**
-   * The number of columns that are frozen in the grid.
-   *
-   * @param int $frozenColumnCount
+   * @param int
    */
   public function setFrozenColumnCount($frozenColumnCount)
   {
@@ -111,9 +91,7 @@ class GridProperties extends \Google\Model
     return $this->frozenColumnCount;
   }
   /**
-   * The number of rows that are frozen in the grid.
-   *
-   * @param int $frozenRowCount
+   * @param int
    */
   public function setFrozenRowCount($frozenRowCount)
   {
@@ -127,9 +105,7 @@ class GridProperties extends \Google\Model
     return $this->frozenRowCount;
   }
   /**
-   * True if the grid isn't showing gridlines in the UI.
-   *
-   * @param bool $hideGridlines
+   * @param bool
    */
   public function setHideGridlines($hideGridlines)
   {
@@ -143,9 +119,7 @@ class GridProperties extends \Google\Model
     return $this->hideGridlines;
   }
   /**
-   * The number of rows in the grid.
-   *
-   * @param int $rowCount
+   * @param int
    */
   public function setRowCount($rowCount)
   {
@@ -159,9 +133,7 @@ class GridProperties extends \Google\Model
     return $this->rowCount;
   }
   /**
-   * True if the row grouping control toggle is shown after the group.
-   *
-   * @param bool $rowGroupControlAfter
+   * @param bool
    */
   public function setRowGroupControlAfter($rowGroupControlAfter)
   {

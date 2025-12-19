@@ -23,9 +23,7 @@ class AddDimensionGroupRequest extends \Google\Model
   protected $rangeDataType = '';
 
   /**
-   * The range over which to create a group.
-   *
-   * @param DimensionRange $range
+   * @param DimensionRange
    */
   public function setRange(DimensionRange $range)
   {

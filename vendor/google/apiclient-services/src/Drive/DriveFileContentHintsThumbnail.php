@@ -20,24 +20,16 @@ namespace Google\Service\Drive;
 class DriveFileContentHintsThumbnail extends \Google\Model
 {
   /**
-   * The thumbnail data encoded with URL-safe Base64 ([RFC 4648 section
-   * 5](https://datatracker.ietf.org/doc/html/rfc4648#section-5)).
-   *
    * @var string
    */
   public $image;
   /**
-   * The MIME type of the thumbnail.
-   *
    * @var string
    */
   public $mimeType;
 
   /**
-   * The thumbnail data encoded with URL-safe Base64 ([RFC 4648 section
-   * 5](https://datatracker.ietf.org/doc/html/rfc4648#section-5)).
-   *
-   * @param string $image
+   * @param string
    */
   public function setImage($image)
   {
@@ -51,9 +43,7 @@ class DriveFileContentHintsThumbnail extends \Google\Model
     return $this->image;
   }
   /**
-   * The MIME type of the thumbnail.
-   *
-   * @param string $mimeType
+   * @param string
    */
   public function setMimeType($mimeType)
   {

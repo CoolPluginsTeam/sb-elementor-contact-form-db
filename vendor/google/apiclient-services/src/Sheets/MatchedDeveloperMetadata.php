@@ -26,9 +26,7 @@ class MatchedDeveloperMetadata extends \Google\Collection
   protected $developerMetadataDataType = '';
 
   /**
-   * All filters matching the returned developer metadata.
-   *
-   * @param DataFilter[] $dataFilters
+   * @param DataFilter[]
    */
   public function setDataFilters($dataFilters)
   {
@@ -42,9 +40,7 @@ class MatchedDeveloperMetadata extends \Google\Collection
     return $this->dataFilters;
   }
   /**
-   * The developer metadata matching the specified filters.
-   *
-   * @param DeveloperMetadata $developerMetadata
+   * @param DeveloperMetadata
    */
   public function setDeveloperMetadata(DeveloperMetadata $developerMetadata)
   {

@@ -23,9 +23,7 @@ class AddBandingResponse extends \Google\Model
   protected $bandedRangeDataType = '';
 
   /**
-   * The banded range that was added.
-   *
-   * @param BandedRange $bandedRange
+   * @param BandedRange
    */
   public function setBandedRange(BandedRange $bandedRange)
   {

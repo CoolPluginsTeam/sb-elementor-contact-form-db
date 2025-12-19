@@ -27,9 +27,7 @@ class PivotGroupRule extends \Google\Model
   protected $manualRuleDataType = '';
 
   /**
-   * A DateTimeRule.
-   *
-   * @param DateTimeRule $dateTimeRule
+   * @param DateTimeRule
    */
   public function setDateTimeRule(DateTimeRule $dateTimeRule)
   {
@@ -43,9 +41,7 @@ class PivotGroupRule extends \Google\Model
     return $this->dateTimeRule;
   }
   /**
-   * A HistogramRule.
-   *
-   * @param HistogramRule $histogramRule
+   * @param HistogramRule
    */
   public function setHistogramRule(HistogramRule $histogramRule)
   {
@@ -59,9 +55,7 @@ class PivotGroupRule extends \Google\Model
     return $this->histogramRule;
   }
   /**
-   * A ManualRule.
-   *
-   * @param ManualRule $manualRule
+   * @param ManualRule
    */
   public function setManualRule(ManualRule $manualRule)
   {

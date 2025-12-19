@@ -22,10 +22,6 @@ class UpdateDimensionPropertiesRequest extends \Google\Model
   protected $dataSourceSheetRangeType = DataSourceSheetDimensionRange::class;
   protected $dataSourceSheetRangeDataType = '';
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `properties` is implied and should not be specified. A single
-   * `"*"` can be used as short-hand for listing every field.
-   *
    * @var string
    */
   public $fields;
@@ -35,9 +31,7 @@ class UpdateDimensionPropertiesRequest extends \Google\Model
   protected $rangeDataType = '';
 
   /**
-   * The columns on a data source sheet to update.
-   *
-   * @param DataSourceSheetDimensionRange $dataSourceSheetRange
+   * @param DataSourceSheetDimensionRange
    */
   public function setDataSourceSheetRange(DataSourceSheetDimensionRange $dataSourceSheetRange)
   {
@@ -51,11 +45,7 @@ class UpdateDimensionPropertiesRequest extends \Google\Model
     return $this->dataSourceSheetRange;
   }
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `properties` is implied and should not be specified. A single
-   * `"*"` can be used as short-hand for listing every field.
-   *
-   * @param string $fields
+   * @param string
    */
   public function setFields($fields)
   {
@@ -69,9 +59,7 @@ class UpdateDimensionPropertiesRequest extends \Google\Model
     return $this->fields;
   }
   /**
-   * Properties to update.
-   *
-   * @param DimensionProperties $properties
+   * @param DimensionProperties
    */
   public function setProperties(DimensionProperties $properties)
   {
@@ -85,9 +73,7 @@ class UpdateDimensionPropertiesRequest extends \Google\Model
     return $this->properties;
   }
   /**
-   * The rows or columns to update.
-   *
-   * @param DimensionRange $range
+   * @param DimensionRange
    */
   public function setRange(DimensionRange $range)
   {

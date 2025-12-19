@@ -21,18 +21,12 @@ class BatchClearValuesRequest extends \Google\Collection
 {
   protected $collection_key = 'ranges';
   /**
-   * The ranges to clear, in [A1 notation or R1C1 notation](https://developers.g
-   * oogle.com/workspace/sheets/api/guides/concepts#cell).
-   *
    * @var string[]
    */
   public $ranges;
 
   /**
-   * The ranges to clear, in [A1 notation or R1C1 notation](https://developers.g
-   * oogle.com/workspace/sheets/api/guides/concepts#cell).
-   *
-   * @param string[] $ranges
+   * @param string[]
    */
   public function setRanges($ranges)
   {

@@ -20,37 +20,6 @@ namespace Google\Service\Sheets;
 class ChartData extends \Google\Model
 {
   /**
-   * Default value, do not use.
-   */
-  public const AGGREGATE_TYPE_CHART_AGGREGATE_TYPE_UNSPECIFIED = 'CHART_AGGREGATE_TYPE_UNSPECIFIED';
-  /**
-   * Average aggregate function.
-   */
-  public const AGGREGATE_TYPE_AVERAGE = 'AVERAGE';
-  /**
-   * Count aggregate function.
-   */
-  public const AGGREGATE_TYPE_COUNT = 'COUNT';
-  /**
-   * Maximum aggregate function.
-   */
-  public const AGGREGATE_TYPE_MAX = 'MAX';
-  /**
-   * Median aggregate function.
-   */
-  public const AGGREGATE_TYPE_MEDIAN = 'MEDIAN';
-  /**
-   * Minimum aggregate function.
-   */
-  public const AGGREGATE_TYPE_MIN = 'MIN';
-  /**
-   * Sum aggregate function.
-   */
-  public const AGGREGATE_TYPE_SUM = 'SUM';
-  /**
-   * The aggregation type for the series of a data source chart. Only supported
-   * for data source charts.
-   *
    * @var string
    */
   public $aggregateType;
@@ -62,29 +31,21 @@ class ChartData extends \Google\Model
   protected $sourceRangeDataType = '';
 
   /**
-   * The aggregation type for the series of a data source chart. Only supported
-   * for data source charts.
-   *
-   * Accepted values: CHART_AGGREGATE_TYPE_UNSPECIFIED, AVERAGE, COUNT, MAX,
-   * MEDIAN, MIN, SUM
-   *
-   * @param self::AGGREGATE_TYPE_* $aggregateType
+   * @param string
    */
   public function setAggregateType($aggregateType)
   {
     $this->aggregateType = $aggregateType;
   }
   /**
-   * @return self::AGGREGATE_TYPE_*
+   * @return string
    */
   public function getAggregateType()
   {
     return $this->aggregateType;
   }
   /**
-   * The reference to the data source column that the data reads from.
-   *
-   * @param DataSourceColumnReference $columnReference
+   * @param DataSourceColumnReference
    */
   public function setColumnReference(DataSourceColumnReference $columnReference)
   {
@@ -98,10 +59,7 @@ class ChartData extends \Google\Model
     return $this->columnReference;
   }
   /**
-   * The rule to group the data by if the ChartData backs the domain of a data
-   * source chart. Only supported for data source charts.
-   *
-   * @param ChartGroupRule $groupRule
+   * @param ChartGroupRule
    */
   public function setGroupRule(ChartGroupRule $groupRule)
   {
@@ -115,9 +73,7 @@ class ChartData extends \Google\Model
     return $this->groupRule;
   }
   /**
-   * The source ranges of the data.
-   *
-   * @param ChartSourceRange $sourceRange
+   * @param ChartSourceRange
    */
   public function setSourceRange(ChartSourceRange $sourceRange)
   {

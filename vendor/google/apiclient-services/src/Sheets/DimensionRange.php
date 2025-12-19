@@ -20,64 +20,38 @@ namespace Google\Service\Sheets;
 class DimensionRange extends \Google\Model
 {
   /**
-   * The default value, do not use.
-   */
-  public const DIMENSION_DIMENSION_UNSPECIFIED = 'DIMENSION_UNSPECIFIED';
-  /**
-   * Operates on the rows of a sheet.
-   */
-  public const DIMENSION_ROWS = 'ROWS';
-  /**
-   * Operates on the columns of a sheet.
-   */
-  public const DIMENSION_COLUMNS = 'COLUMNS';
-  /**
-   * The dimension of the span.
-   *
    * @var string
    */
   public $dimension;
   /**
-   * The end (exclusive) of the span, or not set if unbounded.
-   *
    * @var int
    */
   public $endIndex;
   /**
-   * The sheet this span is on.
-   *
    * @var int
    */
   public $sheetId;
   /**
-   * The start (inclusive) of the span, or not set if unbounded.
-   *
    * @var int
    */
   public $startIndex;
 
   /**
-   * The dimension of the span.
-   *
-   * Accepted values: DIMENSION_UNSPECIFIED, ROWS, COLUMNS
-   *
-   * @param self::DIMENSION_* $dimension
+   * @param string
    */
   public function setDimension($dimension)
   {
     $this->dimension = $dimension;
   }
   /**
-   * @return self::DIMENSION_*
+   * @return string
    */
   public function getDimension()
   {
     return $this->dimension;
   }
   /**
-   * The end (exclusive) of the span, or not set if unbounded.
-   *
-   * @param int $endIndex
+   * @param int
    */
   public function setEndIndex($endIndex)
   {
@@ -91,9 +65,7 @@ class DimensionRange extends \Google\Model
     return $this->endIndex;
   }
   /**
-   * The sheet this span is on.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {
@@ -107,9 +79,7 @@ class DimensionRange extends \Google\Model
     return $this->sheetId;
   }
   /**
-   * The start (inclusive) of the span, or not set if unbounded.
-   *
-   * @param int $startIndex
+   * @param int
    */
   public function setStartIndex($startIndex)
   {

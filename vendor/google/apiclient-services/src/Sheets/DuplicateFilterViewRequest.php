@@ -20,16 +20,12 @@ namespace Google\Service\Sheets;
 class DuplicateFilterViewRequest extends \Google\Model
 {
   /**
-   * The ID of the filter being duplicated.
-   *
    * @var int
    */
   public $filterId;
 
   /**
-   * The ID of the filter being duplicated.
-   *
-   * @param int $filterId
+   * @param int
    */
   public function setFilterId($filterId)
   {

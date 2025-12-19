@@ -21,8 +21,6 @@ class SpreadsheetTheme extends \Google\Collection
 {
   protected $collection_key = 'themeColors';
   /**
-   * Name of the primary font family.
-   *
    * @var string
    */
   public $primaryFontFamily;
@@ -30,9 +28,7 @@ class SpreadsheetTheme extends \Google\Collection
   protected $themeColorsDataType = 'array';
 
   /**
-   * Name of the primary font family.
-   *
-   * @param string $primaryFontFamily
+   * @param string
    */
   public function setPrimaryFontFamily($primaryFontFamily)
   {
@@ -46,10 +42,7 @@ class SpreadsheetTheme extends \Google\Collection
     return $this->primaryFontFamily;
   }
   /**
-   * The spreadsheet theme color pairs. To update you must provide all theme
-   * color pairs.
-   *
-   * @param ThemeColorPair[] $themeColors
+   * @param ThemeColorPair[]
    */
   public function setThemeColors($themeColors)
   {

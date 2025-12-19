@@ -20,16 +20,12 @@ namespace Google\Service\Sheets;
 class DeleteDuplicatesResponse extends \Google\Model
 {
   /**
-   * The number of duplicate rows removed.
-   *
    * @var int
    */
   public $duplicatesRemovedCount;
 
   /**
-   * The number of duplicate rows removed.
-   *
-   * @param int $duplicatesRemovedCount
+   * @param int
    */
   public function setDuplicatesRemovedCount($duplicatesRemovedCount)
   {

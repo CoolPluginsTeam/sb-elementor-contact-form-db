@@ -28,9 +28,7 @@ class ConditionalFormatRule extends \Google\Collection
   protected $rangesDataType = 'array';
 
   /**
-   * The formatting is either "on" or "off" according to the rule.
-   *
-   * @param BooleanRule $booleanRule
+   * @param BooleanRule
    */
   public function setBooleanRule(BooleanRule $booleanRule)
   {
@@ -44,9 +42,7 @@ class ConditionalFormatRule extends \Google\Collection
     return $this->booleanRule;
   }
   /**
-   * The formatting will vary based on the gradients in the rule.
-   *
-   * @param GradientRule $gradientRule
+   * @param GradientRule
    */
   public function setGradientRule(GradientRule $gradientRule)
   {
@@ -60,10 +56,7 @@ class ConditionalFormatRule extends \Google\Collection
     return $this->gradientRule;
   }
   /**
-   * The ranges that are formatted if the condition is true. All the ranges must
-   * be on the same grid.
-   *
-   * @param GridRange[] $ranges
+   * @param GridRange[]
    */
   public function setRanges($ranges)
   {

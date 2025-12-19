@@ -25,9 +25,7 @@ class AutoResizeDimensionsRequest extends \Google\Model
   protected $dimensionsDataType = '';
 
   /**
-   * The dimensions on a data source sheet to automatically resize.
-   *
-   * @param DataSourceSheetDimensionRange $dataSourceSheetDimensions
+   * @param DataSourceSheetDimensionRange
    */
   public function setDataSourceSheetDimensions(DataSourceSheetDimensionRange $dataSourceSheetDimensions)
   {
@@ -41,9 +39,7 @@ class AutoResizeDimensionsRequest extends \Google\Model
     return $this->dataSourceSheetDimensions;
   }
   /**
-   * The dimensions to automatically resize.
-   *
-   * @param DimensionRange $dimensions
+   * @param DimensionRange
    */
   public function setDimensions(DimensionRange $dimensions)
   {

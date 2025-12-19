@@ -24,9 +24,7 @@ class DeleteDimensionGroupResponse extends \Google\Collection
   protected $dimensionGroupsDataType = 'array';
 
   /**
-   * All groups of a dimension after deleting a group from that dimension.
-   *
-   * @param DimensionGroup[] $dimensionGroups
+   * @param DimensionGroup[]
    */
   public function setDimensionGroups($dimensionGroups)
   {

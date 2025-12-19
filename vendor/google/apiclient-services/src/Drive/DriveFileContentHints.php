@@ -20,9 +20,6 @@ namespace Google\Service\Drive;
 class DriveFileContentHints extends \Google\Model
 {
   /**
-   * Text to be indexed for the file to improve fullText queries. This is
-   * limited to 128 KB in length and may contain HTML elements.
-   *
    * @var string
    */
   public $indexableText;
@@ -30,10 +27,7 @@ class DriveFileContentHints extends \Google\Model
   protected $thumbnailDataType = '';
 
   /**
-   * Text to be indexed for the file to improve fullText queries. This is
-   * limited to 128 KB in length and may contain HTML elements.
-   *
-   * @param string $indexableText
+   * @param string
    */
   public function setIndexableText($indexableText)
   {
@@ -47,10 +41,7 @@ class DriveFileContentHints extends \Google\Model
     return $this->indexableText;
   }
   /**
-   * A thumbnail for the file. This will only be used if Google Drive cannot
-   * generate a standard thumbnail.
-   *
-   * @param DriveFileContentHintsThumbnail $thumbnail
+   * @param DriveFileContentHintsThumbnail
    */
   public function setThumbnail(DriveFileContentHintsThumbnail $thumbnail)
   {

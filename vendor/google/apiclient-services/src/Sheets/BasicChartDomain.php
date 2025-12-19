@@ -22,17 +22,12 @@ class BasicChartDomain extends \Google\Model
   protected $domainType = ChartData::class;
   protected $domainDataType = '';
   /**
-   * True to reverse the order of the domain values (horizontal axis).
-   *
    * @var bool
    */
   public $reversed;
 
   /**
-   * The data of the domain. For example, if charting stock prices over time,
-   * this is the data representing the dates.
-   *
-   * @param ChartData $domain
+   * @param ChartData
    */
   public function setDomain(ChartData $domain)
   {
@@ -46,9 +41,7 @@ class BasicChartDomain extends \Google\Model
     return $this->domain;
   }
   /**
-   * True to reverse the order of the domain values (horizontal axis).
-   *
-   * @param bool $reversed
+   * @param bool
    */
   public function setReversed($reversed)
   {

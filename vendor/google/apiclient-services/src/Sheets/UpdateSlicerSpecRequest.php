@@ -20,16 +20,10 @@ namespace Google\Service\Sheets;
 class UpdateSlicerSpecRequest extends \Google\Model
 {
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `SlicerSpec` is implied and should not be specified. A single "*"`
-   * can be used as short-hand for listing every field.
-   *
    * @var string
    */
   public $fields;
   /**
-   * The id of the slicer to update.
-   *
    * @var int
    */
   public $slicerId;
@@ -37,11 +31,7 @@ class UpdateSlicerSpecRequest extends \Google\Model
   protected $specDataType = '';
 
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `SlicerSpec` is implied and should not be specified. A single "*"`
-   * can be used as short-hand for listing every field.
-   *
-   * @param string $fields
+   * @param string
    */
   public function setFields($fields)
   {
@@ -55,9 +45,7 @@ class UpdateSlicerSpecRequest extends \Google\Model
     return $this->fields;
   }
   /**
-   * The id of the slicer to update.
-   *
-   * @param int $slicerId
+   * @param int
    */
   public function setSlicerId($slicerId)
   {
@@ -71,9 +59,7 @@ class UpdateSlicerSpecRequest extends \Google\Model
     return $this->slicerId;
   }
   /**
-   * The specification to apply to the slicer.
-   *
-   * @param SlicerSpec $spec
+   * @param SlicerSpec
    */
   public function setSpec(SlicerSpec $spec)
   {

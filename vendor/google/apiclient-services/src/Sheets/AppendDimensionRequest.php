@@ -20,58 +20,34 @@ namespace Google\Service\Sheets;
 class AppendDimensionRequest extends \Google\Model
 {
   /**
-   * The default value, do not use.
-   */
-  public const DIMENSION_DIMENSION_UNSPECIFIED = 'DIMENSION_UNSPECIFIED';
-  /**
-   * Operates on the rows of a sheet.
-   */
-  public const DIMENSION_ROWS = 'ROWS';
-  /**
-   * Operates on the columns of a sheet.
-   */
-  public const DIMENSION_COLUMNS = 'COLUMNS';
-  /**
-   * Whether rows or columns should be appended.
-   *
    * @var string
    */
   public $dimension;
   /**
-   * The number of rows or columns to append.
-   *
    * @var int
    */
   public $length;
   /**
-   * The sheet to append rows or columns to.
-   *
    * @var int
    */
   public $sheetId;
 
   /**
-   * Whether rows or columns should be appended.
-   *
-   * Accepted values: DIMENSION_UNSPECIFIED, ROWS, COLUMNS
-   *
-   * @param self::DIMENSION_* $dimension
+   * @param string
    */
   public function setDimension($dimension)
   {
     $this->dimension = $dimension;
   }
   /**
-   * @return self::DIMENSION_*
+   * @return string
    */
   public function getDimension()
   {
     return $this->dimension;
   }
   /**
-   * The number of rows or columns to append.
-   *
-   * @param int $length
+   * @param int
    */
   public function setLength($length)
   {
@@ -85,9 +61,7 @@ class AppendDimensionRequest extends \Google\Model
     return $this->length;
   }
   /**
-   * The sheet to append rows or columns to.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {

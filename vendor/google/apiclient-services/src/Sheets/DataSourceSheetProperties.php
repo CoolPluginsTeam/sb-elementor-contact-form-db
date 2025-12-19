@@ -25,16 +25,12 @@ class DataSourceSheetProperties extends \Google\Collection
   protected $dataExecutionStatusType = DataExecutionStatus::class;
   protected $dataExecutionStatusDataType = '';
   /**
-   * ID of the DataSource the sheet is connected to.
-   *
    * @var string
    */
   public $dataSourceId;
 
   /**
-   * The columns displayed on the sheet, corresponding to the values in RowData.
-   *
-   * @param DataSourceColumn[] $columns
+   * @param DataSourceColumn[]
    */
   public function setColumns($columns)
   {
@@ -48,9 +44,7 @@ class DataSourceSheetProperties extends \Google\Collection
     return $this->columns;
   }
   /**
-   * The data execution status.
-   *
-   * @param DataExecutionStatus $dataExecutionStatus
+   * @param DataExecutionStatus
    */
   public function setDataExecutionStatus(DataExecutionStatus $dataExecutionStatus)
   {
@@ -64,9 +58,7 @@ class DataSourceSheetProperties extends \Google\Collection
     return $this->dataExecutionStatus;
   }
   /**
-   * ID of the DataSource the sheet is connected to.
-   *
-   * @param string $dataSourceId
+   * @param string
    */
   public function setDataSourceId($dataSourceId)
   {

@@ -23,9 +23,7 @@ class AddSheetResponse extends \Google\Model
   protected $propertiesDataType = '';
 
   /**
-   * The properties of the newly added sheet.
-   *
-   * @param SheetProperties $properties
+   * @param SheetProperties
    */
   public function setProperties(SheetProperties $properties)
   {

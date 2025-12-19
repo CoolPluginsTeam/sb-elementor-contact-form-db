@@ -27,23 +27,16 @@ class GridData extends \Google\Collection
   protected $rowMetadataType = DimensionProperties::class;
   protected $rowMetadataDataType = 'array';
   /**
-   * The first column this GridData refers to, zero-based.
-   *
    * @var int
    */
   public $startColumn;
   /**
-   * The first row this GridData refers to, zero-based.
-   *
    * @var int
    */
   public $startRow;
 
   /**
-   * Metadata about the requested columns in the grid, starting with the column
-   * in start_column.
-   *
-   * @param DimensionProperties[] $columnMetadata
+   * @param DimensionProperties[]
    */
   public function setColumnMetadata($columnMetadata)
   {
@@ -57,10 +50,7 @@ class GridData extends \Google\Collection
     return $this->columnMetadata;
   }
   /**
-   * The data in the grid, one entry per row, starting with the row in startRow.
-   * The values in RowData will correspond to columns starting at start_column.
-   *
-   * @param RowData[] $rowData
+   * @param RowData[]
    */
   public function setRowData($rowData)
   {
@@ -74,10 +64,7 @@ class GridData extends \Google\Collection
     return $this->rowData;
   }
   /**
-   * Metadata about the requested rows in the grid, starting with the row in
-   * start_row.
-   *
-   * @param DimensionProperties[] $rowMetadata
+   * @param DimensionProperties[]
    */
   public function setRowMetadata($rowMetadata)
   {
@@ -91,9 +78,7 @@ class GridData extends \Google\Collection
     return $this->rowMetadata;
   }
   /**
-   * The first column this GridData refers to, zero-based.
-   *
-   * @param int $startColumn
+   * @param int
    */
   public function setStartColumn($startColumn)
   {
@@ -107,9 +92,7 @@ class GridData extends \Google\Collection
     return $this->startColumn;
   }
   /**
-   * The first row this GridData refers to, zero-based.
-   *
-   * @param int $startRow
+   * @param int
    */
   public function setStartRow($startRow)
   {

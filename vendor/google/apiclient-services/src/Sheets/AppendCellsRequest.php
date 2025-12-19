@@ -21,35 +21,18 @@ class AppendCellsRequest extends \Google\Collection
 {
   protected $collection_key = 'rows';
   /**
-   * The fields of CellData that should be updated. At least one field must be
-   * specified. The root is the CellData; 'row.values.' should not be specified.
-   * A single `"*"` can be used as short-hand for listing every field.
-   *
    * @var string
    */
   public $fields;
   protected $rowsType = RowData::class;
   protected $rowsDataType = 'array';
   /**
-   * The sheet ID to append the data to.
-   *
    * @var int
    */
   public $sheetId;
-  /**
-   * The ID of the table to append data to. The data will be only appended to
-   * the table body. This field also takes precedence over the `sheet_id` field.
-   *
-   * @var string
-   */
-  public $tableId;
 
   /**
-   * The fields of CellData that should be updated. At least one field must be
-   * specified. The root is the CellData; 'row.values.' should not be specified.
-   * A single `"*"` can be used as short-hand for listing every field.
-   *
-   * @param string $fields
+   * @param string
    */
   public function setFields($fields)
   {
@@ -63,9 +46,7 @@ class AppendCellsRequest extends \Google\Collection
     return $this->fields;
   }
   /**
-   * The data to append.
-   *
-   * @param RowData[] $rows
+   * @param RowData[]
    */
   public function setRows($rows)
   {
@@ -79,9 +60,7 @@ class AppendCellsRequest extends \Google\Collection
     return $this->rows;
   }
   /**
-   * The sheet ID to append the data to.
-   *
-   * @param int $sheetId
+   * @param int
    */
   public function setSheetId($sheetId)
   {
@@ -93,23 +72,6 @@ class AppendCellsRequest extends \Google\Collection
   public function getSheetId()
   {
     return $this->sheetId;
-  }
-  /**
-   * The ID of the table to append data to. The data will be only appended to
-   * the table body. This field also takes precedence over the `sheet_id` field.
-   *
-   * @param string $tableId
-   */
-  public function setTableId($tableId)
-  {
-    $this->tableId = $tableId;
-  }
-  /**
-   * @return string
-   */
-  public function getTableId()
-  {
-    return $this->tableId;
   }
 }
 

@@ -20,16 +20,12 @@ namespace Google\Service\Sheets;
 class DeleteNamedRangeRequest extends \Google\Model
 {
   /**
-   * The ID of the named range to delete.
-   *
    * @var string
    */
   public $namedRangeId;
 
   /**
-   * The ID of the named range to delete.
-   *
-   * @param string $namedRangeId
+   * @param string
    */
   public function setNamedRangeId($namedRangeId)
   {

@@ -20,49 +20,32 @@ namespace Google\Service\Drive;
 class User extends \Google\Model
 {
   /**
-   * Output only. A plain text displayable name for this user.
-   *
    * @var string
    */
   public $displayName;
   /**
-   * Output only. The email address of the user. This may not be present in
-   * certain contexts if the user has not made their email address visible to
-   * the requester.
-   *
    * @var string
    */
   public $emailAddress;
   /**
-   * Output only. Identifies what kind of resource this is. Value: the fixed
-   * string `drive#user`.
-   *
    * @var string
    */
   public $kind;
   /**
-   * Output only. Whether this user is the requesting user.
-   *
    * @var bool
    */
   public $me;
   /**
-   * Output only. The user's ID as visible in Permission resources.
-   *
    * @var string
    */
   public $permissionId;
   /**
-   * Output only. A link to the user's profile photo, if available.
-   *
    * @var string
    */
   public $photoLink;
 
   /**
-   * Output only. A plain text displayable name for this user.
-   *
-   * @param string $displayName
+   * @param string
    */
   public function setDisplayName($displayName)
   {
@@ -76,11 +59,7 @@ class User extends \Google\Model
     return $this->displayName;
   }
   /**
-   * Output only. The email address of the user. This may not be present in
-   * certain contexts if the user has not made their email address visible to
-   * the requester.
-   *
-   * @param string $emailAddress
+   * @param string
    */
   public function setEmailAddress($emailAddress)
   {
@@ -94,10 +73,7 @@ class User extends \Google\Model
     return $this->emailAddress;
   }
   /**
-   * Output only. Identifies what kind of resource this is. Value: the fixed
-   * string `drive#user`.
-   *
-   * @param string $kind
+   * @param string
    */
   public function setKind($kind)
   {
@@ -111,9 +87,7 @@ class User extends \Google\Model
     return $this->kind;
   }
   /**
-   * Output only. Whether this user is the requesting user.
-   *
-   * @param bool $me
+   * @param bool
    */
   public function setMe($me)
   {
@@ -127,9 +101,7 @@ class User extends \Google\Model
     return $this->me;
   }
   /**
-   * Output only. The user's ID as visible in Permission resources.
-   *
-   * @param string $permissionId
+   * @param string
    */
   public function setPermissionId($permissionId)
   {
@@ -143,9 +115,7 @@ class User extends \Google\Model
     return $this->permissionId;
   }
   /**
-   * Output only. A link to the user's profile photo, if available.
-   *
-   * @param string $photoLink
+   * @param string
    */
   public function setPhotoLink($photoLink)
   {

@@ -20,39 +20,23 @@ namespace Google\Service\Sheets;
 class ExtendedValue extends \Google\Model
 {
   /**
-   * Represents a boolean value.
-   *
    * @var bool
    */
   public $boolValue;
   protected $errorValueType = ErrorValue::class;
   protected $errorValueDataType = '';
   /**
-   * Represents a formula.
-   *
    * @var string
    */
   public $formulaValue;
-  /**
-   * Represents a double value. Note: Dates, Times and DateTimes are represented
-   * as doubles in SERIAL_NUMBER format.
-   *
-   * @var 
-   */
   public $numberValue;
   /**
-   * Represents a string value. Leading single quotes are not included. For
-   * example, if the user typed `'123` into the UI, this would be represented as
-   * a `stringValue` of `"123"`.
-   *
    * @var string
    */
   public $stringValue;
 
   /**
-   * Represents a boolean value.
-   *
-   * @param bool $boolValue
+   * @param bool
    */
   public function setBoolValue($boolValue)
   {
@@ -66,9 +50,7 @@ class ExtendedValue extends \Google\Model
     return $this->boolValue;
   }
   /**
-   * Represents an error. This field is read-only.
-   *
-   * @param ErrorValue $errorValue
+   * @param ErrorValue
    */
   public function setErrorValue(ErrorValue $errorValue)
   {
@@ -82,9 +64,7 @@ class ExtendedValue extends \Google\Model
     return $this->errorValue;
   }
   /**
-   * Represents a formula.
-   *
-   * @param string $formulaValue
+   * @param string
    */
   public function setFormulaValue($formulaValue)
   {
@@ -106,11 +86,7 @@ class ExtendedValue extends \Google\Model
     return $this->numberValue;
   }
   /**
-   * Represents a string value. Leading single quotes are not included. For
-   * example, if the user typed `'123` into the UI, this would be represented as
-   * a `stringValue` of `"123"`.
-   *
-   * @param string $stringValue
+   * @param string
    */
   public function setStringValue($stringValue)
   {

@@ -20,27 +20,10 @@ namespace Google\Service\Sheets;
 class BaselineValueFormat extends \Google\Model
 {
   /**
-   * Default value, do not use.
-   */
-  public const COMPARISON_TYPE_COMPARISON_TYPE_UNDEFINED = 'COMPARISON_TYPE_UNDEFINED';
-  /**
-   * Use absolute difference between key and baseline value.
-   */
-  public const COMPARISON_TYPE_ABSOLUTE_DIFFERENCE = 'ABSOLUTE_DIFFERENCE';
-  /**
-   * Use percentage difference between key and baseline value.
-   */
-  public const COMPARISON_TYPE_PERCENTAGE_DIFFERENCE = 'PERCENTAGE_DIFFERENCE';
-  /**
-   * The comparison type of key value with baseline value.
-   *
    * @var string
    */
   public $comparisonType;
   /**
-   * Description which is appended after the baseline value. This field is
-   * optional.
-   *
    * @var string
    */
   public $description;
@@ -58,29 +41,21 @@ class BaselineValueFormat extends \Google\Model
   protected $textFormatDataType = '';
 
   /**
-   * The comparison type of key value with baseline value.
-   *
-   * Accepted values: COMPARISON_TYPE_UNDEFINED, ABSOLUTE_DIFFERENCE,
-   * PERCENTAGE_DIFFERENCE
-   *
-   * @param self::COMPARISON_TYPE_* $comparisonType
+   * @param string
    */
   public function setComparisonType($comparisonType)
   {
     $this->comparisonType = $comparisonType;
   }
   /**
-   * @return self::COMPARISON_TYPE_*
+   * @return string
    */
   public function getComparisonType()
   {
     return $this->comparisonType;
   }
   /**
-   * Description which is appended after the baseline value. This field is
-   * optional.
-   *
-   * @param string $description
+   * @param string
    */
   public function setDescription($description)
   {
@@ -94,18 +69,13 @@ class BaselineValueFormat extends \Google\Model
     return $this->description;
   }
   /**
-   * Color to be used, in case baseline value represents a negative change for
-   * key value. This field is optional. Deprecated: Use negative_color_style.
-   *
-   * @deprecated
-   * @param Color $negativeColor
+   * @param Color
    */
   public function setNegativeColor(Color $negativeColor)
   {
     $this->negativeColor = $negativeColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getNegativeColor()
@@ -113,11 +83,7 @@ class BaselineValueFormat extends \Google\Model
     return $this->negativeColor;
   }
   /**
-   * Color to be used, in case baseline value represents a negative change for
-   * key value. This field is optional. If negative_color is also set, this
-   * field takes precedence.
-   *
-   * @param ColorStyle $negativeColorStyle
+   * @param ColorStyle
    */
   public function setNegativeColorStyle(ColorStyle $negativeColorStyle)
   {
@@ -131,10 +97,7 @@ class BaselineValueFormat extends \Google\Model
     return $this->negativeColorStyle;
   }
   /**
-   * Specifies the horizontal text positioning of baseline value. This field is
-   * optional. If not specified, default positioning is used.
-   *
-   * @param TextPosition $position
+   * @param TextPosition
    */
   public function setPosition(TextPosition $position)
   {
@@ -148,18 +111,13 @@ class BaselineValueFormat extends \Google\Model
     return $this->position;
   }
   /**
-   * Color to be used, in case baseline value represents a positive change for
-   * key value. This field is optional. Deprecated: Use positive_color_style.
-   *
-   * @deprecated
-   * @param Color $positiveColor
+   * @param Color
    */
   public function setPositiveColor(Color $positiveColor)
   {
     $this->positiveColor = $positiveColor;
   }
   /**
-   * @deprecated
    * @return Color
    */
   public function getPositiveColor()
@@ -167,11 +125,7 @@ class BaselineValueFormat extends \Google\Model
     return $this->positiveColor;
   }
   /**
-   * Color to be used, in case baseline value represents a positive change for
-   * key value. This field is optional. If positive_color is also set, this
-   * field takes precedence.
-   *
-   * @param ColorStyle $positiveColorStyle
+   * @param ColorStyle
    */
   public function setPositiveColorStyle(ColorStyle $positiveColorStyle)
   {
@@ -185,10 +139,7 @@ class BaselineValueFormat extends \Google\Model
     return $this->positiveColorStyle;
   }
   /**
-   * Text formatting options for baseline value. The link field is not
-   * supported.
-   *
-   * @param TextFormat $textFormat
+   * @param TextFormat
    */
   public function setTextFormat(TextFormat $textFormat)
   {

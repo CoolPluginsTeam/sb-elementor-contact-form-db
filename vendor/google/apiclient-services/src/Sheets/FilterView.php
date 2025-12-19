@@ -25,15 +25,10 @@ class FilterView extends \Google\Collection
   protected $filterSpecsType = FilterSpec::class;
   protected $filterSpecsDataType = 'array';
   /**
-   * The ID of the filter view.
-   *
    * @var int
    */
   public $filterViewId;
   /**
-   * The named range this filter view is backed by, if any. When writing, only
-   * one of range or named_range_id or table_id may be set.
-   *
    * @var string
    */
   public $namedRangeId;
@@ -42,33 +37,18 @@ class FilterView extends \Google\Collection
   protected $sortSpecsType = SortSpec::class;
   protected $sortSpecsDataType = 'array';
   /**
-   * The table this filter view is backed by, if any. When writing, only one of
-   * range or named_range_id or table_id may be set.
-   *
-   * @var string
-   */
-  public $tableId;
-  /**
-   * The name of the filter view.
-   *
    * @var string
    */
   public $title;
 
   /**
-   * The criteria for showing/hiding values per column. The map's key is the
-   * column index, and the value is the criteria for that column. This field is
-   * deprecated in favor of filter_specs.
-   *
-   * @deprecated
-   * @param FilterCriteria[] $criteria
+   * @param FilterCriteria[]
    */
   public function setCriteria($criteria)
   {
     $this->criteria = $criteria;
   }
   /**
-   * @deprecated
    * @return FilterCriteria[]
    */
   public function getCriteria()
@@ -76,11 +56,7 @@ class FilterView extends \Google\Collection
     return $this->criteria;
   }
   /**
-   * The filter criteria for showing/hiding values per column. Both criteria and
-   * filter_specs are populated in responses. If both fields are specified in an
-   * update request, this field takes precedence.
-   *
-   * @param FilterSpec[] $filterSpecs
+   * @param FilterSpec[]
    */
   public function setFilterSpecs($filterSpecs)
   {
@@ -94,9 +70,7 @@ class FilterView extends \Google\Collection
     return $this->filterSpecs;
   }
   /**
-   * The ID of the filter view.
-   *
-   * @param int $filterViewId
+   * @param int
    */
   public function setFilterViewId($filterViewId)
   {
@@ -110,10 +84,7 @@ class FilterView extends \Google\Collection
     return $this->filterViewId;
   }
   /**
-   * The named range this filter view is backed by, if any. When writing, only
-   * one of range or named_range_id or table_id may be set.
-   *
-   * @param string $namedRangeId
+   * @param string
    */
   public function setNamedRangeId($namedRangeId)
   {
@@ -127,10 +98,7 @@ class FilterView extends \Google\Collection
     return $this->namedRangeId;
   }
   /**
-   * The range this filter view covers. When writing, only one of range or
-   * named_range_id or table_id may be set.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {
@@ -144,10 +112,7 @@ class FilterView extends \Google\Collection
     return $this->range;
   }
   /**
-   * The sort order per column. Later specifications are used when values are
-   * equal in the earlier specifications.
-   *
-   * @param SortSpec[] $sortSpecs
+   * @param SortSpec[]
    */
   public function setSortSpecs($sortSpecs)
   {
@@ -161,26 +126,7 @@ class FilterView extends \Google\Collection
     return $this->sortSpecs;
   }
   /**
-   * The table this filter view is backed by, if any. When writing, only one of
-   * range or named_range_id or table_id may be set.
-   *
-   * @param string $tableId
-   */
-  public function setTableId($tableId)
-  {
-    $this->tableId = $tableId;
-  }
-  /**
-   * @return string
-   */
-  public function getTableId()
-  {
-    return $this->tableId;
-  }
-  /**
-   * The name of the filter view.
-   *
-   * @param string $title
+   * @param string
    */
   public function setTitle($title)
   {

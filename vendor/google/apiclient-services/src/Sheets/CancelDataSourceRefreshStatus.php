@@ -25,9 +25,7 @@ class CancelDataSourceRefreshStatus extends \Google\Model
   protected $refreshCancellationStatusDataType = '';
 
   /**
-   * Reference to the data source object whose refresh is being cancelled.
-   *
-   * @param DataSourceObjectReference $reference
+   * @param DataSourceObjectReference
    */
   public function setReference(DataSourceObjectReference $reference)
   {
@@ -41,9 +39,7 @@ class CancelDataSourceRefreshStatus extends \Google\Model
     return $this->reference;
   }
   /**
-   * The cancellation status.
-   *
-   * @param RefreshCancellationStatus $refreshCancellationStatus
+   * @param RefreshCancellationStatus
    */
   public function setRefreshCancellationStatus(RefreshCancellationStatus $refreshCancellationStatus)
   {

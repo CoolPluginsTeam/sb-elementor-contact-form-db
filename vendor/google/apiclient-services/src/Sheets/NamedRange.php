@@ -20,14 +20,10 @@ namespace Google\Service\Sheets;
 class NamedRange extends \Google\Model
 {
   /**
-   * The name of the named range.
-   *
    * @var string
    */
   public $name;
   /**
-   * The ID of the named range.
-   *
    * @var string
    */
   public $namedRangeId;
@@ -35,9 +31,7 @@ class NamedRange extends \Google\Model
   protected $rangeDataType = '';
 
   /**
-   * The name of the named range.
-   *
-   * @param string $name
+   * @param string
    */
   public function setName($name)
   {
@@ -51,9 +45,7 @@ class NamedRange extends \Google\Model
     return $this->name;
   }
   /**
-   * The ID of the named range.
-   *
-   * @param string $namedRangeId
+   * @param string
    */
   public function setNamedRangeId($namedRangeId)
   {
@@ -67,9 +59,7 @@ class NamedRange extends \Google\Model
     return $this->namedRangeId;
   }
   /**
-   * The range this represents.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {

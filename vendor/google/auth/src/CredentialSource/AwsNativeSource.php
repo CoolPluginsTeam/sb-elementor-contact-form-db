@@ -103,7 +103,7 @@ class AwsNativeSource implements ExternalAccountCredentialSourceInterface
         $headers['x-goog-cloud-target-resource'] = $this->audience;
 
         // Format headers as they're expected in the subject token
-        $formattedHeaders = array_map(
+        $formattedHeaders= array_map(
             fn ($k, $v) => ['key' => $k, 'value' => $v],
             array_keys($headers),
             $headers,
@@ -329,21 +329,6 @@ class AwsNativeSource implements ExternalAccountCredentialSourceInterface
     }
 
     /**
-     * Gets the unique key for caching
-     * For AwsNativeSource the values are:
-     * Imdsv2SessionTokenUrl.SecurityCredentialsUrl.RegionUrl.RegionalCredVerificationUrl
-     *
-     * @return string
-     */
-    public function getCacheKey(): string
-    {
-        return ($this->imdsv2SessionTokenUrl ?? '') .
-            '.' . ($this->securityCredentialsUrl ?? '') .
-            '.' . $this->regionUrl .
-            '.' . $this->regionalCredVerificationUrl;
-    }
-
-    /**
      * Return HMAC hash in binary string
      */
     private static function hmacSign(string $key, string $msg): string
@@ -356,7 +341,7 @@ class AwsNativeSource implements ExternalAccountCredentialSourceInterface
      */
     private static function utf8Encode(string $string): string
     {
-        return (string) mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+        return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
     }
 
     private static function getSignatureKey(

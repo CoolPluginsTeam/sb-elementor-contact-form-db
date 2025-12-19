@@ -23,11 +23,7 @@ class DataSourceRefreshDailySchedule extends \Google\Model
   protected $startTimeDataType = '';
 
   /**
-   * The start time of a time interval in which a data source refresh is
-   * scheduled. Only `hours` part is used. The time interval size defaults to
-   * that in the Sheets editor.
-   *
-   * @param TimeOfDay $startTime
+   * @param TimeOfDay
    */
   public function setStartTime(TimeOfDay $startTime)
   {

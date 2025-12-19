@@ -21,20 +21,10 @@ class TeamDriveList extends \Google\Collection
 {
   protected $collection_key = 'teamDrives';
   /**
-   * Identifies what kind of resource this is. Value: the fixed string
-   * `"drive#teamDriveList"`.
-   *
    * @var string
    */
   public $kind;
   /**
-   * The page token for the next page of Team Drives. This will be absent if the
-   * end of the Team Drives list has been reached. If the token is rejected for
-   * any reason, it should be discarded, and pagination should be restarted from
-   * the first page of results. The page token is typically valid for several
-   * hours. However, if new items are added or removed, your expected results
-   * might differ.
-   *
    * @var string
    */
   public $nextPageToken;
@@ -42,10 +32,7 @@ class TeamDriveList extends \Google\Collection
   protected $teamDrivesDataType = 'array';
 
   /**
-   * Identifies what kind of resource this is. Value: the fixed string
-   * `"drive#teamDriveList"`.
-   *
-   * @param string $kind
+   * @param string
    */
   public function setKind($kind)
   {
@@ -59,14 +46,7 @@ class TeamDriveList extends \Google\Collection
     return $this->kind;
   }
   /**
-   * The page token for the next page of Team Drives. This will be absent if the
-   * end of the Team Drives list has been reached. If the token is rejected for
-   * any reason, it should be discarded, and pagination should be restarted from
-   * the first page of results. The page token is typically valid for several
-   * hours. However, if new items are added or removed, your expected results
-   * might differ.
-   *
-   * @param string $nextPageToken
+   * @param string
    */
   public function setNextPageToken($nextPageToken)
   {
@@ -80,10 +60,7 @@ class TeamDriveList extends \Google\Collection
     return $this->nextPageToken;
   }
   /**
-   * The list of Team Drives. If nextPageToken is populated, then this list may
-   * be incomplete and an additional page of results should be fetched.
-   *
-   * @param TeamDrive[] $teamDrives
+   * @param TeamDrive[]
    */
   public function setTeamDrives($teamDrives)
   {

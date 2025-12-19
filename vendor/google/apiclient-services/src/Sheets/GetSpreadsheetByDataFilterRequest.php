@@ -23,24 +23,12 @@ class GetSpreadsheetByDataFilterRequest extends \Google\Collection
   protected $dataFiltersType = DataFilter::class;
   protected $dataFiltersDataType = 'array';
   /**
-   * True if tables should be excluded in the banded ranges. False if not set.
-   *
-   * @var bool
-   */
-  public $excludeTablesInBandedRanges;
-  /**
-   * True if grid data should be returned. This parameter is ignored if a field
-   * mask was set in the request.
-   *
    * @var bool
    */
   public $includeGridData;
 
   /**
-   * The DataFilters used to select which ranges to retrieve from the
-   * spreadsheet.
-   *
-   * @param DataFilter[] $dataFilters
+   * @param DataFilter[]
    */
   public function setDataFilters($dataFilters)
   {
@@ -54,26 +42,7 @@ class GetSpreadsheetByDataFilterRequest extends \Google\Collection
     return $this->dataFilters;
   }
   /**
-   * True if tables should be excluded in the banded ranges. False if not set.
-   *
-   * @param bool $excludeTablesInBandedRanges
-   */
-  public function setExcludeTablesInBandedRanges($excludeTablesInBandedRanges)
-  {
-    $this->excludeTablesInBandedRanges = $excludeTablesInBandedRanges;
-  }
-  /**
-   * @return bool
-   */
-  public function getExcludeTablesInBandedRanges()
-  {
-    return $this->excludeTablesInBandedRanges;
-  }
-  /**
-   * True if grid data should be returned. This parameter is ignored if a field
-   * mask was set in the request.
-   *
-   * @param bool $includeGridData
+   * @param bool
    */
   public function setIncludeGridData($includeGridData)
   {

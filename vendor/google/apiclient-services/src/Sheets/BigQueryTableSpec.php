@@ -20,29 +20,20 @@ namespace Google\Service\Sheets;
 class BigQueryTableSpec extends \Google\Model
 {
   /**
-   * The BigQuery dataset id.
-   *
    * @var string
    */
   public $datasetId;
   /**
-   * The BigQuery table id.
-   *
    * @var string
    */
   public $tableId;
   /**
-   * The ID of a BigQuery project the table belongs to. If not specified, the
-   * project_id is assumed.
-   *
    * @var string
    */
   public $tableProjectId;
 
   /**
-   * The BigQuery dataset id.
-   *
-   * @param string $datasetId
+   * @param string
    */
   public function setDatasetId($datasetId)
   {
@@ -56,9 +47,7 @@ class BigQueryTableSpec extends \Google\Model
     return $this->datasetId;
   }
   /**
-   * The BigQuery table id.
-   *
-   * @param string $tableId
+   * @param string
    */
   public function setTableId($tableId)
   {
@@ -72,10 +61,7 @@ class BigQueryTableSpec extends \Google\Model
     return $this->tableId;
   }
   /**
-   * The ID of a BigQuery project the table belongs to. If not specified, the
-   * project_id is assumed.
-   *
-   * @param string $tableProjectId
+   * @param string
    */
   public function setTableProjectId($tableProjectId)
   {

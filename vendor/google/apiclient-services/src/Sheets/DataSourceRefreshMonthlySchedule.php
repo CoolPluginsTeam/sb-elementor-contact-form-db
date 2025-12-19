@@ -21,9 +21,6 @@ class DataSourceRefreshMonthlySchedule extends \Google\Collection
 {
   protected $collection_key = 'daysOfMonth';
   /**
-   * Days of the month to refresh. Only 1-28 are supported, mapping to the 1st
-   * to the 28th day. At least one day must be specified.
-   *
    * @var int[]
    */
   public $daysOfMonth;
@@ -31,10 +28,7 @@ class DataSourceRefreshMonthlySchedule extends \Google\Collection
   protected $startTimeDataType = '';
 
   /**
-   * Days of the month to refresh. Only 1-28 are supported, mapping to the 1st
-   * to the 28th day. At least one day must be specified.
-   *
-   * @param int[] $daysOfMonth
+   * @param int[]
    */
   public function setDaysOfMonth($daysOfMonth)
   {
@@ -48,11 +42,7 @@ class DataSourceRefreshMonthlySchedule extends \Google\Collection
     return $this->daysOfMonth;
   }
   /**
-   * The start time of a time interval in which a data source refresh is
-   * scheduled. Only `hours` part is used. The time interval size defaults to
-   * that in the Sheets editor.
-   *
-   * @param TimeOfDay $startTime
+   * @param TimeOfDay
    */
   public function setStartTime(TimeOfDay $startTime)
   {

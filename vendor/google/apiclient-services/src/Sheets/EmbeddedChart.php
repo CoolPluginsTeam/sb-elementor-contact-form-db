@@ -22,8 +22,6 @@ class EmbeddedChart extends \Google\Model
   protected $borderType = EmbeddedObjectBorder::class;
   protected $borderDataType = '';
   /**
-   * The ID of the chart.
-   *
    * @var int
    */
   public $chartId;
@@ -33,9 +31,7 @@ class EmbeddedChart extends \Google\Model
   protected $specDataType = '';
 
   /**
-   * The border of the chart.
-   *
-   * @param EmbeddedObjectBorder $border
+   * @param EmbeddedObjectBorder
    */
   public function setBorder(EmbeddedObjectBorder $border)
   {
@@ -49,9 +45,7 @@ class EmbeddedChart extends \Google\Model
     return $this->border;
   }
   /**
-   * The ID of the chart.
-   *
-   * @param int $chartId
+   * @param int
    */
   public function setChartId($chartId)
   {
@@ -65,9 +59,7 @@ class EmbeddedChart extends \Google\Model
     return $this->chartId;
   }
   /**
-   * The position of the chart.
-   *
-   * @param EmbeddedObjectPosition $position
+   * @param EmbeddedObjectPosition
    */
   public function setPosition(EmbeddedObjectPosition $position)
   {
@@ -81,9 +73,7 @@ class EmbeddedChart extends \Google\Model
     return $this->position;
   }
   /**
-   * The specification of the chart.
-   *
-   * @param ChartSpec $spec
+   * @param ChartSpec
    */
   public function setSpec(ChartSpec $spec)
   {

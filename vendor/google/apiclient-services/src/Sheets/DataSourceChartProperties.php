@@ -22,16 +22,12 @@ class DataSourceChartProperties extends \Google\Model
   protected $dataExecutionStatusType = DataExecutionStatus::class;
   protected $dataExecutionStatusDataType = '';
   /**
-   * ID of the data source that the chart is associated with.
-   *
    * @var string
    */
   public $dataSourceId;
 
   /**
-   * Output only. The data execution status.
-   *
-   * @param DataExecutionStatus $dataExecutionStatus
+   * @param DataExecutionStatus
    */
   public function setDataExecutionStatus(DataExecutionStatus $dataExecutionStatus)
   {
@@ -45,9 +41,7 @@ class DataSourceChartProperties extends \Google\Model
     return $this->dataExecutionStatus;
   }
   /**
-   * ID of the data source that the chart is associated with.
-   *
-   * @param string $dataSourceId
+   * @param string
    */
   public function setDataSourceId($dataSourceId)
   {

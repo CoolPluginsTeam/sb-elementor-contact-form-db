@@ -20,10 +20,6 @@ namespace Google\Service\Sheets;
 class BigQueryDataSourceSpec extends \Google\Model
 {
   /**
-   * The ID of a BigQuery enabled Google Cloud project with a billing account
-   * attached. For any queries executed against the data source, the project is
-   * charged.
-   *
    * @var string
    */
   public $projectId;
@@ -33,11 +29,7 @@ class BigQueryDataSourceSpec extends \Google\Model
   protected $tableSpecDataType = '';
 
   /**
-   * The ID of a BigQuery enabled Google Cloud project with a billing account
-   * attached. For any queries executed against the data source, the project is
-   * charged.
-   *
-   * @param string $projectId
+   * @param string
    */
   public function setProjectId($projectId)
   {
@@ -51,9 +43,7 @@ class BigQueryDataSourceSpec extends \Google\Model
     return $this->projectId;
   }
   /**
-   * A BigQueryQuerySpec.
-   *
-   * @param BigQueryQuerySpec $querySpec
+   * @param BigQueryQuerySpec
    */
   public function setQuerySpec(BigQueryQuerySpec $querySpec)
   {
@@ -67,9 +57,7 @@ class BigQueryDataSourceSpec extends \Google\Model
     return $this->querySpec;
   }
   /**
-   * A BigQueryTableSpec.
-   *
-   * @param BigQueryTableSpec $tableSpec
+   * @param BigQueryTableSpec
    */
   public function setTableSpec(BigQueryTableSpec $tableSpec)
   {

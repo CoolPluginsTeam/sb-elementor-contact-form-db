@@ -25,9 +25,7 @@ class AddDataSourceResponse extends \Google\Model
   protected $dataSourceDataType = '';
 
   /**
-   * The data execution status.
-   *
-   * @param DataExecutionStatus $dataExecutionStatus
+   * @param DataExecutionStatus
    */
   public function setDataExecutionStatus(DataExecutionStatus $dataExecutionStatus)
   {
@@ -41,9 +39,7 @@ class AddDataSourceResponse extends \Google\Model
     return $this->dataExecutionStatus;
   }
   /**
-   * The data source that was created.
-   *
-   * @param DataSource $dataSource
+   * @param DataSource
    */
   public function setDataSource(DataSource $dataSource)
   {

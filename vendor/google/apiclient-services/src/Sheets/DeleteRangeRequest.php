@@ -19,33 +19,15 @@ namespace Google\Service\Sheets;
 
 class DeleteRangeRequest extends \Google\Model
 {
-  /**
-   * The default value, do not use.
-   */
-  public const SHIFT_DIMENSION_DIMENSION_UNSPECIFIED = 'DIMENSION_UNSPECIFIED';
-  /**
-   * Operates on the rows of a sheet.
-   */
-  public const SHIFT_DIMENSION_ROWS = 'ROWS';
-  /**
-   * Operates on the columns of a sheet.
-   */
-  public const SHIFT_DIMENSION_COLUMNS = 'COLUMNS';
   protected $rangeType = GridRange::class;
   protected $rangeDataType = '';
   /**
-   * The dimension from which deleted cells will be replaced with. If ROWS,
-   * existing cells will be shifted upward to replace the deleted cells. If
-   * COLUMNS, existing cells will be shifted left to replace the deleted cells.
-   *
    * @var string
    */
   public $shiftDimension;
 
   /**
-   * The range of cells to delete.
-   *
-   * @param GridRange $range
+   * @param GridRange
    */
   public function setRange(GridRange $range)
   {
@@ -59,20 +41,14 @@ class DeleteRangeRequest extends \Google\Model
     return $this->range;
   }
   /**
-   * The dimension from which deleted cells will be replaced with. If ROWS,
-   * existing cells will be shifted upward to replace the deleted cells. If
-   * COLUMNS, existing cells will be shifted left to replace the deleted cells.
-   *
-   * Accepted values: DIMENSION_UNSPECIFIED, ROWS, COLUMNS
-   *
-   * @param self::SHIFT_DIMENSION_* $shiftDimension
+   * @param string
    */
   public function setShiftDimension($shiftDimension)
   {
     $this->shiftDimension = $shiftDimension;
   }
   /**
-   * @return self::SHIFT_DIMENSION_*
+   * @return string
    */
   public function getShiftDimension()
   {

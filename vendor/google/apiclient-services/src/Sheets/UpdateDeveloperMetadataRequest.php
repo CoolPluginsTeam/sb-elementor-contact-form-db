@@ -25,18 +25,12 @@ class UpdateDeveloperMetadataRequest extends \Google\Collection
   protected $developerMetadataType = DeveloperMetadata::class;
   protected $developerMetadataDataType = '';
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `developerMetadata` is implied and should not be specified. A
-   * single `"*"` can be used as short-hand for listing every field.
-   *
    * @var string
    */
   public $fields;
 
   /**
-   * The filters matching the developer metadata entries to update.
-   *
-   * @param DataFilter[] $dataFilters
+   * @param DataFilter[]
    */
   public function setDataFilters($dataFilters)
   {
@@ -50,9 +44,7 @@ class UpdateDeveloperMetadataRequest extends \Google\Collection
     return $this->dataFilters;
   }
   /**
-   * The value that all metadata matched by the data filters will be updated to.
-   *
-   * @param DeveloperMetadata $developerMetadata
+   * @param DeveloperMetadata
    */
   public function setDeveloperMetadata(DeveloperMetadata $developerMetadata)
   {
@@ -66,11 +58,7 @@ class UpdateDeveloperMetadataRequest extends \Google\Collection
     return $this->developerMetadata;
   }
   /**
-   * The fields that should be updated. At least one field must be specified.
-   * The root `developerMetadata` is implied and should not be specified. A
-   * single `"*"` can be used as short-hand for listing every field.
-   *
-   * @param string $fields
+   * @param string
    */
   public function setFields($fields)
   {

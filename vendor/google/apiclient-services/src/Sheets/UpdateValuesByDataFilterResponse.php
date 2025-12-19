@@ -22,37 +22,26 @@ class UpdateValuesByDataFilterResponse extends \Google\Model
   protected $dataFilterType = DataFilter::class;
   protected $dataFilterDataType = '';
   /**
-   * The number of cells updated.
-   *
    * @var int
    */
   public $updatedCells;
   /**
-   * The number of columns where at least one cell in the column was updated.
-   *
    * @var int
    */
   public $updatedColumns;
   protected $updatedDataType = ValueRange::class;
   protected $updatedDataDataType = '';
   /**
-   * The range (in [A1 notation](https://developers.google.com/workspace/sheets/
-   * api/guides/concepts#cell)) that updates were applied to.
-   *
    * @var string
    */
   public $updatedRange;
   /**
-   * The number of rows where at least one cell in the row was updated.
-   *
    * @var int
    */
   public $updatedRows;
 
   /**
-   * The data filter that selected the range that was updated.
-   *
-   * @param DataFilter $dataFilter
+   * @param DataFilter
    */
   public function setDataFilter(DataFilter $dataFilter)
   {
@@ -66,9 +55,7 @@ class UpdateValuesByDataFilterResponse extends \Google\Model
     return $this->dataFilter;
   }
   /**
-   * The number of cells updated.
-   *
-   * @param int $updatedCells
+   * @param int
    */
   public function setUpdatedCells($updatedCells)
   {
@@ -82,9 +69,7 @@ class UpdateValuesByDataFilterResponse extends \Google\Model
     return $this->updatedCells;
   }
   /**
-   * The number of columns where at least one cell in the column was updated.
-   *
-   * @param int $updatedColumns
+   * @param int
    */
   public function setUpdatedColumns($updatedColumns)
   {
@@ -98,11 +83,7 @@ class UpdateValuesByDataFilterResponse extends \Google\Model
     return $this->updatedColumns;
   }
   /**
-   * The values of the cells in the range matched by the dataFilter after all
-   * updates were applied. This is only included if the request's
-   * `includeValuesInResponse` field was `true`.
-   *
-   * @param ValueRange $updatedData
+   * @param ValueRange
    */
   public function setUpdatedData(ValueRange $updatedData)
   {
@@ -116,10 +97,7 @@ class UpdateValuesByDataFilterResponse extends \Google\Model
     return $this->updatedData;
   }
   /**
-   * The range (in [A1 notation](https://developers.google.com/workspace/sheets/
-   * api/guides/concepts#cell)) that updates were applied to.
-   *
-   * @param string $updatedRange
+   * @param string
    */
   public function setUpdatedRange($updatedRange)
   {
@@ -133,9 +111,7 @@ class UpdateValuesByDataFilterResponse extends \Google\Model
     return $this->updatedRange;
   }
   /**
-   * The number of rows where at least one cell in the row was updated.
-   *
-   * @param int $updatedRows
+   * @param int
    */
   public function setUpdatedRows($updatedRows)
   {

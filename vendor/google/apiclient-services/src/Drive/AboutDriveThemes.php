@@ -20,28 +20,20 @@ namespace Google\Service\Drive;
 class AboutDriveThemes extends \Google\Model
 {
   /**
-   * A link to this theme's background image.
-   *
    * @var string
    */
   public $backgroundImageLink;
   /**
-   * The color of this theme as an RGB hex string.
-   *
    * @var string
    */
   public $colorRgb;
   /**
-   * The ID of the theme.
-   *
    * @var string
    */
   public $id;
 
   /**
-   * A link to this theme's background image.
-   *
-   * @param string $backgroundImageLink
+   * @param string
    */
   public function setBackgroundImageLink($backgroundImageLink)
   {
@@ -55,9 +47,7 @@ class AboutDriveThemes extends \Google\Model
     return $this->backgroundImageLink;
   }
   /**
-   * The color of this theme as an RGB hex string.
-   *
-   * @param string $colorRgb
+   * @param string
    */
   public function setColorRgb($colorRgb)
   {
@@ -71,9 +61,7 @@ class AboutDriveThemes extends \Google\Model
     return $this->colorRgb;
   }
   /**
-   * The ID of the theme.
-   *
-   * @param string $id
+   * @param string
    */
   public function setId($id)
   {

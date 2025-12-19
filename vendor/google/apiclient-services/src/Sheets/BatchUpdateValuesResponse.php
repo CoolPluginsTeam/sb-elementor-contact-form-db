@@ -23,43 +23,28 @@ class BatchUpdateValuesResponse extends \Google\Collection
   protected $responsesType = UpdateValuesResponse::class;
   protected $responsesDataType = 'array';
   /**
-   * The spreadsheet the updates were applied to.
-   *
    * @var string
    */
   public $spreadsheetId;
   /**
-   * The total number of cells updated.
-   *
    * @var int
    */
   public $totalUpdatedCells;
   /**
-   * The total number of columns where at least one cell in the column was
-   * updated.
-   *
    * @var int
    */
   public $totalUpdatedColumns;
   /**
-   * The total number of rows where at least one cell in the row was updated.
-   *
    * @var int
    */
   public $totalUpdatedRows;
   /**
-   * The total number of sheets where at least one cell in the sheet was
-   * updated.
-   *
    * @var int
    */
   public $totalUpdatedSheets;
 
   /**
-   * One UpdateValuesResponse per requested range, in the same order as the
-   * requests appeared.
-   *
-   * @param UpdateValuesResponse[] $responses
+   * @param UpdateValuesResponse[]
    */
   public function setResponses($responses)
   {
@@ -73,9 +58,7 @@ class BatchUpdateValuesResponse extends \Google\Collection
     return $this->responses;
   }
   /**
-   * The spreadsheet the updates were applied to.
-   *
-   * @param string $spreadsheetId
+   * @param string
    */
   public function setSpreadsheetId($spreadsheetId)
   {
@@ -89,9 +72,7 @@ class BatchUpdateValuesResponse extends \Google\Collection
     return $this->spreadsheetId;
   }
   /**
-   * The total number of cells updated.
-   *
-   * @param int $totalUpdatedCells
+   * @param int
    */
   public function setTotalUpdatedCells($totalUpdatedCells)
   {
@@ -105,10 +86,7 @@ class BatchUpdateValuesResponse extends \Google\Collection
     return $this->totalUpdatedCells;
   }
   /**
-   * The total number of columns where at least one cell in the column was
-   * updated.
-   *
-   * @param int $totalUpdatedColumns
+   * @param int
    */
   public function setTotalUpdatedColumns($totalUpdatedColumns)
   {
@@ -122,9 +100,7 @@ class BatchUpdateValuesResponse extends \Google\Collection
     return $this->totalUpdatedColumns;
   }
   /**
-   * The total number of rows where at least one cell in the row was updated.
-   *
-   * @param int $totalUpdatedRows
+   * @param int
    */
   public function setTotalUpdatedRows($totalUpdatedRows)
   {
@@ -138,10 +114,7 @@ class BatchUpdateValuesResponse extends \Google\Collection
     return $this->totalUpdatedRows;
   }
   /**
-   * The total number of sheets where at least one cell in the sheet was
-   * updated.
-   *
-   * @param int $totalUpdatedSheets
+   * @param int
    */
   public function setTotalUpdatedSheets($totalUpdatedSheets)
   {
