@@ -42,6 +42,9 @@ class HelloPlus_Widget_Loader {
             });
 
             add_action('elementor/element/ehp-form/section_integration/after_section_end',array($this,'show_actions_on_editor_side') , 10, 2 );
+
+            // hook for compatibility with cool formkit pro plugin
+            add_action('elementor/element/ehp-form/section_integration/after_section_end',array($this,'show_actions_on_editor_side_in_delay') , 20, 2 );
             
             $this->load_actions();
         }
@@ -100,6 +103,53 @@ class HelloPlus_Widget_Loader {
             if ( method_exists( $instance, 'register_settings_section' ) ) {
                 // Inside each register_settings_section(), use:
                 // 'condition' => [ 'cool_formkit_submit_actions' => $this->get_name() ]
+                $instance->register_settings_section( $element );
+            }
+        }
+    }
+
+    public function show_actions_on_editor_side_in_delay($element, $args){
+        if ( ! method_exists( $element, 'get_controls' ) ) {
+            return;
+        }
+
+        $controls = $element->get_controls();
+
+        // Ensure the control exists
+        if ( empty( $controls['cool_formkit_submit_actions'] ) ) {
+            return;
+        }
+
+        // Load your action classes
+        require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-register-post.php';
+        require_once FDBGP_PLUGIN_DIR . 'includes/widgets/helloplus-modules/helloplus-fdbgp-form-sheets-action.php';
+
+        $new_actions     = [];
+        $action_instances = [];
+
+        $instance = new HelloPlus_FDBGP_Register_Post();
+        $new_actions[ $instance->get_name() ] = $instance->get_label();
+        $action_instances[] = $instance;
+
+        $instance = new HelloPlus_FDBGP_Form_Sheets_Action();
+        $new_actions[ $instance->get_name() ] = $instance->get_label();
+        $action_instances[] = $instance;
+
+        // Merge existing + new options
+        $options = $controls['cool_formkit_submit_actions']['options'] ?? [];
+        $options = array_merge( $options, $new_actions );
+
+        // Update control
+        $element->update_control(
+            'cool_formkit_submit_actions',
+            [
+                'options' => $options,
+            ]
+        );
+
+        // Register settings sections for your actions
+        foreach ( $action_instances as $instance ) {
+            if ( method_exists( $instance, 'register_settings_section' ) ) {
                 $instance->register_settings_section( $element );
             }
         }
