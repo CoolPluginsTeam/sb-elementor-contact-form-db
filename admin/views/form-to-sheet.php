@@ -144,7 +144,7 @@ class FDBGP_Form_To_Sheet_Settings {
                     <ul>
                     <li>▶ Watch Video Tutorial</li>
                     <li>📄 Read Documentation</li>
-                    <li>🎧 Contact Support</li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar">🎧 Contact Support</a></li>
                     </ul>
                 </div>
             </div>

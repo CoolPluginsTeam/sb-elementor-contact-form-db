@@ -1953,6 +1953,11 @@ a.button-primary.upgrade-pro-btn {
   border: 1px solid #ddd;
 }
 
+.fdbgp-card a{
+    color: inherit;
+  text-decoration: none;
+}
+
 .fdbgp-card-title {
   display: flex;
   align-items: center;

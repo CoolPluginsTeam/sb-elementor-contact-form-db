@@ -245,9 +245,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                 </div>
 
                 <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-number">5</div>
                     <div class="fdbgp-step-content">
-                        <h3>Add Authorized Redirect URI</h3>
+                        <h3>Add Authorized Redirect URL</h3>
                         <code id="redirect-uri"><?php echo esc_url($redirect_uri); ?></code>
                         <button type="button" class="button button-small copy-btn" data-clipboard-target="#redirect-uri">
                             <?php esc_html_e('Copy', 'elementor-contact-form-db'); ?>
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                 </div>
 
                 <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-number">6</div>
                     <div class="fdbgp-step-content">
                         <h3>Google OAuth</h3>
                         <p>Create OAuth 2.0 credentials.</p>
@@ -270,7 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                 <ul>
                     <li>▶ Watch Video Tutorial</li>
                     <li>📄 Read Documentation</li>
-                    <li>🎧 Contact Support</li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar">🎧 Contact Support</a></li>
                 </ul>
             </div>
         </div>
