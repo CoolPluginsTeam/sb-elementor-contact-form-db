@@ -1,5 +1,28 @@
 jQuery(document).ready(function ($) {
 
+    function handleFormsDBSubmenu() {
+        var $entriesItem = jQuery('.wp-submenu a[href="admin.php?page=formsdb"]').closest('li');
+
+        if (!$entriesItem.length) {
+            return;
+        }
+
+        var $entriesClone = $entriesItem.clone();
+        $entriesItem.remove();
+
+        var $formKitItem = jQuery('.wp-submenu a[href="admin.php?page=cool-formkit"]').closest('li');
+        $formKitItem.after($entriesClone);
+
+        var $link = jQuery('.wp-submenu a[href="admin.php?page=formsdb"]');
+        $link.prepend('↳ ').css({
+            'padding-left': '10px',
+            'font-style': 'italic',
+            'opacity': '0.85'
+        });
+    }
+
+    handleFormsDBSubmenu();
+
     jQuery('.copy-btn').click(function (e) {
         e.preventDefault();
 

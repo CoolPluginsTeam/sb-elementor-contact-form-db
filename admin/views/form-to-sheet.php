@@ -67,26 +67,31 @@ class FDBGP_Form_To_Sheet_Settings {
      * Render page
      *
      * @param array $forms
-     */
-    /**
-     * Render page
-     *
-     * @param array $forms
      * @param int $total_items
      * @param int $current_page
      */
     private function render_page( array $forms, $total_items = 0, $current_page = 1 ) {
         ?>
-        <div class='status-wrapper'>
-        <?php
-        echo '<h1>' . esc_html__( 'Save Form Submissions to Google Sheets', 'elementor-contact-form-db' ) . '</h1>';
-        echo '<p>' . esc_html__( 'View all your Elementor forms here and manage their connection with Google Sheets. Automatically send new form submissions to your selected Google Sheet.', 'elementor-contact-form-db' ) . '</p>';
-        if ( ! empty( $forms ) || $total_items > 0 ) {
-            $this->render_forms_table( $forms ,$total_items, $current_page);
-        } else {
-            $this->render_empty_state();
-        }
-        ?>
+        <div class='cfk-promo'>
+            <div class="cfk-box cfk-left">
+                <div class="wrapper-header">
+                    <div class="cfkef-save-all">
+                        <div class="cfkef-title-desc">
+                            <h2><?php esc_html_e( 'Save Form Submissions to Google Sheets', 'elementor-contact-form-db' ); ?></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="wrapper-body">
+                    <?php
+                    if ( ! empty( $forms ) || $total_items > 0 ) {
+                        $this->render_forms_table( $forms, $total_items, $current_page );
+                    } else {
+                        $this->render_empty_state();
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php $this->render_google_sheets_sidebar(); ?>
         </div>
         <?php
     }
@@ -94,7 +99,7 @@ class FDBGP_Form_To_Sheet_Settings {
 
     private function render_google_sheets_sidebar() {
         ?>
-            <div class="fdbgp-card">
+            <div class="fdbgp-card cfk-left">
                 <h2 class="fdbgp-card-title">
                     <span class="fdbgp-icon">🎓</span> How to use
                 </h2>
@@ -151,57 +156,56 @@ class FDBGP_Form_To_Sheet_Settings {
      * Render table of forms
      *
      * @param array $forms
+     * @param int   $total_items
+     * @param int   $current_page
      */
-    private function render_forms_table( array $forms ,$total_items, $current_page) {
-
+    private function render_forms_table( array $forms, $total_items, $current_page ) {
         ?>
-            <div class="cool-formkit-setting-table-con">
+        <p><?php esc_html_e( 'View all your Elementor forms here and manage their connection with Google Sheets. Automatically send new form submissions to your selected Google Sheet.', 'elementor-contact-form-db' ); ?></p>
+        <div class="cool-formkit-setting-table-con">
+            <div class="cool-formkit-left-side-setting">
+                <?php
+                echo '<table class="widefat striped">';
+                echo '<thead>
+                        <tr>
+                            <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Status', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Google Sheet', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
+                        </tr>
+                    </thead><tbody>';
 
-                <div class="cool-formkit-left-side-setting">
-                    <?php
-                    echo '<table class="widefat striped">';
-                    echo '<thead>
-                            <tr>
-                                <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Status', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Google Sheet', 'elementor-contact-form-db' ) . '</th>
-                                <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
-                            </tr>
-                        </thead><tbody>';
+                foreach ( $forms as $form ) {
+                    $sheet_status = '<a href="' . esc_url( $form['edit_url'] ) . '" target="_blank" class="button button-secondary">
+                            <span>❌</span> ' . esc_html__( 'Connect Sheet', 'elementor-contact-form-db' ) . '
+                        </a>';
 
-                    foreach ( $forms as $form ) {
-                        $sheet_status = '<a href="' . esc_url( $form['edit_url'] ) . '" target="_blank" class="button button-secondary">
-                                <span>❌</span> ' . esc_html__( 'Connect Sheet', 'elementor-contact-form-db' ) . '
-                            </a>';
-
-                        if ( ! empty( $form['spreadsheet_url'] ) ) {
-                            $sheet_status = '<a href="' . esc_url( $form['spreadsheet_url'] ) . '" target="_blank" class="button button-secondary">
-                                <span>✅</span> ' . esc_html__( 'View Sheet', 'elementor-contact-form-db' ) . '
-                            </a>';
-                        }
-
-                        echo '<tr>
-                                <td>' . esc_html( $form['form_name'] ) . '</td>
-                                <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
-                                <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
-                                <td>' . $sheet_status . '</td>
-                                <td>
-                                    <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
-                                        ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
-                                    </a>
-                                </td>
-                            </tr>';
+                    if ( ! empty( $form['spreadsheet_url'] ) ) {
+                        $sheet_status = '<a href="' . esc_url( $form['spreadsheet_url'] ) . '" target="_blank" class="button button-secondary">
+                            <span>✅</span> ' . esc_html__( 'View Sheet', 'elementor-contact-form-db' ) . '
+                        </a>';
                     }
 
-                    echo '</tbody></table>';
-                    $this->render_pagination( $total_items, $current_page );
-                    ?>
-                </div>
+                    echo '<tr>
+                            <td>' . esc_html( $form['form_name'] ) . '</td>
+                            <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
+                            <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
+                            <td>' . $sheet_status . '</td>
+                            <td>
+                                <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
+                                    ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
+                                </a>
+                            </td>
+                        </tr>';
+                }
 
-                <?php $this->render_google_sheets_sidebar(); ?>
-
+                echo '</tbody></table>';
+                $this->render_pagination( $total_items, $current_page );
+                ?>
             </div>
+
+        </div>
         <?php
     }
 
@@ -214,7 +218,6 @@ class FDBGP_Form_To_Sheet_Settings {
         $create_form_url = admin_url( 'admin.php?action=fdbgp_create_elementor_page' );
         ?>
         <div class="cool-formkit-setting-table-con">
-
             <div class="cool-formkit-left-side-setting">
 
                 <p>
@@ -238,8 +241,6 @@ class FDBGP_Form_To_Sheet_Settings {
                 </p>
 
             </div>
-
-            <?php $this->render_google_sheets_sidebar(); ?>
 
         </div>
         <?php

@@ -141,7 +141,11 @@ if(!class_exists('FDBGP_Admin')) {
         }
 
         public function enqueue_admin_styles() {
-            wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
+            $is_conflicting_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+            if(!$is_conflicting_active){
+                wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
+            }
+
             $screen = get_current_screen();
             if ( $screen && 'elementor_page_e-form-submissions' === $screen->id ) {
                 $button_text = __('Save Form Submissions To Google Sheet', 'elementor-contact-form-db');

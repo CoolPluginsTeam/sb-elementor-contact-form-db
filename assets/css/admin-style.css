@@ -52,12 +52,12 @@ input:checked+.fdbgp-slider::before {
 }
 
 
-.notice p{
+.notice p {
   margin-bottom: 0px !important;
 }
 
-.notice button{
- padding: 0px !important;
+.notice button {
+  padding: 0px !important;
 }
 
 
@@ -65,6 +65,10 @@ input:checked+.fdbgp-slider::before {
 .fdbgp-wrapper h2.nav-tab-wrapper,
 .fdbgp-wrapper .tab-content {
   padding: 0 30px;
+}
+
+.fdbgp-wrapper .tab-content {
+  margin: 25px auto;
 }
 
 .fdbgp-wrapper h2.nav-tab-wrapper .nav-tab {
@@ -792,9 +796,12 @@ p.description {
 }
 
 .cool-formkit-left-side-setting {
-  width: calc(85% - 10px);
+  width: 100%;
 }
 
+.cool-formkit-left-side-setting table {
+  border-radius: 8px;
+}
 
 
 .form-table th {
@@ -1943,6 +1950,7 @@ a.button-primary.upgrade-pro-btn {
   padding: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   height: fit-content;
+  border: 1px solid #ddd;
 }
 
 .fdbgp-card-title {
