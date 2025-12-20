@@ -224,12 +224,52 @@
             $btn.prop('disabled', true);
             $text.text('Creating...');
 
+            // Resolve headers to labels (use Label if available, otherwise ID)
+            let headersToSend = settings.sheetHeaders;
+            try {
+                if (typeof elementor !== 'undefined' && elementor.getPanelView) {
+                    const view = elementor.getPanelView().getCurrentPageView();
+                    if (view && view.model) {
+                        const formFields = view.model.get('settings').get('form_fields');
+
+                        if (headersToSend && Array.isArray(headersToSend)) {
+                            headersToSend = headersToSend.map(headerId => {
+                                // System fields mapping
+                                const systemLabels = {
+                                    'user_ip': 'User IP',
+                                    'user_agent': 'User Agent',
+                                    'page_url': 'Page URL',
+                                    'submission_date': 'Submission Date',
+                                };
+
+                                if (systemLabels[headerId]) {
+                                    return systemLabels[headerId];
+                                }
+
+                                // Find in form fields
+                                if (formFields && formFields.findWhere) {
+                                    const field = formFields.findWhere({ custom_id: headerId });
+                                    if (field) {
+                                        const label = field.get('field_label');
+                                        return label && label.trim() !== '' ? label : headerId;
+                                    }
+                                }
+
+                                return headerId;
+                            });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('FDBGP: Error resolving header labels:', e);
+            }
+
             $.post(ajaxurl, {
                 action: 'fdbgp_create_spreadsheet',
                 _nonce: elementorCommon.config.ajax.nonce,
                 spreadsheet_name: settings.spreadsheetName,
                 sheet_name: settings.sheetName,
-                headers: settings.sheetHeaders
+                headers: headersToSend
             }).done((response) => {
                 const { success, data } = response;
 
