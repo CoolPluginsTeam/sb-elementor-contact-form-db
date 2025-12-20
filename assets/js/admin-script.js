@@ -26,9 +26,9 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    setTimeout(() => {
-        handleFormsDBSubmenu();
-    }, 500)
+    // setTimeout(() => {
+    //     handleFormsDBSubmenu();
+    // }, 500)
 
     jQuery('.copy-btn').click(function (e) {
         e.preventDefault();

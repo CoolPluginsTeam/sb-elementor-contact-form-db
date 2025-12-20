@@ -71,14 +71,31 @@ if(!class_exists('FDBGP_Admin')) {
         }
 
         public function add_plugin_admin_menu() {
-            add_submenu_page(
-                'elementor',
-                __('FormsDB', 'elementor-contact-form-db'),
-                __('FormsDB', 'elementor-contact-form-db'),
-                'manage_options',
-                'formsdb',
-                array($this, 'display_plugin_admin_page')
-            );
+            // Check if conflicting plugins are active
+            $is_conflicting_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) 
+                || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+            
+            if ( $is_conflicting_active ) {
+                add_submenu_page(
+                    'elementor',
+                    __('FormsDB', 'elementor-contact-form-db'),
+                    __('↳ FormsDB', 'elementor-contact-form-db'),
+                    'manage_options',
+                    'formsdb',
+                    array($this, 'display_plugin_admin_page'),
+                    18 // Position after cool-formkit (which is at default position)
+                );
+            } else {
+                // Add as submenu under elementor (default behavior)
+                add_submenu_page(
+                    'elementor',
+                    __('FormsDB', 'elementor-contact-form-db'),
+                    __('FormsDB', 'elementor-contact-form-db'),
+                    'manage_options',
+                    'formsdb',
+                    array($this, 'display_plugin_admin_page')
+                );
+            }
         }
 
         public function display_plugin_admin_page() {
@@ -144,6 +161,16 @@ if(!class_exists('FDBGP_Admin')) {
             $is_conflicting_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
             if(!$is_conflicting_active){
                 wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
+            }else{
+                ?>
+                <style>
+                    li a[href="admin.php?page=formsdb"] {
+                        padding-left: 10px;
+                        font-style: italic;
+                        opacity: 0.85;
+                    }
+                </style>
+                <?php
             }
 
             $screen = get_current_screen();
