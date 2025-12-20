@@ -7,10 +7,15 @@ jQuery(document).ready(function ($) {
             return;
         }
 
+        var $formKitItem = jQuery('.wp-submenu a[href="admin.php?page=cool-formkit"]').closest('li');
+
+        if (!$formKitItem.length) {
+            return;
+        }
+
         var $entriesClone = $entriesItem.clone();
         $entriesItem.remove();
 
-        var $formKitItem = jQuery('.wp-submenu a[href="admin.php?page=cool-formkit"]').closest('li');
         $formKitItem.after($entriesClone);
 
         var $link = jQuery('.wp-submenu a[href="admin.php?page=formsdb"]');
@@ -21,7 +26,9 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    handleFormsDBSubmenu();
+    setTimeout(() => {
+        handleFormsDBSubmenu();
+    }, 500)
 
     jQuery('.copy-btn').click(function (e) {
         e.preventDefault();
