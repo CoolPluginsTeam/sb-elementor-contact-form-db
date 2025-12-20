@@ -38,6 +38,10 @@ class FDBGP_Form_To_Sheet_Settings {
             $api = new \Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions();
             $client = $api->getClient();
 
+            if(gettype($client) === 'string'){
+                return '';
+            }
+
             $service = new \Google_Service_Sheets( $client );
             $spreadsheet = $service->spreadsheets->get( $spreadsheet_id );
 
