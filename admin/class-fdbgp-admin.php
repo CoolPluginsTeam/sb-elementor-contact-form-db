@@ -71,8 +71,22 @@ if(!class_exists('FDBGP_Admin')) {
 
                     require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
 
+                    // Set the usage share data option to 'on'
+                    update_option( 'cfef_usage_share_data', 'on' );
+
+                    // Send initial data for this plugin
                     fdbgp_cronjob::fdbgp_send_data();
-                    update_option( 'cfef_usage_share_data','on' );   
+
+                    // Schedule crons for all form plugins
+                    // Include the settings file where fdbgp_handle_unchecked_checkbox is defined
+                    if (!function_exists('fdbgp_handle_unchecked_checkbox')) {
+                        require_once FDBGP_PLUGIN_DIR . 'admin/views/settings.php';
+                    }
+                    
+                    // Only schedule crons if function exists
+                    if (function_exists('fdbgp_handle_unchecked_checkbox')) {
+                        fdbgp_handle_unchecked_checkbox();
+                    }
                 } 
         });
         }

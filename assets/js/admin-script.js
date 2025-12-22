@@ -31,7 +31,7 @@ jQuery(document).ready(function ($) {
     // }, 500)
 
     function handleTermLink() {
-        const termsLinks = document.querySelectorAll('.ccpw-see-terms');
+        const termsLinks = document.querySelectorAll('.fdbgp-ccpw-see-terms');
         const termsBox = document.getElementById('termsBox');
 
         termsLinks.forEach(function (link) {

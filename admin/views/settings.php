@@ -295,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                                             <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
                                             <div class="description cool-formkit-description">
                                                 <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'ccpw'); ?>
-                                                <a href="#" class="ccpw-see-terms">[<?php esc_html_e('See terms', 'ccpw'); ?>]</a>
+                                                <a href="#" class="fdbgp-ccpw-see-terms">[<?php esc_html_e('See terms', 'ccpw'); ?>]</a>
                     
                                                 <div id="termsBox" style="display: none; padding-left: 20px; margin-top: 10px; font-size: 12px; color: #999;">
                                                     <p>
