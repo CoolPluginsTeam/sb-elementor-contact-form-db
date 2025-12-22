@@ -131,22 +131,98 @@ class FDBGP_Entries_Posts {
 
     public function output_entries_list(FDBGP_Dashboard $dashboard) {
         if($dashboard->current_screen(self::$post_type)){
-            echo "<div class='wrap'>";
-            echo "<h1 class='wp-heading-inline cfkef-entries-list-title'>" . esc_html__( 'Entries', 'cool-formkit' ) . "</h1>";
-            echo "<div id='cfkef-entries-list-wrapper'>";
-            $list_table = FDBGP_List_Table::get_instance(self::$post_type);
-            $list_table->prepare_items();
-            $list_table->views();
-            // echo '<form method="get">';
-            echo '<form method="get" action="'.esc_url( admin_url( 'admin.php?page=cfkef-entries' ) ).'">';
-            echo '<input type="hidden" name="page" value="'.self::$post_type.'">';
-            echo '<input type="hidden" name="view" value="'.self::get_view().'">';
-            $list_table->search_box( esc_html__( 'Search Forms', 'cool-formkit' ), 'cfkef-entries-search' );
-            $list_table->display();
-            echo "</form>";
-            echo "</div>";
-            echo "</div>";
+            ?>
+            <div class='cfk-promo'>
+                <div class="cfk-box cfk-left">
+                    <div class="wrapper-header">
+                        <div class="cfkef-save-all">
+                            <div class="cfkef-title-desc">
+                                <h2><?php esc_html_e( 'Hello+ Form Entries', 'elementor-contact-form-db' ); ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrapper-body">
+                        <div class="cool-formkit-setting-table-con">
+                            <div class="cool-formkit-left-side-setting">
+                                <div id='cfkef-entries-list-wrapper'>
+                                    <?php
+                                    $list_table = FDBGP_List_Table::get_instance(self::$post_type);
+                                    $list_table->prepare_items();
+                                    $list_table->views();
+                                    ?>
+                                    <form method="get" action="<?php echo esc_url( admin_url( 'admin.php?page=cfkef-entries' ) ); ?>">
+                                        <input type="hidden" name="page" value="<?php echo esc_attr(self::$post_type); ?>">
+                                        <input type="hidden" name="view" value="<?php echo esc_attr(self::get_view()); ?>">
+                                        <?php 
+                                        $list_table->search_box( esc_html__( 'Search Forms', 'cool-formkit' ), 'cfkef-entries-search' );
+                                        $list_table->display();
+                                        ?>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php $this->render_right_sidebar(); ?>
+            </div>
+            <?php
         }
+    }
+
+    /**
+     * Render right sidebar
+     */
+    private function render_right_sidebar() {
+        ?>
+        <div class="fdbgp-card cfk-left">
+            <h2 class="fdbgp-card-title">
+                <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'elementor-contact-form-db' ); ?>
+            </h2>
+
+            <div class="fdbgp-steps">
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">1</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'Create Form', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Create a page with Hello+ Form widget', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">2</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'Enable Action', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Enable "Collect Submissions" action in form settings.', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">3</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'Submit Form', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Submit your form from the frontend to save entries.', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'View Entries', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'All submissions will appear in this list.', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fdbgp-help-box">
+                <h4><?php esc_html_e( 'NEED HELP?', 'elementor-contact-form-db' ); ?></h4>
+                <ul>
+                    <li>▶ <?php esc_html_e( 'Watch Video Tutorial', 'elementor-contact-form-db' ); ?></li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=entries_page_sidebar" target="_blank" rel="noopener noreferrer">📄 <?php esc_html_e( 'Read Documentation', 'elementor-contact-form-db' ); ?></a></li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=entries_page_sidebar">🎧 <?php esc_html_e( 'Contact Support', 'elementor-contact-form-db' ); ?></a></li>
+                </ul>
+            </div>
+        </div>
+        <?php
     }
 
     public function add_screen_option() {

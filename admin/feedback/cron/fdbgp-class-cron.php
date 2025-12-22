@@ -46,7 +46,7 @@ if (!class_exists('fdbgp_cronjob')) {
             $settings  = get_option('fdbgp_usage_share_data');
             
             if (!empty($settings) || $settings === 'on') {
-                    fdbgp_cronjob::fdbgp_send_data();
+                fdbgp_cronjob::fdbgp_send_data();
             }
             
         }
@@ -126,7 +126,7 @@ if (!class_exists('fdbgp_cronjob')) {
                   $post_data = array(
                       'site_id'           => sanitize_text_field(md5($site_id)),
                       'plugin_version'    => sanitize_text_field($plugin_version),
-                      'plugin_name'       => "Conditional Fields for Elementor Form",
+                      'plugin_name'       => "FormsDB For Elementor Forms",
                       'plugin_initial'    => sanitize_text_field($initial_version),
                       'email'             => sanitize_email($admin_email),
                       'site_url'          => esc_url_raw($site_url),
