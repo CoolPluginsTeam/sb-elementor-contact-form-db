@@ -132,9 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                                         name="client_secret"
                                         class="regular-text cool-formkit-input"
                                         value="<?php echo esc_attr($google_settings['client_secret']); ?>"
-                                        placeholder="Enter your Client Secret"
+                                        placeholder="Enter your Client Secret key"
                                         <?php echo !empty($google_settings['client_secret']) ? 'readonly' : ''; ?> />
-                                    <p class="description"><?php esc_html_e('Enter your Google API Client Secret', 'elementor-contact-form-db'); ?></p>
+                                    <p class="description"><?php esc_html_e('Enter your Google API Client Secret key', 'elementor-contact-form-db'); ?></p>
                                 </td>
                             </tr>
 
@@ -269,7 +269,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                 <h4>NEED HELP?</h4>
                 <ul>
                     <li>▶ Watch Video Tutorial</li>
-                    <li>📄 Read Documentation</li>
+                    <li><a href="https://coolplugins.net/automatically-save-elementor-form-submissions-to-google-sheets/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-generate-a-google-api-authentication-token" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
                     <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar">🎧 Contact Support</a></li>
                 </ul>
             </div>

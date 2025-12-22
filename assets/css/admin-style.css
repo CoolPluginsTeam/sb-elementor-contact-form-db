@@ -1943,7 +1943,7 @@ a.button-primary.upgrade-pro-btn {
 
 
 .fdbgp-card {
-  width: 33%;
+  width: 33% !important;
   max-width: 500px;
   background: #fff;
   border-radius: 12px;
