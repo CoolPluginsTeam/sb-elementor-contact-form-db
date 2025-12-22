@@ -148,7 +148,7 @@ class FDBGP_Form_To_Sheet_Settings {
                     <ul>
                     <li>▶ Watch Video Tutorial</li>
                     <li><a href="https://coolplugins.net/automatically-save-elementor-form-submissions-to-google-sheets/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-save-elementor-form-submissions-to-google-sheets" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
-                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar">🎧 Contact Support</a></li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar" target="_blank">🎧 Contact Support</a></li>
                     </ul>
                 </div>
             </div>
