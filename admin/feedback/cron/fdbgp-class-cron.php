@@ -43,7 +43,7 @@ if (!class_exists('fdbgp_cronjob')) {
 
         function fdbgp_cron_extra_data_autoupdater() {
 
-            $settings  = get_option('fdbgp_usage_share_data');
+            $settings  = get_option('cfef_usage_share_data');
             
             if (!empty($settings) || $settings === 'on') {
                 fdbgp_cronjob::fdbgp_send_data();

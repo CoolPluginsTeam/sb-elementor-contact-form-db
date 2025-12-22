@@ -6,16 +6,16 @@ if (!defined('ABSPATH')) {
 use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions;
 
 
-function cfef_handle_unchecked_checkbox() {
+function fdbgp_handle_unchecked_checkbox() {
     $choice  = get_option('cpfm_opt_in_choice_cool_forms');
-    $options = get_option('fdbgp_usage_share_data');
+    $options = get_option('cfef_usage_share_data');
 
     if (!empty($choice)) {
 
         // If the checkbox is unchecked (value is empty, false, or null)
         if (empty($options)) {
             // formsDB
-            wp_clear_scheduled_hook('fdbgp_usage_share_data');
+            wp_clear_scheduled_hook('fdbgp_extra_data_update');
 
             // conditional free
             if(method_exists('cfef_cronjob', 'cfef_send_data')){
@@ -46,11 +46,11 @@ function cfef_handle_unchecked_checkbox() {
 
         }else {
             // formsDB
-            if (!wp_next_scheduled('fdbgp_usage_share_data')) {
+            if (!wp_next_scheduled('fdbgp_extra_data_update')) {
                 if (class_exists('fdbgp_cronjob') && method_exists('fdbgp_cronjob', 'fdbgp_send_data')) {
                     fdbgp_cronjob::fdbgp_send_data();
                 }
-                wp_schedule_event(time(), 'every_30_days', 'fdbgp_usage_share_data');
+                wp_schedule_event(time(), 'every_30_days', 'fdbgp_extra_data_update');
             }
 
             // conditional free
@@ -120,9 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
     // Verify nonce
     if (wp_verify_nonce($_POST['fdbgp_settings_nonce'], 'fdbgp_settings_action')) {
 
-        $fdbgp_usage_share_data = isset($_POST['fdbgp_usage_share_data']) ? sanitize_text_field($_POST['fdbgp_usage_share_data']) : '';
-        update_option( "fdbgp_usage_share_data",  $fdbgp_usage_share_data);
+        $cfef_usage_share_data = isset($_POST['cfef_usage_share_data']) ? sanitize_text_field($_POST['cfef_usage_share_data']) : '';
+        update_option( "cfef_usage_share_data",  $cfef_usage_share_data);
 
+        fdbgp_handle_unchecked_checkbox();        
         // Save Google Settings
         if (isset($_POST['save_google_settings'])) {
             $new_settings = array(
@@ -279,38 +280,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
 
                             <?php $cpfm_opt_in = get_option('cpfm_opt_in_choice_cool_forms','');
                                 if ($cpfm_opt_in) {
-                
-                                $check_option =  get_option( 'fdbgp_usage_share_data','');
-                                if($check_option == 'on'){
-                                    $checked = 'checked';
-                                }else{
-                                    $checked = '';
-                                }                
-                                ?>            
-                                <tr>
-                                    <th scope="row" class="cool-formkit-table-th">
-                                        <label for="fdbgp_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Usage Share Data', 'cool-formkit'); ?></label>
-                                    </th>
-                                    <td class="cool-formkit-table-td usage-share-data">
-                                        <input type="checkbox" id="fdbgp_usage_share_data" name="fdbgp_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
-                                        <div class="description cool-formkit-description">
-                                            <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'ccpw'); ?>
-                                            <a href="#" class="ccpw-see-terms">[<?php esc_html_e('See terms', 'ccpw'); ?>]</a>
-                
-                                            <div id="termsBox" style="display: none; padding-left: 20px; margin-top: 10px; font-size: 12px; color: #999;">
-                                                <p>
-                                                    <?php esc_html_e('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'ccpw'); ?>
-                                                    <a href="https://my.coolplugins.net/terms/usage-tracking/" target="_blank">Click Here</a>
+                                    $check_option =  get_option( 'cfef_usage_share_data','');
+                                    if($check_option == 'on'){
+                                        $checked = 'checked';
+                                    }else{
+                                        $checked = '';
+                                    }                
+                                    ?>            
+                                    <tr>
+                                        <th scope="row" class="cool-formkit-table-th">
+                                            <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Usage Share Data', 'cool-formkit'); ?></label>
+                                        </th>
+                                        <td class="cool-formkit-table-td usage-share-data">
+                                            <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
+                                            <div class="description cool-formkit-description">
+                                                <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'ccpw'); ?>
+                                                <a href="#" class="ccpw-see-terms">[<?php esc_html_e('See terms', 'ccpw'); ?>]</a>
+                    
+                                                <div id="termsBox" style="display: none; padding-left: 20px; margin-top: 10px; font-size: 12px; color: #999;">
+                                                    <p>
+                                                        <?php esc_html_e('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'ccpw'); ?>
+                                                        <a href="https://my.coolplugins.net/terms/usage-tracking/" target="_blank">Click Here</a>
 
-                                                </p>
-                                                <ul style="list-style-type: auto;">
-                                                    <li><?php esc_html_e('Your website home URL and WordPress admin email.', 'ccpw'); ?></li>
-                                                    <li><?php esc_html_e('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'ccpw'); ?></li>
-                                                </ul>
+                                                    </p>
+                                                    <ul style="list-style-type: auto;">
+                                                        <li><?php esc_html_e('Your website home URL and WordPress admin email.', 'ccpw'); ?></li>
+                                                        <li><?php esc_html_e('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'ccpw'); ?></li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                             <?php } ?>
 
                         </table>

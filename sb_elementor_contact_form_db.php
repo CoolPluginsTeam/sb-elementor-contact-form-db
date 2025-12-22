@@ -182,7 +182,7 @@ if(!class_exists('FDBGP_Main')) {
         	}
 
 
-			$settings       = get_option('fdbgp_usage_share_data');
+			$settings       = get_option('cfef_usage_share_data');
 
 			
 			if (!empty($settings) || $settings === 'on'){

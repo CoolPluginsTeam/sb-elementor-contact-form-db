@@ -72,7 +72,7 @@ if(!class_exists('FDBGP_Admin')) {
                     require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
 
                     fdbgp_cronjob::fdbgp_send_data();
-                    update_option( 'fdbgp_usage_share_data','on' );   
+                    update_option( 'cfef_usage_share_data','on' );   
                 } 
         });
         }
