@@ -10,7 +10,7 @@ class FDBGP_Form_To_Post_Settings {
      */
     private $per_page = 10;
 
-    /**s
+    /**
      * Render settings UI
      */
     public function __construct() {
