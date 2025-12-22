@@ -3,6 +3,8 @@ if (!defined('ABSPATH')) {
     die;
 }
 
+use Formsdb_Elementor_Forms\Admin\CPFM_Feedback_Notice;
+
 if(!class_exists('FDBGP_Admin')) { 
 
     class FDBGP_Admin {
@@ -39,6 +41,40 @@ if(!class_exists('FDBGP_Admin')) {
             add_action('admin_menu', array($this, 'add_plugin_admin_menu'), 999);
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
             add_action('admin_action_fdbgp_create_elementor_page', array($this, 'redirect_to_elementor_builder'));
+
+            add_action('cpfm_register_notice', function () { 
+                if (!class_exists('Formsdb_Elementor_Forms\Admin\CPFM_Feedback_Notice') || !current_user_can('manage_options')) {
+                    return;
+                }
+
+                $notice = [
+                    'title' => __('Elementor Form Addons by Cool Plugins', 'cool-formkit-for-elementor-forms'),
+                    'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'cool-plugins-feedback'),
+                    'pages' => ['cool-formkit','cfkef-entries','cool-formkit&tab=recaptcha-settings','formsdb'],
+                    'always_show_on' => ['cool-formkit','cfkef-entries','cool-formkit&tab=recaptcha-settings','formsdb'], // This enables auto-show
+                    'plugin_name'=>'fdbgp'
+                ];
+
+                CPFM_Feedback_Notice::cpfm_register_notice('cool_forms', $notice);
+
+                    if (!isset($GLOBALS['cool_plugins_feedback'])) {
+                        $GLOBALS['cool_plugins_feedback'] = [];
+                    }
+                    
+                    $GLOBALS['cool_plugins_feedback']['cool_forms'][] = $notice;
+            
+            });
+        
+        add_action('cpfm_after_opt_in_fdbgp', function($category) {
+            
+                if ($category === 'cool_forms') {
+
+                    require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
+
+                    fdbgp_cronjob::fdbgp_send_data();
+                    update_option( 'fdbgp_usage_share_data','on' );   
+                } 
+        });
         }
 
         /**

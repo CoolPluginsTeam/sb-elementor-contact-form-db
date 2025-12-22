@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Plugin Name: FormsDB - Elementor Google Spreadsheet Addon
+ * Plugin Name: FormsDB For Elementor Forms
  * Plugin URI:  https://webacetechs.in
  * Description: A simple plugin to save contact form submissions in the database, designed for the Elementor Form Module
  * Author:      Cool Plugins
@@ -14,6 +14,7 @@
  */
 
 namespace Formsdb_Elementor_Forms;
+use Formsdb_Elementor_Forms\Admin\CPFM_Feedback_Notice;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
@@ -24,8 +25,11 @@ define( 'FDBGP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'FDBGP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FDBGP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FDBGP_PLUGIN_VERSION', '1.8.1' );
+define('FDBGP_FEEDBACK_URL', 'https://feedback.coolplugins.net/');
 
 
+register_activation_hook( FDBGP_PLUGIN_FILE, array( 'Formsdb_Elementor_Forms\FDBGP_Main', 'fdbgp_activate' ) );
+register_deactivation_hook( FDBGP_PLUGIN_FILE, array( 'Formsdb_Elementor_Forms\FDBGP_Main', 'fdbgp_deactivate' ) );
 if(!class_exists('FDBGP_Main')) { 
 
 	class FDBGP_Main {
@@ -115,9 +119,16 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		private function includes() {
+			if(!class_exists('Formsdb_Elementor_Forms\Admin\CPFM_Feedback_Notice')){
+				require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cpfm-common-notice.php';
+			}
 
 			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-loader.php';
 			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-cache-manager.php';
+			if ( is_admin() ) {
+				require_once FDBGP_PLUGIN_DIR . 'admin/feedback/admin-feedback-form.php';
+			}
+			require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
 		}
 
 		public function autoload( $class_name ) {
@@ -157,6 +168,46 @@ if(!class_exists('FDBGP_Main')) {
 			}
 		}
 
+		public static function fdbgp_activate() {
+			update_option( 'fdbgp-v', FDBGP_PLUGIN_VERSION );
+			update_option( 'fdbgp-type', 'FREE' );
+			update_option( 'fdbgp-installDate', gmdate( 'Y-m-d h:i:s' ) );
+
+			if (!get_option( 'formsdb_initial_version' ) ) {
+                add_option( 'formsdb_initial_version', FDBGP_PLUGIN_VERSION );
+            }
+
+			if(!get_option( 'fdbgp-install-date' ) ) {
+				add_option( 'fdbgp-install-date', gmdate('Y-m-d h:i:s') );
+        	}
+
+
+			$settings       = get_option('fdbgp_usage_share_data');
+
+			
+			if (!empty($settings) || $settings === 'on'){
+				
+				static::fdbgp_cron_job_init();
+			}
+		}
+
+		public static function fdbgp_cron_job_init()
+		{
+			if (!wp_next_scheduled('fdbgp_extra_data_update')) {
+				wp_schedule_event(time(), 'every_30_days', 'fdbgp_extra_data_update');
+			}
+		}
+
+
+		/**
+		 * Function run on plugin deactivate
+		 */
+		public static function fdbgp_deactivate() {
+
+			if (wp_next_scheduled('fdbgp_extra_data_update')) {
+            	wp_clear_scheduled_hook('fdbgp_extra_data_update');
+        	}
+		}
 
 	}
 
