@@ -55,11 +55,7 @@ if(!class_exists('FDBGP_Main')) {
 		 * FDBGP_Main Constructor.
 		 */
 		private function __construct() {
-			if (! version_compare(PHP_VERSION, '7.4', '>=')) {
-				add_action('admin_notices', [$this, 'admin_notice_php_version_fail']);
-				return false;
-			}
-
+		
 			static $autoloader_registered = false;
 
 			if ( ! $autoloader_registered ) {
