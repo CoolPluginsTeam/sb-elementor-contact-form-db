@@ -378,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                 <div class="fdbgp-step">
                     <div class="fdbgp-step-number">5</div>
                     <div class="fdbgp-step-content">
-                        <h3>Add Authorized Redirect URL</h3>
+                        <h3>Add Authorized Redirect URI</h3>
                         <code id="redirect-uri"><?php echo esc_url($redirect_uri); ?></code>
                         <button type="button" class="button button-small copy-btn" data-clipboard-target="#redirect-uri">
                             <?php esc_html_e('Copy', 'elementor-contact-form-db'); ?>
