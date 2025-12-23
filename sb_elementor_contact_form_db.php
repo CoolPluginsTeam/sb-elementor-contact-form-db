@@ -56,11 +56,11 @@ if(!class_exists('FDBGP_Main')) {
 		 */
 		private function __construct() {
 		
-			static $autoloader_registered = false;
+			// static $autoloader_registered = false;
 
-			if ( ! $autoloader_registered ) {
-				$autoloader_registered = spl_autoload_register( [ $this, 'autoload' ] );
-			}
+			// if ( ! $autoloader_registered ) {
+			// 	$autoloader_registered = spl_autoload_register( [ $this, 'autoload' ] );
+			// }
 
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
 			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
