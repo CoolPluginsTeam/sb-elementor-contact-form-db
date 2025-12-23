@@ -127,6 +127,8 @@ if(!class_exists('FDBGP_Main')) {
 			require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-cache-manager.php';
 			if ( is_admin() ) {
 				require_once FDBGP_PLUGIN_DIR . 'admin/feedback/admin-feedback-form.php';
+				// Load old submission handler early for CSV export to work
+				require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-old-submission.php';
 			}
 			require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
 		}

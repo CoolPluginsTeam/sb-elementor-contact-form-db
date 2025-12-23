@@ -151,6 +151,12 @@ if(!class_exists('FDBGP_Admin')) {
         public function display_plugin_admin_page() {
             $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'forms-sheets';
             
+            // Check for old submissions
+            if (!class_exists('FDBGP_Old_Submission')) {
+                require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-old-submission.php';
+            }
+            $has_old_submissions = FDBGP_Old_Submission::has_old_submissions();
+            
             ?>
             <div class="fdbgp-wrapper">
                 <div class="fdbgp-header">
@@ -181,6 +187,9 @@ if(!class_exists('FDBGP_Admin')) {
                     ?>
                         <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
+                    <?php if ($has_old_submissions) : ?>
+                        <a href="?page=formsdb&tab=old-submission" class="nav-tab <?php echo $tab == 'old-submission' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Old Submissions', 'elementor-contact-form-db'); ?></a>
+                    <?php endif; ?>
                 </h2>
                 <div class="tab-content">
                     <?php
@@ -196,6 +205,9 @@ if(!class_exists('FDBGP_Admin')) {
                             break;
                         case 'advanced':
                             include_once 'views/advanced-fields.php';
+                            break;
+                        case 'old-submission':
+                            include_once 'views/old-submission.php';
                             break;
                         default:
                             // Show default tab content
