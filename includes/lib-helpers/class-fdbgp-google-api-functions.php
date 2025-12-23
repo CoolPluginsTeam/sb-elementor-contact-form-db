@@ -158,7 +158,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		$clientsecert                 = isset( $fdbgp_google_settings_value['client_secret'] ) ? $fdbgp_google_settings_value['client_secret'] : '';
 		$auth_token                   = isset( $fdbgp_google_settings_value['client_token'] ) ? $fdbgp_google_settings_value['client_token'] : '';
 		$client       = new \Google\Client();
-		$client->setApplicationName( 'FormsDB - Elementor Google Spreadsheet Addon' );
+		$client->setApplicationName( 'FormsDB For Elementor Forms' );
 		$client->setScopes( \Google\Service\Sheets::SPREADSHEETS_READONLY );
 		$client->setScopes( \Google\Service\Drive::DRIVE_METADATA_READONLY );
 		$client->addScope( \Google\Service\Sheets::SPREADSHEETS );
