@@ -26,10 +26,6 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    // setTimeout(() => {
-    //     handleFormsDBSubmenu();
-    // }, 500)
-
     function handleTermLink() {
         const termsLinks = document.querySelectorAll('.fdbgp-ccpw-see-terms');
         const termsBox = document.getElementById('termsBox');
@@ -110,87 +106,5 @@ jQuery(document).ready(function ($) {
             $authBtn.hide();
         }
     });
-
-    // Handle Create Spreadsheet Now button in Elementor editor
-    if (typeof elementor !== 'undefined') {
-        // Listen for the custom event triggered by the button
-        elementor.channels.editor.on('fdbgp:create_spreadsheet', function (controlView) {
-            var model = controlView.container.settings;
-
-            // Get form settings
-            var spreadsheetName = model.get('fdbgp_new_spreadsheet_name');
-            var sheetName = model.get('fdbgp_sheet_name');
-            var sheetHeaders = model.get('fdbgp_sheet_headers');
-
-            // Validate
-            if (!spreadsheetName || spreadsheetName.trim() === '') {
-                alert('Please enter a Spreadsheet Name');
-                return;
-            }
-
-            if (!sheetName || sheetName.trim() === '') {
-                alert('Please enter a Sheet Name');
-                return;
-            }
-
-            // Show loading notification
-            elementorCommon.dialogsManager.createWidget('lightbox', {
-                id: 'fdbgp-creating-spreadsheet',
-                headerMessage: 'Creating Spreadsheet',
-                message: 'Please wait while we create your spreadsheet...',
-                hide: {
-                    onBackgroundClick: false,
-                    onEscKeyPress: false
-                }
-            }).show();
-
-            // Make AJAX request
-            jQuery.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'fdbgp_create_spreadsheet',
-                    _nonce: elementorCommon.config.ajax.nonce,
-                    spreadsheet_name: spreadsheetName,
-                    sheet_name: sheetName,
-                    headers: sheetHeaders || []
-                },
-                success: function (response) {
-                    // Close loading dialog
-                    elementorCommon.dialogsManager.getWidgetById('fdbgp-creating-spreadsheet').destroy();
-
-                    if (response.success) {
-                        // Update the spreadsheet ID in the form settings
-                        model.set('fdbgp_spreadsheetid', response.data.spreadsheet_id);
-
-                        // Show success message
-                        elementorCommon.dialogsManager.createWidget('confirm', {
-                            headerMessage: 'Success!',
-                            message: response.data.message + '\n\nThe form settings have been updated with the new spreadsheet.',
-                            strings: {
-                                confirm: 'OK'
-                            },
-                            onConfirm: function () {
-                                // Refresh the panel to show updated dropdown
-                                elementor.getPanelView().getCurrentPageView().render();
-                            }
-                        }).show();
-                    } else {
-                        elementorCommon.dialogsManager.createWidget('alert', {
-                            headerMessage: 'Error',
-                            message: response.data.message
-                        }).show();
-                    }
-                },
-                error: function () {
-                    elementorCommon.dialogsManager.getWidgetById('fdbgp-creating-spreadsheet').destroy();
-                    elementorCommon.dialogsManager.createWidget('alert', {
-                        headerMessage: 'Error',
-                        message: 'Failed to create spreadsheet. Please try again.'
-                    }).show();
-                }
-            });
-        });
-    }
 
 })
