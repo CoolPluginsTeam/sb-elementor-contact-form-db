@@ -2,7 +2,7 @@
 
 /*
  * Plugin Name: FormsDB For Elementor Forms
- * Plugin URI:  https://webacetechs.in
+ * Plugin URI:  https://coolformkit.com/
  * Description: A simple plugin to save contact form submissions in the database, designed for the Elementor Form Module
  * Author:      Cool Plugins
  * Version:     1.8.1
