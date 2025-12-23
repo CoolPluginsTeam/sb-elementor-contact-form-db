@@ -37,8 +37,8 @@ class FDBGP_Form_To_Sheet_Settings {
         try {
             $api = new \Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions();
             $client = $api->getClient();
-
-            if(gettype($client) === 'string'){
+            
+            if(gettype($client) === 'string' || gettype($client) === 'boolean'){
                 return '';
             }
 
