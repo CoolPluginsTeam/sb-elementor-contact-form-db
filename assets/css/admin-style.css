@@ -790,9 +790,8 @@ p.description {
   column-gap: 24px;
 }
 
-.cool-formkit-setting-table-con input[type="text"] {
-  width: 100%;
-  max-width: 400px;
+.elementor_page_formsdb .cool-formkit-setting-table-con .widefat td {
+  vertical-align: middle;
 }
 
 .cool-formkit-left-side-setting {
@@ -1953,8 +1952,8 @@ a.button-primary.upgrade-pro-btn {
   border: 1px solid #ddd;
 }
 
-.fdbgp-card a{
-    color: inherit;
+.fdbgp-card a {
+  color: inherit;
   text-decoration: none;
 }
 
