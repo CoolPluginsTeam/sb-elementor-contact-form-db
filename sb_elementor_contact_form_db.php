@@ -21,9 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }   
 
 define( 'FDBGP_PLUGIN_FILE', __FILE__ );
-define( 'FDBGP_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
-define( 'FDBGP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-define( 'FDBGP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'FDBGP_PLUGIN_BASENAME', plugin_basename( FDBGP_PLUGIN_FILE ) );
+define( 'FDBGP_PLUGIN_DIR', plugin_dir_path( FDBGP_PLUGIN_FILE ) );
+define( 'FDBGP_PLUGIN_URL', plugin_dir_url( FDBGP_PLUGIN_FILE ) );
 define( 'FDBGP_PLUGIN_VERSION', '1.8.1' );
 define('FDBGP_FEEDBACK_URL', 'https://feedback.coolplugins.net/');
 
