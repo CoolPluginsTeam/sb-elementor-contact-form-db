@@ -191,6 +191,21 @@ class FDBGP_Old_Submission_View {
                         <p><?php esc_html_e('New submissions are no longer saved in this format. Use Google Sheets or Post Type integration for new forms.', 'elementor-contact-form-db'); ?></p>
                     </div>
                 </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">📝</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e('New Submissions', 'elementor-contact-form-db'); ?></h3>
+                        <p>
+                            <?php 
+                            printf(
+                                esc_html__( 'Please visit the %s for your new form entries.', 'elementor-contact-form-db' ),
+                                '<a href="' . esc_url( admin_url( 'admin.php?page=e-form-submissions' ) ) . '" target="_blank">' . esc_html__( 'Elementor Submissions tab', 'elementor-contact-form-db' ) . '</a>'
+                            ); 
+                            ?>
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <div class="fdbgp-help-box">
