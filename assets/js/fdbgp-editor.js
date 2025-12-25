@@ -676,24 +676,6 @@
     $(window).on('load', () => {
         window.FDBGP_Editor = new FDBGP_Editor();
 
-        // Expose global functions for backward compatibility
-        // window.fdbgpUpdateSheetHeaders = (confirmOverwrite, btnContext) => {
-        //     if (window.FDBGP_Editor) {
-        //         window.FDBGP_Editor.updateSheetHeaders(confirmOverwrite, btnContext);
-        //     }
-        // };
-
-        // window.fdbgpCreateSpreadsheet = (btnContext) => {
-        //     if (window.FDBGP_Editor) {
-        //         window.FDBGP_Editor.createSpreadsheet(btnContext);
-        //     }
-        // };
-
-        // window.fdbgpCheckSheetContent = ($sheetSelect) => {
-        //     if (window.FDBGP_Editor) {
-        //         window.FDBGP_Editor.checkSheetContent($sheetSelect);
-        //     }
-        // };
     });
 
     $(window).on('load', () => {
