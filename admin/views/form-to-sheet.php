@@ -61,7 +61,6 @@ class FDBGP_Form_To_Sheet_Settings {
 
         } catch ( \Exception $e ) {
             // Optional: log error for debugging
-            error_log( 'Google Sheet URL error: ' . $e->getMessage() );
         }
 
         return '';

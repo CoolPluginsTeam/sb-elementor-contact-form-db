@@ -149,8 +149,12 @@ if(!class_exists('FDBGP_Admin')) {
         }
 
         public function display_plugin_admin_page() {
+            $allowed_tabs = array('forms-sheets', 'post-type', 'settings', 'advanced', 'old-submission');
             $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'forms-sheets';
-            
+            if (!in_array($tab, $allowed_tabs, true)) {
+                $tab = 'forms-sheets'; 
+            }
+
             // Check for old submissions
             if (!class_exists('FDBGP_Old_Submission')) {
                 require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-old-submission.php';

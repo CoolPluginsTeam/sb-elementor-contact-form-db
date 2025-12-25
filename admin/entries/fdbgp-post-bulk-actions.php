@@ -141,11 +141,8 @@ class FDBGP_Post_Bulk_Actions {
 		}
 		
 		// Check the nonce.
-		if (
-			! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'bulk-entries' ) &&
-			! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'bulk-entries' )
-			) {
-				return;
+		if (! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'bulk-entries' )) {
+			return;
 		}
 
 		// Finally, we can process the action.

@@ -196,7 +196,7 @@ class FDBGP_List_Table extends WP_List_Table {
     
         foreach ( $actions as $action => $link ) {
             ++$i;
-    
+            $link = wp_kses_post($link);
             $separator = ( $i < $action_count ) ? ' | ' : '';
     
             $output .= "<span class='".esc_attr(lcfirst($action))."'>{$link}{$separator}</span>";

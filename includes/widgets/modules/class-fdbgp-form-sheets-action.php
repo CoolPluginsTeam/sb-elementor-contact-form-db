@@ -226,7 +226,6 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                 $fdbgp_sheetarray = $instance_api->get_spreadsheet_listing();
                 
                 if ( ! empty( $fdbgp_spreadsheetid ) && ! array_key_exists( $fdbgp_spreadsheetid, $fdbgp_sheetarray ) ) {
-                    error_log( 'Error: Spreadsheet ID not found in listing.' );
                     return;
                 } elseif ( ! empty( $fdbgp_spreadsheetid ) ) {
                     $fdbgp_sheets = array();
@@ -301,7 +300,6 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                                     $fdbgp_sheets[] = $fdbgp_sheetname;
                                     
                                 } catch ( Exception $e ) {
-                                    error_log( 'Failed to create new tab: ' . $e->getMessage() );
                                     // Fallback: Proceed, maybe it exists and we missed it, or it will fail on insert.
                                 }
                             }
@@ -537,7 +535,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                 $fdbgp_spreadsheets = $instance_api->get_spreadsheet_listing();
             } catch ( Exception $e ) {
                 $fdbgp_spreadsheets = array();
-                error_log( "Error fetching spreadsheets: " . $e->getMessage() );
+                // error_log( "Error fetching spreadsheets: " . $e->getMessage() );
             }
             
             $fdbgp_spreadsheets = array( '' => esc_html__( 'Please Select a Spreadsheet', 'elementor-contact-form-db' ) ) + $fdbgp_spreadsheets;
@@ -592,7 +590,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
                         $fdbgp_sheets[ $title ] = $title;
                     }
                 } catch ( Exception $e ) {
-                    error_log( "Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage() );
+                    // error_log( "Error fetching sheets for ID $local_spreadsheet_id: " . $e->getMessage() );
                 }
             }
             

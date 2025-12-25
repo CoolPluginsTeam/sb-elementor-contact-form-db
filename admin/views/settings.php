@@ -106,6 +106,7 @@ $google_settings = get_option('fdbgp_google_settings', array(
     'client_token' => ''
 ));
 
+$oauth_code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
 // Get site domain and redirect URI
 $site_url = parse_url(site_url(), PHP_URL_HOST);
 $site_domain = str_replace('www.', '', $site_url);
@@ -117,6 +118,7 @@ $error_message = '';
 $connection_status = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'])) {
+    if (!current_user_can('manage_options')) wp_die('Unauthorized');
     // Verify nonce
     if (check_admin_referer('fdbgp_settings_action', 'fdbgp_settings_nonce')) {
 
@@ -242,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
                                         </label>
                                     </th>
                                     <td class="cool-formkit-table-td">
-                                        <?php if (empty($google_settings['client_token']) && !isset($_GET['code'])) : ?>
+                                        <?php if (empty($google_settings['client_token']) && empty($oauth_code)) : ?>
                                             <?php $auth_url = $instance_api->getClient(); ?>
                                             <div id="authbtn" style="margin-bottom: 10px;">
                                                 <a href="<?php echo esc_url($auth_url); ?>" id="authlink" target="_blank" class="button button-secondary">

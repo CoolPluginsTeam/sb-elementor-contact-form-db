@@ -77,7 +77,7 @@ class FDBGP_Old_Submission_View {
                                     <?php 
                                     ksort($forms);
                                     foreach ($forms as $form => $label): 
-                                        $selected = isset($_REQUEST['form_name']) && $_REQUEST['form_name'] == $form ? 'selected="selected"' : '';
+                                        $selected = isset($_REQUEST['form_name']) && sanitize_text_field($_REQUEST['form_name']) == $form ? 'selected="selected"' : '';
                                     ?>
                                         <option <?php echo $selected; ?> value="<?php echo esc_attr($form); ?>">
                                             <?php echo esc_html($label); ?>
@@ -123,6 +123,10 @@ class FDBGP_Old_Submission_View {
     }
 
     private function render_preview() {
+        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce($_POST['fdbgp_old_export_nonce'], 'fdbgp_old_export')) {
+            return; // Invalid or missing nonce - silently exit
+        }
+        
         if (isset($_REQUEST['preview_page']) && isset($_REQUEST['form_name'])) {
             $form_name = sanitize_text_field($_REQUEST['form_name']);
             $rows = $this->helper->get_export_rows_by_page($form_name, 50);
