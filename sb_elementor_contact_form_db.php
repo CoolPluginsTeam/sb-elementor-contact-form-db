@@ -5,7 +5,7 @@
  * Plugin URI:  https://coolformkit.com/
  * Description: A simple plugin to save contact form submissions in the database, designed for the Elementor Form Module
  * Author:      Cool Plugins
- * Version:     1.8.1
+ * Version:     2.0.0
  * Author URI:  https://coolplugins.net/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
  * Text Domain: elementor-contact-form-db
  * Requires Plugins: elementor
@@ -24,7 +24,7 @@ define( 'FDBGP_PLUGIN_FILE', __FILE__ );
 define( 'FDBGP_PLUGIN_BASENAME', plugin_basename( FDBGP_PLUGIN_FILE ) );
 define( 'FDBGP_PLUGIN_DIR', plugin_dir_path( FDBGP_PLUGIN_FILE ) );
 define( 'FDBGP_PLUGIN_URL', plugin_dir_url( FDBGP_PLUGIN_FILE ) );
-define( 'FDBGP_PLUGIN_VERSION', '1.8.1' );
+define( 'FDBGP_PLUGIN_VERSION', '2.0.0' );
 define('FDBGP_FEEDBACK_URL', 'https://feedback.coolplugins.net/');
 
 
