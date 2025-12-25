@@ -401,9 +401,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
             <div class="fdbgp-help-box">
                 <h4>NEED HELP?</h4>
                 <ul>
-                    <li>▶ Watch Video Tutorial</li>
-                    <li><a href="https://coolplugins.net/automatically-save-elementor-form-submissions-to-google-sheets/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-generate-a-google-api-authentication-token" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
-                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar">🎧 Contact Support</a></li>
+                    <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-generate-a-google-api-authentication-token" target="_blank" rel="noopener noreferrer">▶ Watch Video Tutorial</a></li>
+                    <li><a href="https://docs.coolplugins.net/doc/google-api-setup-connect-elementor-google-sheets/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-generate-a-google-api-authentication-token" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
+                    <li><a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db" target="_blank">🎧 Contact Support</a></li>
                 </ul>
             </div>
         </div>

@@ -216,9 +216,7 @@ class FDBGP_Entries_Posts {
             <div class="fdbgp-help-box">
                 <h4><?php esc_html_e( 'NEED HELP?', 'elementor-contact-form-db' ); ?></h4>
                 <ul>
-                    <li>▶ <?php esc_html_e( 'Watch Video Tutorial', 'elementor-contact-form-db' ); ?></li>
-                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=entries_page_sidebar" target="_blank" rel="noopener noreferrer">📄 <?php esc_html_e( 'Read Documentation', 'elementor-contact-form-db' ); ?></a></li>
-                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=entries_page_sidebar">🎧 <?php esc_html_e( 'Contact Support', 'elementor-contact-form-db' ); ?></a></li>
+                    <li><a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db" target="_blank">🎧 Contact Support</a></li>
                 </ul>
             </div>
         </div>
