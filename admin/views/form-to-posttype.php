@@ -1,0 +1,360 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
+class FDBGP_Form_To_Post_Settings {
+
+    /**
+     * Render settings UI
+     */
+    private $per_page = 10;
+
+    /**
+     * Render settings UI
+     */
+    public function __construct() {
+
+        $forms = $this->get_all_forms();
+        
+        $total_items = count( $forms );
+        $current_page = $this->get_current_page();
+        $offset = ( $current_page - 1 ) * $this->per_page;
+        
+        $forms_to_show = array_slice( $forms, $offset, $this->per_page );
+        
+        $this->render_page( $forms_to_show, $total_items, $current_page );
+    }
+
+    private function get_current_page() {
+        $paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+        return max( 1, $paged );
+    }
+    
+    /**
+     * Render page
+     *
+     * @param array $forms
+     * @param int $total_items
+     * @param int $current_page
+     */
+    private function render_page( array $forms, $total_items = 0, $current_page = 1 ) {
+        ?>
+        <div class='cfk-promo'>
+            <div class="cfk-box cfk-left">
+                <div class="wrapper-header">
+                    <div class="cfkef-save-all">
+                        <div class="cfkef-title-desc">
+                            <h2><?php esc_html_e( 'Send Form Submissions to Post Types', 'elementor-contact-form-db' ); ?></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="wrapper-body">
+                    <?php
+                    if ( ! empty( $forms ) || $total_items > 0 ) {
+                        $this->render_forms_table( $forms, $total_items, $current_page );
+                    } else {
+                        $this->render_empty_state();
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php $this->render_right_sidebar(); ?>
+        </div>
+        <?php
+    }
+    
+    /**
+     * Render page
+     *
+     * @param array $forms
+     */
+
+
+    private function render_right_sidebar() {
+        ?>
+
+
+            <div class="fdbgp-card cfk-left">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">🎓</span> How to use
+                </h2>
+
+                <div class="fdbgp-steps">
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">1</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Create Page</h3>
+                        <p>Create a page with Elementor</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">2</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Edit your Form</h3>
+                        <p>Open your page in Elementor and select your form widget.</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">3</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Add Action</h3>
+                        <p>Under <strong>'Actions After Submit'</strong>, add <strong>Save Submissions In Post Type</strong>.</p>
+                    </div>
+                    </div>
+
+                    <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3>Post Type</h3>
+                        <p>Select post type and post status in settings.</p>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="fdbgp-help-box">
+                    <h4>NEED HELP?</h4>
+                    <ul>
+                    <li>▶ Watch Video Tutorial</li>
+                    <li><a href="https://coolplugins.net/automatically-save-elementor-form-submissions-to-google-sheets/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-save-elementor-form-submissions-to-posts-type" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar" target="_blank">🎧 Contact Support</a></li>
+                    </ul>
+                </div>
+            </div>
+        <?php
+    }
+
+
+    /**
+     * Render table of forms
+     *
+     * @param array $forms
+     */
+    /**
+     * Render table of forms
+     *
+     * @param array $forms
+     * @param int   $total_items
+     * @param int   $current_page
+     */
+    private function render_forms_table( array $forms, $total_items, $current_page ) {
+        ?>
+        <p><?php esc_html_e( 'View all your Elementor forms here and connect them to WordPress posts, pages, or custom post types. Use form submissions to create content directly from the frontend.', 'elementor-contact-form-db' ); ?></p>
+        <div class="cool-formkit-setting-table-con">
+            <div class="cool-formkit-left-side-setting">
+                <?php
+                echo '<table class="widefat striped">';
+                echo '<thead>
+                        <tr>
+                            <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Status', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Post Type', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
+                        </tr>
+                    </thead><tbody>';
+
+                foreach ( $forms as $form ) {
+                    $post_type_status = '<a href="' . esc_url( $form['edit_url'] ) . '" target="_blank" class="button button-secondary">
+                            <span>❌</span> ' . esc_html__( 'Connect Post Type', 'elementor-contact-form-db' ) . '
+                        </a>';
+
+                    if ( ! empty( $form['post_type_url'] ) && ! empty( $form['post_type_label'] ) ) {
+                        $post_type_status = '<a href="' . esc_url( $form['post_type_url'] ) . '" target="_blank" class="button button-secondary">
+                            <span>✅</span> ' . esc_html( $form['post_type_label'] ) . '
+                        </a>';
+                    }
+                    
+                    echo '<tr>
+                            <td>' . esc_html( $form['form_name'] ) . '</td>
+                            <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
+                            <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
+                            <td>' . $post_type_status . '</td>
+                            <td>
+                                <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
+                                    ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
+                                </a>
+                            </td>
+                        </tr>';
+                }
+
+                echo '</tbody></table>';
+                $this->render_pagination( $total_items, $current_page );
+                ?>
+            </div>
+
+        </div>
+        <?php
+    }
+
+
+    /**
+     * Render empty state
+     */
+    private function render_empty_state() {
+
+        $create_form_url = admin_url( 'admin.php?action=fdbgp_create_elementor_page' );
+        ?>
+        <div class="cool-formkit-setting-table-con">
+            <div class="cool-formkit-left-side-setting">
+
+                <p><?php esc_html_e(
+                    'No Elementor form is using the "Save Submissions In Post Type" action.',
+                    'elementor-contact-form-db'
+                ); ?></p>
+
+                <p>
+                    <a class="button button-primary" href="<?php echo esc_url( $create_form_url ); ?>"  target="_blank">
+                        <?php esc_html_e( 'Create New Form', 'elementor-contact-form-db' ); ?>
+                    </a>
+                </p>
+
+                <p class="description">
+                    <?php esc_html_e(
+                        'Create a new Elementor Form and enable the "Save Submissions In Post Type" action under Actions After Submit.',
+                        'elementor-contact-form-db'
+                    ); ?>
+                </p>
+
+            </div>
+
+        </div>
+        <?php
+    }
+
+
+    /**
+     * Get All Elementor forms
+     *
+     * @return array
+     */
+    private function get_all_forms() {
+        
+        // Try to get from cache first
+        $cached_forms = get_transient( 'fdbgp_forms_posttype_data' );
+        if ( false !== $cached_forms ) {
+            return $cached_forms;
+        }
+
+        $forms = [];
+
+        $posts = get_posts( [
+            'post_type'      => 'any',
+            'post_status'    => 'any',
+            'posts_per_page' => -1,
+            'meta_key'       => '_elementor_data',
+        ] );
+
+        foreach ( $posts as $post ) {
+
+            $data = get_post_meta( $post->ID, '_elementor_data', true );
+            if ( empty( $data ) ) {
+                continue;
+            }
+
+            $elements = json_decode( $data, true );
+            if ( ! is_array( $elements ) ) {
+                continue;
+            }
+
+            $this->walk_elements( $elements, $post, $forms );
+        }
+
+        // Cache the result for 24 hours (will be flushed on save)
+        set_transient( 'fdbgp_forms_posttype_data', $forms, DAY_IN_SECONDS );
+
+        return $forms;
+    }
+
+    /**
+     * Recursive Elementor element walker
+     *
+     * @param array   $elements
+     * @param WP_Post $post
+     * @param array   $forms
+     */
+    private function walk_elements( array $elements, $post, array &$forms ) {
+
+        foreach ( $elements as $element ) {
+            $is_found = false;
+            $post_type_url = '';
+            $post_type_label = '';
+
+            if ( isset( $element['widgetType'] ) && ( 'form' === $element['widgetType'] || 'ehp-form' === $element['widgetType'] ) ) {
+                $is_found = true;
+                
+                // Check if Register Post action is enabled
+                $submit_actions = [];
+                if ( 'form' === $element['widgetType'] && ! empty( $element['settings']['submit_actions'] ) ) {
+                    $submit_actions = $element['settings']['submit_actions'];
+                } elseif ( 'ehp-form' === $element['widgetType'] && ! empty( $element['settings']['cool_formkit_submit_actions'] ) ) {
+                    $submit_actions = $element['settings']['cool_formkit_submit_actions'];
+                }
+
+                if ( in_array( 'eef-register-post', $submit_actions, true ) ) {
+                    // Get Post Type
+                    if ( ! empty( $element['settings'] ) ) {
+                        $post_type_slug = $element['settings']['eef-register-post-post-type'] ?? 'post';
+                        $post_type_obj = get_post_type_object( $post_type_slug );      
+                        
+                        if ( $post_type_obj ) {
+                            $post_type_label = $post_type_obj->labels->name;
+                            $post_type_url = admin_url( 'edit.php?post_type=' . $post_type_slug );
+                        } else {
+                            // Fallback if post type object not found (e.g. inactive CPT)
+                            $post_type_label = ucfirst( $post_type_slug );
+                            $post_type_url = admin_url( 'edit.php?post_type=' . $post_type_slug );
+                        }
+                    }
+                }
+            }
+
+            if ($is_found) {
+                $forms[] = [
+                    'post_id'         => $post->ID,
+                    'post_title'      => get_the_title( $post->ID ),
+                    'frontend_url'    => get_permalink( $post->ID ),
+                    'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
+                    'edit_url'        => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
+                    'widget_type'     => strtoupper($element['widgetType']),
+                    'post_type_label' => $post_type_label,
+                    'post_type_url'   => $post_type_url,
+                    'status' => in_array( 'eef-register-post', $submit_actions, true ),
+                ];
+            }
+
+            if ( ! empty( $element['elements'] ) ) {
+                $this->walk_elements( $element['elements'], $post, $forms );
+            }
+        }
+    }
+
+    /**
+     * Render pagination
+     *
+     * @param int $total_items
+     * @param int $current_page
+     */
+    private function render_pagination( $total_items, $current_page ) {
+        $total_pages = ceil( $total_items / $this->per_page );
+
+        if ( $total_pages > 1 ) {
+            $pagination_args = [
+                'base'      => add_query_arg( 'paged', '%#%' ),
+                'format'    => '',
+                'current'   => $current_page,
+                'total'     => $total_pages,
+                'prev_text' => '&laquo;',
+                'next_text' => '&raquo;',
+            ];
+
+            echo '<div class="formsdb-tablenav bottom"><div class="tablenav-pages" style="margin: 1em 0;">';
+            echo paginate_links( $pagination_args );
+            echo '</div></div>';
+        }
+    }
+}
+
+new FDBGP_Form_To_Post_Settings();

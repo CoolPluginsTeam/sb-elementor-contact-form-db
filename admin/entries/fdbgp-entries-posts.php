@@ -1,0 +1,306 @@
+<?php
+
+namespace Formsdb_Elementor_Forms\Admin\Entries;
+
+use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_List_Table;
+use Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard\FDBGP_Dashboard;
+use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Post_Bulk_Actions;
+
+/**
+ * Entries Posts
+ */     
+class FDBGP_Entries_Posts {
+
+    private static $instance = null;
+
+    public static $post_type = 'cfkef-entries';
+
+    /**
+     * Get instance
+     * 
+     * @return FDBGP_Entries_Posts
+     */
+    public static function get_instance() {
+        if ( null === self::$instance ) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }       
+
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        add_action( 'init', [ $this, 'register_post_type' ] );
+        add_action('add_meta_boxes', [ $this, 'add_submission_meta_boxes' ]);
+        add_action('admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ]);
+        add_action('fdbgp_render_menu_pages', [ $this, 'output_entries_list' ]);
+        add_action( 'admin_head', [$this, 'add_screen_option'] );
+        add_filter('fdbgp_dashboard_tabs', [ $this, 'add_dashboard_tab' ]);
+
+        $bulk_actions = new FDBGP_Post_Bulk_Actions();
+        $bulk_actions->init();
+
+        remove_action( 'admin_head', 'wp_admin_bar_help_menu' );
+    }
+
+    /**
+     * Add dashboard tab
+     */
+    public function add_dashboard_tab($tabs) {
+        // $tabs[] = array(
+        //     'title' => 'Entries',
+        //     'position' => 2,
+        //     'slug' => 'cfkef-entries',
+        // );
+
+        return $tabs;
+    }
+
+    /**
+     * Enqueue admin scripts
+     */
+    public function enqueue_admin_scripts() {
+        wp_enqueue_style('cfkef-entries-posts', FDBGP_PLUGIN_URL . 'admin/assets/css/cfkef-entries-post.css', [], FDBGP_PLUGIN_VERSION);
+    }
+
+    /**
+     * Add admin menu
+     */
+    public function register_post_type() {
+        
+        $labels = array(
+            'name'                  => esc_html_x( 'Form Entries', 'Post Type General Name', 'cool-formkit' ),
+            'singular_name'         => esc_html_x( 'Entrie', 'Post Type Singular Name', 'cool-formkit' ),
+            'menu_name'             => esc_html__( 'Entrie', 'cool-formkit' ),
+            'name_admin_bar'        => esc_html__( 'Entrie', 'cool-formkit' ),
+            'archives'              => esc_html__( 'Entrie Archives', 'cool-formkit' ),
+            'attributes'            => esc_html__( 'Entrie Attributes', 'cool-formkit' ),
+            'parent_item_colon'     => esc_html__( 'Parent Item:', 'cool-formkit' ),
+            'all_items'             => esc_html__( 'Entries', 'cool-formkit' ),
+            'add_new_item'          => esc_html__( 'Add New Item', 'cool-formkit' ),
+            'add_new'               => esc_html__( 'Add New', 'cool-formkit' ),
+            'new_item'              => esc_html__( 'New Item', 'cool-formkit' ),
+            'edit_item'             => esc_html__( 'View Entry', 'cool-formkit' ),
+            'update_item'           => esc_html__( 'Update Item', 'cool-formkit' ),
+            'view_item'             => esc_html__( 'View Item', 'cool-formkit' ),
+            'view_items'            => esc_html__( 'View Items', 'cool-formkit' ),
+            'search_items'          => esc_html__( 'Search Item', 'cool-formkit' ),
+            'not_found'             => esc_html__( 'Not found', 'cool-formkit' ),
+            'not_found_in_trash'    => esc_html__( 'Not found in Trash', 'cool-formkit' ),
+            'featured_image'        => esc_html__( 'Featured Image', 'cool-formkit' ),
+            'set_featured_image'    => esc_html__( 'Set featured image', 'cool-formkit' ),
+            'remove_featured_image' => esc_html__( 'Remove featured image', 'cool-formkit' ),
+            'use_featured_image'    => esc_html__( 'Use as featured image', 'cool-formkit' ),
+            'insert_into_item'      => esc_html__( 'Insert into item', 'cool-formkit' ),
+            'uploaded_to_this_item' => esc_html__( 'Uploaded to this item', 'cool-formkit' ),
+            'items_list'            => esc_html__( 'Form entries list', 'cool-formkit' ),
+            'items_list_navigation' => esc_html__( 'Form entries list navigation', 'cool-formkit' ),
+            'filter_items_list'     => esc_html__( 'Filter from entry list', 'cool-formkit' ),
+        );
+
+        $args = array(
+            'label'                 => esc_html__( 'Form Entries', 'cool-formkit' ),
+            'description'           => esc_html__( 'cool-formkit-entry', 'cool-formkit' ),
+            'labels'                => $labels,
+            'supports'              => false,
+            'capabilities'          => ['create_posts' => 'do_not_allow'],
+            'map_meta_cap'          => true,
+            'hierarchical'          => false,
+            'public'                => false,
+            'show_ui'               => true, // Hide from dashboard
+            'show_in_menu'          => false,
+            'show_in_admin_bar'     => false,
+            'show_in_nav_menus'     => false,
+            'can_export'            => true,
+            'has_archive'           => false,
+            'publicly_queryable'    => false,
+            'rewrite'               => false,
+            'query_var'             => true,
+            'exclude_from_search'   => true,
+            'show_in_rest'          => true,
+        );
+
+        register_post_type( self::$post_type, $args );
+        
+    }
+
+    public static function get_view() {
+        return isset($_GET['view']) && in_array($_GET['view'], ['all', 'trash']) ? sanitize_text_field($_GET['view']) : 'all';
+    }
+
+    public function output_entries_list(FDBGP_Dashboard $dashboard) {
+        if($dashboard->current_screen(self::$post_type)){
+            ?>
+            <div class='cfk-promo'>
+                <div class="cfk-box cfk-left">
+                    <div class="wrapper-header">
+                        <div class="cfkef-save-all">
+                            <div class="cfkef-title-desc">
+                                <h2><?php esc_html_e( 'Hello+ Form Entries', 'elementor-contact-form-db' ); ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wrapper-body">
+                        <div class="cool-formkit-setting-table-con">
+                            <div class="cool-formkit-left-side-setting">
+                                <div id='cfkef-entries-list-wrapper'>
+                                    <?php
+                                    $list_table = FDBGP_List_Table::get_instance(self::$post_type);
+                                    $list_table->prepare_items();
+                                    $list_table->views();
+                                    ?>
+                                    <form method="get" action="<?php echo esc_url( admin_url( 'admin.php?page=cfkef-entries' ) ); ?>">
+                                        <input type="hidden" name="page" value="<?php echo esc_attr(self::$post_type); ?>">
+                                        <input type="hidden" name="view" value="<?php echo esc_attr(self::get_view()); ?>">
+                                        <?php 
+                                        $list_table->search_box( esc_html__( 'Search Forms', 'cool-formkit' ), 'cfkef-entries-search' );
+                                        $list_table->display();
+                                        ?>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php $this->render_right_sidebar(); ?>
+            </div>
+            <?php
+        }
+    }
+
+    /**
+     * Render right sidebar
+     */
+    private function render_right_sidebar() {
+        ?>
+        <div class="fdbgp-card cfk-left">
+            <h2 class="fdbgp-card-title">
+                <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'elementor-contact-form-db' ); ?>
+            </h2>
+
+            <div class="fdbgp-steps">
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">1</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'Create Form', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Create a page with Hello+ Form widget', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">2</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'Enable Action', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Enable "Collect Submissions" action in form settings.', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">3</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'Submit Form', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Submit your form from the frontend to save entries.', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+
+                <div class="fdbgp-step">
+                    <div class="fdbgp-step-number">4</div>
+                    <div class="fdbgp-step-content">
+                        <h3><?php esc_html_e( 'View Entries', 'elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'All submissions will appear in this list.', 'elementor-contact-form-db' ); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fdbgp-help-box">
+                <h4><?php esc_html_e( 'NEED HELP?', 'elementor-contact-form-db' ); ?></h4>
+                <ul>
+                    <li>▶ <?php esc_html_e( 'Watch Video Tutorial', 'elementor-contact-form-db' ); ?></li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=entries_page_sidebar" target="_blank" rel="noopener noreferrer">📄 <?php esc_html_e( 'Read Documentation', 'elementor-contact-form-db' ); ?></a></li>
+                    <li><a href="https://coolplugins.net/support/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=support&utm_content=entries_page_sidebar">🎧 <?php esc_html_e( 'Contact Support', 'elementor-contact-form-db' ); ?></a></li>
+                </ul>
+            </div>
+        </div>
+        <?php
+    }
+
+    public function add_screen_option() {
+        if(FDBGP_Dashboard::current_screen(self::$post_type)){
+            $args = array(
+                'label'   => 'Items per page',
+                'default' => 20,
+                'option'  => 'edit_'.self::$post_type.'_per_page',
+            );
+            
+            add_screen_option( 'per_page', $args );
+        }
+    }
+    
+
+    /**
+     * Add submission meta boxes
+     */
+    public function add_submission_meta_boxes() {
+        remove_meta_box('submitdiv', self::$post_type, 'side');
+        remove_meta_box('slugdiv', self::$post_type, 'normal');
+        
+        add_meta_box( 'cfkef-entries-meta-box', 'Entry Details', [ $this, 'render_submission_meta_box' ], self::$post_type, 'normal', 'high' );
+        add_meta_box( 'cfkef-form-info-meta-box', 'Form Info', [ $this, 'render_form_info_meta_box' ], self::$post_type, 'side', 'high' );
+    }
+
+    /**
+     * Render submission meta box
+     */
+    public function render_submission_meta_box() {
+        $form_data = get_post_meta(get_the_ID(), '_cfkef_form_data', true);
+        
+        $this->render_field_html("cfkef-entries-form-data", $form_data);
+    }
+
+    /**
+     * Render form info meta box
+     */
+    public function render_form_info_meta_box() {
+        $meta = get_post_meta(get_the_ID(), '_cfkef_form_meta', true);
+
+          // Update the form entry id in post meta
+        $submission_number = get_post_meta(get_the_ID(), '_cfkef_form_entry_id', true);
+  
+        // Update the form name in post meta
+        $form_name = get_post_meta(get_the_ID(), '_cfkef_form_name', true);
+  
+        // Update the element id in post meta
+        $element_id = get_post_meta(get_the_ID(), '_cfkef_element_id', true);
+
+        $post_id= isset($meta['page_url']['value']) ? url_to_postid(isset($meta['page_url']['value'])) : '';
+
+        $data=[
+            'Form Name' => array('value' => $form_name),
+            'Entry No.' => array('value' => $submission_number),
+            'Page Url' => array('value' => isset($meta['page_url']['value']) ? $meta['page_url']['value'] : ''),
+        ];
+
+        $this->render_field_html("cfkef-form-info", $data);
+    }
+
+    private function render_field_html($type, $data) {
+        echo '<div id="' . esc_attr($type) . '" class="cfkef-entries-field-wrapper">';
+        echo '<table class="cfkef-entries-data-table">';
+        echo '<tbody>';
+        
+        foreach ($data as $key => $value) {
+            $label = $value['title'] ?? $key;
+            echo '<tr class="cfkef-entries-data-table-key">';
+            echo '<td>' . esc_html($label) . '</td>';
+            echo '</tr>';
+            echo '<tr class="cfkef-entries-data-table-value">';
+            echo '<td>' . esc_html($value['value']) . '</td>';
+            echo '</tr>';
+        }
+        
+        echo '</tbody>';
+        echo '</table>';
+        echo '</div>';
+    }
+}
