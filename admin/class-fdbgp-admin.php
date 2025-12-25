@@ -83,10 +83,8 @@ if(!class_exists('FDBGP_Admin')) {
                         require_once FDBGP_PLUGIN_DIR . 'admin/views/settings.php';
                     }
                     
-                    // Only schedule crons if function exists
-                    if (function_exists('fdbgp_handle_unchecked_checkbox')) {
-                        fdbgp_handle_unchecked_checkbox();
-                    }
+                    // Call the function to schedule crons - now safe since settings.php no longer outputs HTML on include
+                    fdbgp_handle_unchecked_checkbox();
                 } 
         });
         }
@@ -199,7 +197,9 @@ if(!class_exists('FDBGP_Admin')) {
                     <?php
                     switch ($tab) {
                         case 'settings':
-                            include_once 'views/settings.php';
+                            require_once 'views/settings.php';
+                            $settings_page = new FDBGP_Settings_Page();
+                            $settings_page->render();
                             break;
                         case 'post-type':
                             include_once 'views/form-to-posttype.php';

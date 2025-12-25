@@ -5,7 +5,9 @@ if (!defined('ABSPATH')) {
 
 use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Google_API_Functions;
 
-
+/**
+ * Handle unchecked checkbox logic for cron scheduling
+ */
 function fdbgp_handle_unchecked_checkbox() {
     $choice  = get_option('cpfm_opt_in_choice_cool_forms');
     $options = get_option('cfef_usage_share_data');
@@ -40,7 +42,7 @@ function fdbgp_handle_unchecked_checkbox() {
             }
 
             // input form mask
-            if(method_exists('Mask_Form_Elementor\mfe_cronjob', 'mfe_send_data')){
+            if(method_exists('Mask_Form_Elementor\\mfe_cronjob', 'mfe_send_data')){
                 wp_clear_scheduled_hook('mfe_extra_data_update');
             }
 
@@ -87,7 +89,7 @@ function fdbgp_handle_unchecked_checkbox() {
             }
 
             // input form mask
-            if(method_exists('Mask_Form_Elementor\mfe_cronjob', 'mfe_send_data')){
+            if(method_exists('Mask_Form_Elementor\\mfe_cronjob', 'mfe_send_data')){
                 if (!wp_next_scheduled('mfe_extra_data_update')) {
                     wp_schedule_event(time(), 'every_30_days', 'mfe_extra_data_update');
                     Mask_Form_Elementor\mfe_cronjob::mfe_send_data();
@@ -97,69 +99,97 @@ function fdbgp_handle_unchecked_checkbox() {
     }
 }
 
-$instance_api = new FDBGP_Google_API_Functions();
-
-// Get Google settings
-$google_settings = get_option('fdbgp_google_settings', array(
-    'client_id' => '',
-    'client_secret' => '',
-    'client_token' => ''
-));
-
-$oauth_code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
-// Get site domain and redirect URI
-$site_url = parse_url(site_url(), PHP_URL_HOST);
-$site_domain = str_replace('www.', '', $site_url);
-$redirect_uri = admin_url('admin.php?page=formsdb&tab=settings');
-
-// Process form submission
-$success_message = '';
-$error_message = '';
-$connection_status = false;
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'])) {
-    if (!current_user_can('manage_options')) wp_die('Unauthorized');
-    // Verify nonce
-    if (check_admin_referer('fdbgp_settings_action', 'fdbgp_settings_nonce')) {
-
-        $cfef_usage_share_data = isset($_POST['cfef_usage_share_data']) ? sanitize_text_field($_POST['cfef_usage_share_data']) : '';
-        update_option( "cfef_usage_share_data",  $cfef_usage_share_data);
-
-        fdbgp_handle_unchecked_checkbox();        
-        // Save Google Settings
-        if (isset($_POST['save_google_settings'])) {
-            $new_settings = array(
-                'client_id' => sanitize_text_field($_POST['client_id'] ?? ''),
-                'client_secret' => sanitize_text_field($_POST['client_secret'] ?? ''),
-                'client_token' => sanitize_text_field($_POST['client_token'] ?? $google_settings['client_token'] ?? ''),
-            );
-
-            update_option('fdbgp_google_settings', $new_settings);
-            $google_settings = $new_settings;
-            $success_message = __('Settings saved successfully!', 'elementor-contact-form-db');
-        }
-
-        // Revoke Token
-        if (isset($_POST['revoke_token'])) {
-            $google_settings['client_token'] = '';
-            update_option('fdbgp_google_settings', $google_settings);
-            delete_option('fdbgp_google_access_token');
-            $success_message = __('Token revoked successfully!', 'elementor-contact-form-db');
-        }
-
-        // Reset Settings
-        if (isset($_POST['reset_google_settings'])) {
-            delete_option('fdbgp_google_settings');
-            delete_option('fdbgp_google_access_token');
-            $google_settings = array('client_id' => '', 'client_secret' => '', 'client_token' => '');
-            $success_message = __('Settings reset successfully!', 'elementor-contact-form-db');
-        }
-    } else {
-        $error_message = __('Security check failed. Please try again.', 'elementor-contact-form-db');
+/**
+ * Settings Page Class - Only renders HTML when explicitly called
+ */
+class FDBGP_Settings_Page {
+    
+    private $instance_api;
+    private $google_settings;
+    private $oauth_code;
+    private $site_domain;
+    private $redirect_uri;
+    private $success_message = '';
+    private $error_message = '';
+    
+    public function __construct() {
+        $this->instance_api = new FDBGP_Google_API_Functions();
+        
+        $this->google_settings = get_option('fdbgp_google_settings', array(
+            'client_id' => '',
+            'client_secret' => '',
+            'client_token' => ''
+        ));
+        
+        $this->oauth_code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
+        
+        $site_url = parse_url(site_url(), PHP_URL_HOST);
+        $this->site_domain = str_replace('www.', '', $site_url);
+        $this->redirect_uri = admin_url('admin.php?page=formsdb&tab=settings');
     }
-}
+    
+    /**
+     * Process form submission
+     */
+    private function process_form() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'])) {
+            if (!current_user_can('manage_options')) wp_die('Unauthorized');
+            
+            if (check_admin_referer('fdbgp_settings_action', 'fdbgp_settings_nonce')) {
 
-?>
+                $cfef_usage_share_data = isset($_POST['cfef_usage_share_data']) ? sanitize_text_field($_POST['cfef_usage_share_data']) : '';
+                update_option( "cfef_usage_share_data",  $cfef_usage_share_data);
+
+                fdbgp_handle_unchecked_checkbox();        
+                
+                // Save Google Settings
+                if (isset($_POST['save_google_settings'])) {
+                    $new_settings = array(
+                        'client_id' => sanitize_text_field($_POST['client_id'] ?? ''),
+                        'client_secret' => sanitize_text_field($_POST['client_secret'] ?? ''),
+                        'client_token' => sanitize_text_field($_POST['client_token'] ?? $this->google_settings['client_token'] ?? ''),
+                    );
+
+                    update_option('fdbgp_google_settings', $new_settings);
+                    $this->google_settings = $new_settings;
+                    $this->success_message = __('Settings saved successfully!', 'elementor-contact-form-db');
+                }
+
+                // Revoke Token
+                if (isset($_POST['revoke_token'])) {
+                    $this->google_settings['client_token'] = '';
+                    update_option('fdbgp_google_settings', $this->google_settings);
+                    delete_option('fdbgp_google_access_token');
+                    $this->success_message = __('Token revoked successfully!', 'elementor-contact-form-db');
+                }
+
+                // Reset Settings
+                if (isset($_POST['reset_google_settings'])) {
+                    delete_option('fdbgp_google_settings');
+                    delete_option('fdbgp_google_access_token');
+                    $this->google_settings = array('client_id' => '', 'client_secret' => '', 'client_token' => '');
+                    $this->success_message = __('Settings reset successfully!', 'elementor-contact-form-db');
+                }
+            } else {
+                $this->error_message = __('Security check failed. Please try again.', 'elementor-contact-form-db');
+            }
+        }
+    }
+    
+    /**
+     * Render the settings page - only call this from admin page display
+     */
+    public function render() {
+        $this->process_form();
+        
+        $google_settings = $this->google_settings;
+        $instance_api = $this->instance_api;
+        $oauth_code = $this->oauth_code;
+        $site_domain = $this->site_domain;
+        $redirect_uri = $this->redirect_uri;
+        $success_message = $this->success_message;
+        $error_message = $this->error_message;
+        ?>
 
 <div class="fdbgp-settings-box">
     <div class="cfk-promo">
@@ -410,3 +440,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'
     </div>
 </div>
 </div>
+        <?php
+    }
+}
