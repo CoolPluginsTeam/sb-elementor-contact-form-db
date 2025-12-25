@@ -24,3 +24,5 @@ LICENSE export-ignore
 .distignore export-ignore
 tsconfig.json export-ignore
 assets/js/fdbgp-editor.js export-ignore
+admin/assets/css/cfkef-entries-post.css.map export-ignore
+admin/assets/css/cfkef-entries-post.scss export-ignore
