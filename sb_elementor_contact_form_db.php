@@ -71,31 +71,37 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function setting_redirect(){
-			// Get site domain and redirect URI
-			$site_url = parse_url(site_url(), PHP_URL_HOST);
-			$site_domain = str_replace('www.', '', $site_url);
-			$redirect_uri = admin_url('admin.php?page=formsdb');
-
+			
 			// Handle OAuth callback
-			if (isset($_GET['code']) && !empty($_GET['code'])) {
+			$code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
+			
+			if(!empty($code)){
 				// Get Google settings
-				$google_settings = get_option('fdbgp_google_settings', array(
-					'client_id' => '',
+			$google_settings = get_option(
+				'fdbgp_google_settings',
+				array(
+					'client_id'     => '',
 					'client_secret' => '',
-					'client_token' => ''
-				));
+					'client_token'  => '',
+				)
+			);
 
-				$code = sanitize_text_field($_GET['code']);
-				$google_settings['client_token'] = $code;
-				update_option('fdbgp_google_settings', $google_settings);
+			// Save token (already sanitized earlier)
+			$google_settings['client_token'] = sanitize_text_field( wp_unslash( $code ) );
+			update_option( 'fdbgp_google_settings', $google_settings );
 
-				$redirect_url = remove_query_arg('code');
-				$redirect_uri = preg_replace('&code='.$code, '', $redirect_uri);
-				$redirect_url = preg_replace('/&scope=[^&]*/', '', $redirect_url);
+			// Clean redirect URL safely
+			$redirect_url = remove_query_arg(
+				array( 'code', 'scope', 'state' )
+			);
+
+			wp_safe_redirect( $redirect_url );
+			exit;
+
 
 				// Remove code from URL and redirect
-				wp_redirect($redirect_url);
-				exit;
+				// wp_safe_redirect($redirect_url);
+				// exit;
 			}
 		}
 

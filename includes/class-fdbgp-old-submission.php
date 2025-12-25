@@ -55,16 +55,19 @@ class FDBGP_Old_Submission {
     public function get_form_ids() {
         global $wpdb;
 
-        $sql = "SELECT DISTINCT(pm.meta_value) AS form_id
-                FROM {$wpdb->posts} p 
-                JOIN {$wpdb->postmeta} pm ON (
-                    p.ID = pm.post_id AND 
-                    pm.meta_key = 'sb_elem_cfd_form_id'
-                ) 
-                WHERE 
-                    p.post_type = 'elementor_cf_db'
-                    AND p.post_status = 'publish'
-                    AND pm.meta_value != ''";
+        $sql = $wpdb->prepare(
+                "SELECT DISTINCT pm.meta_value AS form_id
+                FROM {$wpdb->posts} p
+                INNER JOIN {$wpdb->postmeta} pm
+                    ON p.ID = pm.post_id
+                WHERE p.post_type = %s
+                AND p.post_status = %s
+                AND pm.meta_key = %s
+                AND pm.meta_value != ''",
+                'elementor_cf_db',
+                'publish',
+                'sb_elem_cfd_form_id'
+            );
 
         $results = $wpdb->get_results($sql);
         $form_ids = array();

@@ -171,7 +171,7 @@ class FDBGP_Dashboard {
 
     private static function fdbgp_current_page($slug)
     {
-        $current_page = isset($_REQUEST['page']) ? esc_html($_REQUEST['page']) : (isset($_REQUEST['post_type']) ? esc_html($_REQUEST['post_type']) : '');
+        $current_page = isset($_REQUEST['page']) ? sanitize_key($_REQUEST['page']) : (isset($_REQUEST['post_type']) ? sanitize_key($_REQUEST['post_type']) : '');
         $status=false;
 
         if (in_array($current_page, self::get_allowed_pages()) && $current_page === $slug) {

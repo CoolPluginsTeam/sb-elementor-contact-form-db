@@ -281,7 +281,7 @@ class FDBGP_List_Table extends WP_List_Table {
         );
 
         if(!empty($search)){
-            $query .= $wpdb->prepare(" AND post_title LIKE '%%%s%%'", $wpdb->esc_like($search));
+            $query .= $wpdb->prepare(" AND post_title LIKE %s", '%' . $wpdb->esc_like($search) . '%');
         }
 
         

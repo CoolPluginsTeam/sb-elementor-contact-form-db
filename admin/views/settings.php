@@ -118,7 +118,7 @@ $connection_status = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['fdbgp_settings_nonce'])) {
     // Verify nonce
-    if (wp_verify_nonce($_POST['fdbgp_settings_nonce'], 'fdbgp_settings_action')) {
+    if (check_admin_referer('fdbgp_settings_action', 'fdbgp_settings_nonce')) {
 
         $cfef_usage_share_data = isset($_POST['cfef_usage_share_data']) ? sanitize_text_field($_POST['cfef_usage_share_data']) : '';
         update_option( "cfef_usage_share_data",  $cfef_usage_share_data);
