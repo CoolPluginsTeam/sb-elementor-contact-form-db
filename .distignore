@@ -50,3 +50,5 @@ tsconfig.json
 *js.LICENSE.txt
 *.scss
 assets/js/fdbgp-editor.js
+admin/assets/css/cfkef-entries-post.css.map
+admin/assets/css/cfkef-entries-post.scss

@@ -1,31 +1,5 @@
 jQuery(document).ready(function ($) {
-
-    function handleFormsDBSubmenu() {
-        var $entriesItem = jQuery('.wp-submenu a[href="admin.php?page=formsdb"]').closest('li');
-
-        if (!$entriesItem.length) {
-            return;
-        }
-
-        var $formKitItem = jQuery('.wp-submenu a[href="admin.php?page=cool-formkit"]').closest('li');
-
-        if (!$formKitItem.length) {
-            return;
-        }
-
-        var $entriesClone = $entriesItem.clone();
-        $entriesItem.remove();
-
-        $formKitItem.after($entriesClone);
-
-        var $link = jQuery('.wp-submenu a[href="admin.php?page=formsdb"]');
-        $link.prepend('↳ ').css({
-            'padding-left': '10px',
-            'font-style': 'italic',
-            'opacity': '0.85'
-        });
-    }
-
+    
     function handleTermLink() {
         const termsLinks = document.querySelectorAll('.fdbgp-ccpw-see-terms');
         const termsBox = document.getElementById('termsBox');
