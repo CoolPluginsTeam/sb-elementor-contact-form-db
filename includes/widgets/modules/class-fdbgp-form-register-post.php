@@ -70,6 +70,14 @@ class FDBGP_Register_Post extends Action_Base {
 			]
 		);
 
+		$widget->add_control(
+			'eef-register-post-info',
+			[
+				'type' => \Elementor\Controls_Manager::RAW_HTML,
+				'raw' => \esc_html__( 'Important: To save form fields as post data, you must map each field from the "Advanced" tab of the respective form field settings.', 'extensions-for-elementor-form' ),
+				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+			]
+		);
 		/**
 		 * TODO:
 		 * 1. Add or edit existent post.

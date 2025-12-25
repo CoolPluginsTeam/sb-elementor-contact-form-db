@@ -66,11 +66,11 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 	 */
 	public function register_settings_section( $widget ) {
 		$control_id = 'eef-register-post-section';
-        if ( in_array( $control_id, self::$registered_actions, true ) ) {
-            return; // Already registered
-        }
+		if ( in_array( $control_id, self::$registered_actions, true ) ) {
+			return; // Already registered
+		}
 
-        self::$registered_actions[] = $control_id;
+		self::$registered_actions[] = $control_id;
 
 		$widget->start_controls_section(
 			'eef-register-post-section',
@@ -79,6 +79,15 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 				'condition' => [
 					'cool_formkit_submit_actions' => $this->get_name(),
 				],
+			]
+		);
+
+		$widget->add_control(
+			'eef-register-post-info',
+			[
+				'type' => \Elementor\Controls_Manager::RAW_HTML,
+				'raw' => \esc_html__( 'Important: To save form fields as post data, you must map each field from the "Advanced" tab of the respective form field settings.', 'extensions-for-elementor-form' ),
+				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
 			]
 		);
 
