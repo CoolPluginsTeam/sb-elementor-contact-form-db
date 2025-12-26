@@ -104,7 +104,7 @@ This plugin uses the **Google APIs Client Library for PHP** for Google Sheets in
 * License: Apache License 2.0  
 * License URL: https://www.apache.org/licenses/LICENSE-2.0
 
-[FormsDB on GitHub.](https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db) 
+FormsDB is a fully open-source plugin. You can view the complete source code on [GitHub](https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db)
 
 == Screenshots ==
 
