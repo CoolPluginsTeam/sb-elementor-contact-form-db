@@ -104,6 +104,8 @@ This plugin uses the **Google APIs Client Library for PHP** for Google Sheets in
 * License: Apache License 2.0  
 * License URL: https://www.apache.org/licenses/LICENSE-2.0
 
+[FormsDB on GitHub.](https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db) 
+
 == Screenshots ==
 
 1. Sync Elementor Forms to Google Sheets
