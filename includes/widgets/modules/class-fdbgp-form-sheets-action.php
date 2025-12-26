@@ -463,7 +463,7 @@ class FDBGP_Form_Sheets_Action extends Action_Base {
         if ( empty( $fdbgp_google_settings['client_token'] ) ) {
             $fdbgp_html = sprintf(
                 '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb&tab=settings"> <strong>%2$s</strong></a>.</div>',
-                esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'elementor-contact-form-db' ),
+                esc_html__( 'Authentication required. Connect your Google account to use Sheets.', 'elementor-contact-form-db' ),
                 esc_html__( 'Click Here', 'elementor-contact-form-db' )
             );
             $widget->start_controls_section(

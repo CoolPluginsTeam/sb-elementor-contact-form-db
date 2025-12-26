@@ -6,7 +6,7 @@
  * Description: Connect Elementor forms with Google Sheets to sync form entries, or save frontend form submissions in any WordPress post type using Elementor Pro or Hello Plus forms.
  * Author:      Cool Plugins
  * Version:     2.0.0
- * Author URI:  https://coolplugins.net/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
+ * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
  * Text Domain: elementor-contact-form-db
  * Requires Plugins: elementor
  * Elementor tested up to: 3.33.4
@@ -64,10 +64,20 @@ if(!class_exists('FDBGP_Main')) {
 
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
 			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
-
+			add_filter( 'plugin_row_meta', array( $this, 'fdbgp_plugin_row_meta' ), 10, 2 );
 
 			$this->includes();
 			
+		}
+
+		public function fdbgp_plugin_row_meta( $plugin_meta, $plugin_file ) {
+			if ( FDBGP_PLUGIN_BASENAME === $plugin_file ) {
+				$row_meta = array(
+					'docs' => '<a href="' . esc_url('https://docs.coolplugins.net/plugin/formsdb-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list') . '" aria-label="' . esc_attr(esc_html__('View FormsDB Documentation', 'elementor-contact-form-db')) . '" target="_blank">' . esc_html__('Docs', 'elementor-contact-form-db') . '</a>',
+				);
+				$plugin_meta = array_merge( $plugin_meta, $row_meta );
+			}
+			return $plugin_meta;
 		}
 
 		public function setting_redirect(){

@@ -15,7 +15,7 @@ $enabled_elements = get_option('cfkef_enabled_elements', array());
 $popular_elements = array('range_slider');
 $updated_elements = array('country_code');
 
-$first_plugin = 'fdbgp_plugin';
+$first_plugin = 'formsdb';
 
 
 
@@ -152,7 +152,7 @@ $form_elements = array(
         'how_to' => str_replace('utm_source=cfkef_plugin', 'utm_source=' . esc_attr($first_plugin),'https://coolformkit.com/features/conditional-mailchimp-for-elementor-form/?utm_source=cfkef_plugin&utm_medium=inside&utm_campaign=demo&utm_content=dashboard'),
         'icon' => FDBGP_PLUGIN_URL . 'assets/icons/mailchimp-logo.svg',
         'pro' => true,
-        'pro_link' => 'https://coolplugins.net/cool-formkit-for-elementor-forms/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=get-pro&utm_content=plugins-dashboard/'
+        'pro_link' => 'https://coolplugins.net/cool-formkit-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=get-pro&utm_content=plugins-dashboard/'
     ),
 );
 
