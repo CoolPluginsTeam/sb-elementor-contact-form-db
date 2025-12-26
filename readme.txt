@@ -21,7 +21,7 @@ FormsDB works with both **Elementor Pro** and **Hello Plus** forms. It helps you
 
 👉 **[Elementor Forms to GSheets - Video Tutorials](https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=readme&utm_campaign=docs&utm_content=video_tutorials)**
 
-https://youtu.be/CV3ZtcOVWzU
+https://youtu.be/HTa7bf1ZuqM
 
 To extend Elementor form features further, you can use **[Cool FormKit](https://coolformkit.com/?utm_source=formsdb&utm_medium=readme&utm_campaign=get_pro&utm_content=below_video)** along with FormsDB to unlock advanced features such as **[Range Slider](https://coolformkit.com/features/range-slider-for-elementor-form/?utm_source=formsdb&utm_medium=readme&utm_campaign=features&utm_content=below_video)**, **[Signature Field](https://coolformkit.com/features/signature-field-for-elementor-form/?utm_source=formsdb&utm_medium=readme&utm_campaign=features&utm_content=below_video)**, **[Conditional Logic](https://coolformkit.com/features/conditional-logic-for-elementor-form/?utm_source=formsdb&utm_medium=readme&utm_campaign=features&utm_content=below_video)**, **[Calculator](https://coolformkit.com/features/calculator-for-elementor/?utm_source=formsdb&utm_medium=readme&utm_campaign=features&utm_content=below_video)**, and many more advanced fields to build smarter and more dynamic forms with Elementor.
 
@@ -95,6 +95,8 @@ Easily add The Events Calendar widgets to Elementor and display events in grid, 
 * **[LocoAI - AI Translation for Loco Translate](https://locoaddon.com/?utm_source=formsdb&utm_medium=readme&utm_campaign=get_pro&utm_content=other_addons)**  
 Translate WordPress plugins and themes automatically using AI with one-click string translation inside Loco Translate.
 
+FormsDB is a fully open-source plugin. You can view the complete source code on GitHub - https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db
+
 #### Third-Party Libraries
 
 This plugin uses the **Google APIs Client Library for PHP** for Google Sheets integration.
@@ -104,7 +106,6 @@ This plugin uses the **Google APIs Client Library for PHP** for Google Sheets in
 * License: Apache License 2.0  
 * License URL: https://www.apache.org/licenses/LICENSE-2.0
 
-FormsDB is a fully open-source plugin. You can view the complete source code on [GitHub](https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db)
 
 == Screenshots ==
 
@@ -177,6 +178,8 @@ To sync Elementor form submissions with Google Sheets:
 - Open **Elementor → FormsDB → Settings**.
 - Enter your **Google API Client ID** and **Client Secret**.
 - Connect your Google account to complete the setup.
+
+https://youtu.be/CV3ZtcOVWzU
 
 👉 [Google API Setup to Connect with Google Sheets](https://docs.coolplugins.net/doc/google-api-setup-connect-elementor-google-sheets/?utm_source=formsdb&utm_medium=readme&utm_campaign=docs&utm_content=installation)
 
