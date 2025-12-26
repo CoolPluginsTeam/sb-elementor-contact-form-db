@@ -2,15 +2,15 @@
 
 /*
  * Plugin Name: FormsDB for Elementor Forms
- * Plugin URI:  https://coolformkit.com/
+ * Plugin URI:  https://coolplugins.net/product/formsdb-connect-elementor-forms-google-sheets/?utm_source=formsdb&utm_medium=inside&utm_campaign=plugin_page&utm_content=plugins_list
  * Description: Connect Elementor forms with Google Sheets to sync form entries, or save frontend form submissions in any WordPress post type using Elementor Pro or Hello Plus forms.
  * Author:      Cool Plugins
  * Version:     2.0.0
  * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
  * Text Domain: elementor-contact-form-db
  * Requires Plugins: elementor
- * Elementor tested up to: 3.33.4
- * Elementor Pro tested up to: 3.33.2
+ * Elementor tested up to: 3.34.0
+ * Elementor Pro tested up to: 3.34.0
  */
 
 namespace Formsdb_Elementor_Forms;
