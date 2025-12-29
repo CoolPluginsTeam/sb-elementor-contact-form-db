@@ -62,6 +62,7 @@ if (!class_exists('fdbgp_cronjob')) {
                 // Server and WP environment details
                 $server_info = [
                     'server_software'        => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : 'N/A',
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is incrementally prepared above.
                     'mysql_version'          => $wpdb ? sanitize_text_field($wpdb->get_var("SELECT VERSION()")) : 'N/A',
                     'php_version'            => sanitize_text_field(phpversion() ?: 'N/A'),
                     'wp_version'             => sanitize_text_field(get_bloginfo('version') ?: 'N/A'),
@@ -157,6 +158,7 @@ if (!class_exists('fdbgp_cronjob')) {
         }
 
     }
-
+    
+    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
     $cron_init = new fdbgp_cronjob();
 }

@@ -19,7 +19,7 @@ use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Ajax_Handlers;
  * Register Custom Control
  */
 add_action( 'elementor/controls/register', function ( $controls_manager ) {
-    
+    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound	
     class HelloPlus_FDBGP_Control_Dynamic_Select2 extends \Elementor\Base_Data_Control {
         public function get_type() {
             return 'fdbgp_dynamic_select2';
@@ -345,10 +345,10 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             }
 
             // Add System Fields for mapping
-            $fdbgp_fields['user_ip']         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '';
-            $fdbgp_fields['user_agent']      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '';
+            $fdbgp_fields['user_ip']         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR']) ) : '';
+            $fdbgp_fields['user_agent']      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash($_SERVER['HTTP_USER_AGENT']) ) : '';
             $fdbgp_fields['submission_date'] = current_time( 'mysql' );
-            $fdbgp_fields['page_url']        = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : '';
+            $fdbgp_fields['page_url']        = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash($_SERVER['HTTP_REFERER']) ) : '';
             
             try {
                 $fdbgp_headers = isset( $fdbgp_settings[ $this->add_prefix( 'sheet_headers' ) ] ) ? $fdbgp_settings[ $this->add_prefix( 'sheet_headers' ) ] : [];

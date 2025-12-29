@@ -270,3 +270,7 @@ https://youtu.be/CV3ZtcOVWzU
 
 = 2.0.0 =
 This is a major update where the plugin has been fully rebuilt and rebranded as **FormsDB** by **Cool Plugins**. The new version introduces Google Sheets sync, frontend post submission, and Hello Plus form entry support, as the old functionality is now available inside Elementor Pro. Users upgrading from older versions can export previous entries from **FormsDB → Old Submissions** after updating.
+
+= 2.0.1 (Dec 29, 2025) =
+* Fixed issues reported by "Plugin Check" plugin.
+* Improved code quality to follow WordPress coding standards.

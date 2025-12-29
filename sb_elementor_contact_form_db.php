@@ -83,9 +83,9 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function setting_redirect(){
-			
 			// Handle OAuth callback
-			$code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field(wp_unslash($_GET['code'])) : '';
 			
 			if(!empty($code)){
 				// Get Google settings
@@ -99,7 +99,7 @@ if(!class_exists('FDBGP_Main')) {
 				);
 
 				// Save token (already sanitized earlier)
-				$google_settings['client_token'] = sanitize_text_field( wp_unslash( $code ) );
+				$google_settings['client_token'] = $code;
 				update_option( 'fdbgp_google_settings', $google_settings );
 
 				// Clean redirect URL safely
@@ -114,6 +114,10 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function FDBGP_plugins_loaded() {
+			if (!get_option( 'formsdb_initial_version' ) ) {
+                add_option( 'formsdb_initial_version', FDBGP_PLUGIN_VERSION );
+            }
+			
 			// Add plugin dashboard link
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'FDBGP_plugin_dashboard_link' ) );
 

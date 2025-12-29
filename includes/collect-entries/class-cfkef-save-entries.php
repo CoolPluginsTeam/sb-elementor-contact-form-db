@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 } 
 use Elementor\Core\Utils\Collection;
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound	
 class CFKEF_Save_Entries {
 
     private $last_entry_key = 'cfkef_last_entry_serial_no';

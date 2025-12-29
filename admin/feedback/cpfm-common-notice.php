@@ -56,7 +56,7 @@ class CPFM_Feedback_Notice {
          *     'pages' => ['dashboard', 'cpfm_'],
          * ]);
          */
-        
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
         do_action('cpfm_register_notice');
     }
 
@@ -95,7 +95,7 @@ class CPFM_Feedback_Notice {
 
 
 
-        wp_enqueue_style('cpfm-common-review-style', FDBGP_PLUGIN_URL . 'admin/feedback/css/cpfm-admin-feedback.css');
+        wp_enqueue_style( 'cpfm-common-review-style', FDBGP_PLUGIN_URL . 'admin/feedback/css/cpfm-admin-feedback.css', array(), FDBGP_PLUGIN_VERSION );
 
 
         wp_enqueue_script(
@@ -153,7 +153,7 @@ class CPFM_Feedback_Notice {
                     $plugin_name = isset($notice['plugin_name'])?sanitize_key($notice['plugin_name']):'';
 
                     if($plugin_name){
-
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                         do_action('cpfm_after_opt_in_' . $plugin_name, $category);
                     }
               

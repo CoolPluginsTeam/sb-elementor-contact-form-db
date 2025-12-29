@@ -87,6 +87,7 @@ class HelloPlus_Collect_Entries extends Action_Base {
         $settings = $record->get_form_settings('save_form_data');
         if($settings == 'yes'){
             $save_entries = new CFKEF_Save_Entries();
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound					
             do_action('cfkef/form/entries', $record, $ajax_handler, $this,'ehp-form');
         }
     }

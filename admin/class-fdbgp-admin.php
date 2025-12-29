@@ -58,9 +58,11 @@ if(!class_exists('FDBGP_Admin')) {
                 CPFM_Feedback_Notice::cpfm_register_notice('cool_forms', $notice);
 
                     if (!isset($GLOBALS['cool_plugins_feedback'])) {
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Shared across Cool Plugins products.
                         $GLOBALS['cool_plugins_feedback'] = [];
                     }
                     
+                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Shared across Cool Plugins products.
                     $GLOBALS['cool_plugins_feedback']['cool_forms'][] = $notice;
             
             });

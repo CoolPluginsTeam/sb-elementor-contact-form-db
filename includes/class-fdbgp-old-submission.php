@@ -69,7 +69,7 @@ class FDBGP_Old_Submission {
                 'sb_elem_cfd_form_id'
             );
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above with $wpdb->prepare().
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above with $wpdb->prepare().        
         $results = $wpdb->get_results( $sql );
         $form_ids = array();
 
@@ -102,7 +102,7 @@ class FDBGP_Old_Submission {
                     p.post_type = 'elementor_cf_db'
                     AND p.post_status = 'publish'";
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query uses hardcoded safe values, no user input.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query uses hardcoded safe values, no user input.
         $results = $wpdb->get_results( $sql );
         $pages = array();
 
@@ -131,7 +131,7 @@ class FDBGP_Old_Submission {
             $post_id
         );
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is prepared above with $wpdb->prepare().
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above with $wpdb->prepare().
         $meta = $wpdb->get_var( $sql );
         
         if ($meta) {
@@ -152,8 +152,10 @@ class FDBGP_Old_Submission {
         $rows = array();
         $args = array(
             'post_type' => 'elementor_cf_db',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
             'meta_key' => 'sb_elem_cfd_submitted_on_id',
             'posts_per_page' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_value' => $submitted_id,
             'post_status' => 'publish'
         );
@@ -209,7 +211,9 @@ class FDBGP_Old_Submission {
         $args = array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
             'meta_key' => 'sb_elem_cfd_form_id',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_value' => $form_id,
             'post_status' => 'publish'
         );

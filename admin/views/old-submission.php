@@ -131,7 +131,7 @@ class FDBGP_Old_Submission_View {
     }
 
     private function render_preview() {
-        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce(wp_unslash($_POST['fdbgp_old_export_nonce']), 'fdbgp_old_export')) {
+        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['fdbgp_old_export_nonce'])), 'fdbgp_old_export')) {
             return; // Invalid or missing nonce - silently exit
         }
         

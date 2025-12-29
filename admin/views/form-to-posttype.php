@@ -245,6 +245,7 @@ class FDBGP_Form_To_Post_Settings {
             'post_type'      => 'any',
             'post_status'    => 'any',
             'posts_per_page' => -1,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Necessary to find Elementor posts, results are cached with transients.
             'meta_key'       => '_elementor_data',
         ] );
 

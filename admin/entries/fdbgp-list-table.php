@@ -299,10 +299,10 @@ class FDBGP_List_Table extends WP_List_Table {
 
         }
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- orderby and order are already validated against whitelist.
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- orderby and order are already validated against whitelist (line 243-245) and escaped with esc_sql (line 259-260).
         $query .= $wpdb->prepare( " ORDER BY {$args['orderby']} {$args['order']} LIMIT %d OFFSET %d", $args['posts_per_page'], ( $args['paged'] - 1 ) * $args['posts_per_page'] );
 
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is incrementally prepared above.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Query is incrementally prepared above. orderby/order validated against whitelist and escaped. Caching not used for list table queries.
         $this->items = $wpdb->get_results( $query );
 
         $total_posts=wp_count_posts($this->post_type);

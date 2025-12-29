@@ -325,7 +325,7 @@ class FDBGP_Post_Bulk_Actions {
 			$query .= $wpdb->prepare( ' AND post_title LIKE %s', '%' . $wpdb->esc_like( $search ) . '%' );
 		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is incrementally prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is incrementally prepared above.
 		$posts = $wpdb->get_results( $query );
 		
 		foreach($posts as $post){
@@ -369,6 +369,7 @@ class FDBGP_Post_Bulk_Actions {
 		 *
 		 * @param array $items Dropdown items.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$items = apply_filters( 'cfkef_admin_entries_bulk_actions_get_dropdown_items', $items );
 
 		// phpcs:enable WPForms.Comments.ParamTagHooks.InvalidParamTagsQuantity

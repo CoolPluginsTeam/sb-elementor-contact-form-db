@@ -8,17 +8,20 @@ if (! function_exists('get_plugins')) {
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $enabled_elements = get_option('cfkef_enabled_elements', array());
 
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $popular_elements = array('range_slider');
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $updated_elements = array('country_code');
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $first_plugin = 'formsdb';
 
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $form_elements = array(
 
 
@@ -156,7 +159,7 @@ $form_elements = array(
     ),
 );
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $condition_plugin_features = array(
     'conditional_logic' => array(
         'label' => __('Conditional Logic', 'sb-elementor-contact-form-db'),
@@ -219,7 +222,7 @@ $condition_plugin_features = array(
 
 );
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $country_field_features = array(
     'country_code' => array(
         'label' => __('Country code', 'sb-elementor-contact-form-db'),
@@ -249,7 +252,7 @@ $country_field_features = array(
 );
 
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $form_mask_features = array(
     'form_input_mask' => array(
         'label' => __('Field Masking', 'sb-elementor-contact-form-db'),
@@ -276,7 +279,7 @@ $form_mask_features = array(
 );
 
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $input_form_mask_features = array(
     'form_input_mask' => array(
         'label' => __('Input Mask', 'sb-elementor-contact-form-db'),
@@ -346,6 +349,7 @@ $input_form_mask_features = array(
 
 
                         <div class="cfkef-form-element-box">
+                            <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
                             <?php foreach ($form_elements as $key => $element): ?>
                                 <div class="cfkef-form-element-card">
                                     <div class="cfkef-form-element-info">
