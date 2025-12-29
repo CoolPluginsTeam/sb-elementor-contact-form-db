@@ -57,6 +57,7 @@ class FDBGP_List_Table extends WP_List_Table {
             return;
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- View filtering doesn't modify data.
         $current_view = isset($_GET['view']) ? sanitize_key($_GET['view']) : 'all';
 
         // Get counts for all and trash
@@ -75,8 +76,8 @@ class FDBGP_List_Table extends WP_List_Table {
             }
 
             if ( $count > 0 || $view === 'all') {
-                echo "<li class='$class'><a href='?page=cfkef-entries&view=$view'>$label</a></li>";
-                echo "<span class='count'>($count)</span>";
+                echo "<li class='" . esc_attr( $class ) . "'><a href='?page=cfkef-entries&view=" . esc_attr( $view ) . "'>" . esc_html( $label ) . "</a></li>";
+                echo "<span class='count'>(" . esc_html( $count ) . ")</span>";
             }
             
 
@@ -238,13 +239,13 @@ class FDBGP_List_Table extends WP_List_Table {
 
         // phpcs:disable WordPress.Security.NonceVerification.Recommended
         $page     = $this->get_pagenum();
-		$order    = isset( $_GET['order'] ) && sanitize_text_field($_GET['order']) === 'asc' ? 'ASC' : 'DESC';
-        $search= isset($_GET['cfkef-entries-search']) ? sanitize_text_field($_GET['cfkef-entries-search']) : '';
+		$order    = isset( $_GET['order'] ) && sanitize_text_field( wp_unslash( $_GET['order'] ) ) === 'asc' ? 'ASC' : 'DESC';
+        $search   = isset( $_GET['cfkef-entries-search'] ) ? sanitize_text_field( wp_unslash( $_GET['cfkef-entries-search'] ) ) : '';
 		$allowed_orderby = ['ID','post_title','post_date','post_modified','post_status'];
         $orderby = isset($_GET['orderby']) ? sanitize_key($_GET['orderby']) : 'ID';
         $orderby = in_array($orderby, $allowed_orderby, true) ? $orderby : 'ID';
         $per_page = $this->get_items_per_page( $this->get_per_page_option_name() , 20 );
-        $date_filter= isset($_GET['date_filter']) && isset($_GET['m']) && !empty($_GET['m']) ? sanitize_text_field($_GET['m']) : '';
+        $date_filter = isset( $_GET['date_filter'] ) && isset( $_GET['m'] ) && ! empty( $_GET['m'] ) ? sanitize_text_field( wp_unslash( $_GET['m'] ) ) : '';
         $view = FDBGP_Entries_Posts::get_view();
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
@@ -273,15 +274,14 @@ class FDBGP_List_Table extends WP_List_Table {
         ];
 
         global $wpdb;
-            
-        $post_placeholders=implode(',', array_fill(0, count($args['post_status']), "%s"));
 
-        $post_status_query = $wpdb->prepare("post_status IN ($post_placeholders)", array_map('esc_sql', $args['post_status']));
+        // Build post status placeholders for IN clause.
+        $post_status_placeholders = implode( ', ', array_fill( 0, count( $args['post_status'] ), '%s' ) );
 
-
+        // Build the base query with all placeholders.
         $query = $wpdb->prepare(
-            "SELECT * FROM $wpdb->posts WHERE post_type = '%s' AND $post_status_query",
-            $this->post_type,
+            "SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ($post_status_placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are dynamically generated for IN clause.
+            array_merge( array( $this->post_type ), $args['post_status'] )
         );
 
         if(!empty($search)){
@@ -299,9 +299,11 @@ class FDBGP_List_Table extends WP_List_Table {
 
         }
 
-        $query .= $wpdb->prepare(" ORDER BY {$args['orderby']} {$args['order']} LIMIT %d OFFSET %d", $args['posts_per_page'], ($args['paged'] - 1) * $args['posts_per_page']);
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- orderby and order are already validated against whitelist.
+        $query .= $wpdb->prepare( " ORDER BY {$args['orderby']} {$args['order']} LIMIT %d OFFSET %d", $args['posts_per_page'], ( $args['paged'] - 1 ) * $args['posts_per_page'] );
 
-        $this->items = $wpdb->get_results($query);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is incrementally prepared above.
+        $this->items = $wpdb->get_results( $query );
 
         $total_posts=wp_count_posts($this->post_type);
         $post_count=0;
@@ -321,7 +323,7 @@ class FDBGP_List_Table extends WP_List_Table {
         $view = FDBGP_Entries_Posts::get_view();
         if($which === 'top'){
             $this->months_dropdown( FDBGP_Entries_Posts::$post_type );
-            echo "<input type='submit' name='date_filter' id='".FDBGP_Entries_Posts::$post_type."-date-filter' class='button' value='Filter'>";
+            echo "<input type='submit' name='date_filter' id='" . esc_attr( FDBGP_Entries_Posts::$post_type ) . "-date-filter' class='button' value='Filter'>";
 
             if($view === 'trash'){
                 echo '<div class="alignleft actions bulkactions">

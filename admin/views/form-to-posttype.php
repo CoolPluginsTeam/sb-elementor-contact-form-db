@@ -27,6 +27,7 @@ class FDBGP_Form_To_Post_Settings {
     }
 
     private function get_current_page() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- get the current page, no data modification.
         $paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
         return max( 1, $paged );
     }
@@ -171,7 +172,7 @@ class FDBGP_Form_To_Post_Settings {
                             <td>' . esc_html( $form['form_name'] ) . '</td>
                             <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
                             <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
-                            <td>' . $post_type_status . '</td>
+                            <td>' . wp_kses_post($post_type_status) . '</td>
                             <td>
                                 <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
                                     ' . esc_html__( 'Edit Form', 'sb-elementor-contact-form-db' ) . '
@@ -351,7 +352,7 @@ class FDBGP_Form_To_Post_Settings {
             ];
 
             echo '<div class="formsdb-tablenav bottom"><div class="tablenav-pages" style="margin: 1em 0;">';
-            echo paginate_links( $pagination_args );
+            echo wp_kses_post(paginate_links( $pagination_args ));
             echo '</div></div>';
         }
     }

@@ -171,6 +171,7 @@ class FDBGP_Dashboard {
 
     private static function fdbgp_current_page($slug)
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only for current page detection, no data modification.
         $current_page = isset($_REQUEST['page']) ? sanitize_key($_REQUEST['page']) : (isset($_REQUEST['post_type']) ? sanitize_key($_REQUEST['post_type']) : '');
         $status=false;
 
@@ -209,11 +210,7 @@ class FDBGP_Dashboard {
                     </a>
                 </div>
                 <div class="fdbgp-header-buttons">
-<<<<<<< Updated upstream
                     <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'sb-elementor-contact-form-db'); ?></a>
-=======
-                    <a href="https://coolformkit.com/features/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'sb-elementor-contact-form-db'); ?></a>
->>>>>>> Stashed changes
                 </div>
             </div>
         <?php

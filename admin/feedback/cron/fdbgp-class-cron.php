@@ -61,7 +61,7 @@ if (!class_exists('fdbgp_cronjob')) {
                 global $wpdb;
                 // Server and WP environment details
                 $server_info = [
-                    'server_software'        => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field($_SERVER['SERVER_SOFTWARE']) : 'N/A',
+                    'server_software'        => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : 'N/A',
                     'mysql_version'          => $wpdb ? sanitize_text_field($wpdb->get_var("SELECT VERSION()")) : 'N/A',
                     'php_version'            => sanitize_text_field(phpversion() ?: 'N/A'),
                     'wp_version'             => sanitize_text_field(get_bloginfo('version') ?: 'N/A'),
@@ -144,8 +144,7 @@ if (!class_exists('fdbgp_cronjob')) {
                   ));
               
                   if (is_wp_error($response)) {
-                      error_log('fdbgp Feedback Send Failed: ' . $response->get_error_message());
-                      return;
+                    return;
                   }
               
                   $response_body = wp_remote_retrieve_body($response);

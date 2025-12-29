@@ -129,7 +129,9 @@ class FDBGP_Entries_Posts {
     }
 
     public static function get_view() {
-        return isset($_GET['view']) && in_array($_GET['view'], ['all', 'trash']) ? sanitize_text_field($_GET['view']) : 'all';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only view filter for navigation, no data modification.
+        $view = isset( $_GET['view'] ) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : 'all';
+        return in_array( $view, array( 'all', 'trash' ), true ) ? $view : 'all';
     }
 
     public function output_entries_list(FDBGP_Dashboard $dashboard) {

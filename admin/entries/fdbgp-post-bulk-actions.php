@@ -113,9 +113,9 @@ class FDBGP_Post_Bulk_Actions {
 		
 		$this->ids    = isset( $_GET['entry_id'] ) ? array_map( 'absint', (array) $_GET['entry_id'] ) : [];
 
-		$action=isset($_REQUEST['action']) ? str_replace(' ', '_', strtolower($_REQUEST['action'])) : false;
+		$action = isset( $_REQUEST['action'] ) ? str_replace( ' ', '_', strtolower( sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) ) ) : false;
 
-		$this->action = isset( $_REQUEST['action'] ) ? sanitize_key( $action ) : false;
+		$this->action = $action ? sanitize_key( $action ) : false;
 
 		if ( $this->action === '-1' ) {
 			$this->action = ! empty( $_REQUEST['action2'] ) ? sanitize_key( $_REQUEST['action2'] ) : false;
@@ -301,7 +301,7 @@ class FDBGP_Post_Bulk_Actions {
 		]);
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-        $search= isset($_GET['cfkef-entries-search']) ? sanitize_text_field($_GET['cfkef-entries-search']) : '';
+        $search = isset( $_GET['cfkef-entries-search'] ) ? sanitize_text_field( wp_unslash( $_GET['cfkef-entries-search'] ) ) : '';
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$args = [
@@ -312,21 +312,21 @@ class FDBGP_Post_Bulk_Actions {
 
 		global $wpdb;
 
-		$post_placeholders=implode(',', array_fill(0, count($args['post_status']), "%s"));
+		// Build post status placeholders for IN clause.
+		$post_status_placeholders = implode( ', ', array_fill( 0, count( $args['post_status'] ), '%s' ) );
 
-        $post_status_query = $wpdb->prepare("post_status IN ($post_placeholders)", array_map('esc_sql', $args['post_status']));
+		// Build the base query with all placeholders.
+		$query = $wpdb->prepare(
+			"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ($post_status_placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are dynamically generated for IN clause.
+			array_merge( array( $this->posts_type ), $args['post_status'] )
+		);
 
+		if ( ! empty( $search ) ) {
+			$query .= $wpdb->prepare( ' AND post_title LIKE %s', '%' . $wpdb->esc_like( $search ) . '%' );
+		}
 
-        $query = $wpdb->prepare(
-            "SELECT * FROM $wpdb->posts WHERE post_type = '%s' AND $post_status_query",
-            $this->posts_type,
-        );
-
-        if(!empty($search)){
-            $query .= $wpdb->prepare(" AND post_title LIKE '%%%s%%'", $wpdb->esc_like($search));
-        }
-
-		$posts=$wpdb->get_results($wpdb->prepare($query));
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is incrementally prepared above.
+		$posts = $wpdb->get_results( $query );
 		
 		foreach($posts as $post){
 			if ( ! current_user_can( 'delete_post', $post->ID ) ) {

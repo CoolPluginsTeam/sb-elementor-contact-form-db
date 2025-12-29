@@ -140,18 +140,20 @@ if (!class_exists('FDBGP_Settings_Page')) {
                 'client_token' => ''
             ));
 
-            $this->oauth_code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- OAuth callback from Google doesn't include nonce.
+            $this->oauth_code = isset( $_GET['code'] ) && ! empty( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : '';
             
-            $site_url = parse_url(site_url(), PHP_URL_HOST);
-            $this->site_domain = str_replace('www.', '', $site_url);
-            $this->redirect_uri = admin_url('admin.php?page=formsdb&tab=settings');
+            $site_url = wp_parse_url( site_url(), PHP_URL_HOST );
+            $this->site_domain = str_replace( 'www.', '', $site_url );
+            $this->redirect_uri = admin_url( 'admin.php?page=formsdb&tab=settings' );
         }
 
         /**
          * Process form submission.
          */
         private function process_form_submission() {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['fdbgp_settings_nonce'])) {
+            $request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+            if ( 'POST' !== $request_method || ! isset( $_POST['fdbgp_settings_nonce'] ) ) {
                 return;
             }
 
@@ -164,17 +166,17 @@ if (!class_exists('FDBGP_Settings_Page')) {
                 return;
             }
 
-            $cfef_usage_share_data = isset($_POST['cfef_usage_share_data']) ? sanitize_text_field($_POST['cfef_usage_share_data']) : '';
-            update_option("cfef_usage_share_data", $cfef_usage_share_data);
+            $cfef_usage_share_data = isset( $_POST['cfef_usage_share_data'] ) ? sanitize_text_field( wp_unslash( $_POST['cfef_usage_share_data'] ) ) : '';
+            update_option( 'cfef_usage_share_data', $cfef_usage_share_data );
 
             fdbgp_handle_unchecked_checkbox();
 
             // Save Google Settings
-            if (isset($_POST['save_google_settings'])) {
+            if ( isset( $_POST['save_google_settings'] ) ) {
                 $new_settings = array(
-                    'client_id' => sanitize_text_field($_POST['client_id'] ?? ''),
-                    'client_secret' => sanitize_text_field($_POST['client_secret'] ?? ''),
-                    'client_token' => sanitize_text_field($_POST['client_token'] ?? $this->google_settings['client_token'] ?? ''),
+                    'client_id'     => isset( $_POST['client_id'] ) ? sanitize_text_field( wp_unslash( $_POST['client_id'] ) ) : '',
+                    'client_secret' => isset( $_POST['client_secret'] ) ? sanitize_text_field( wp_unslash( $_POST['client_secret'] ) ) : '',
+                    'client_token'  => isset( $_POST['client_token'] ) ? sanitize_text_field( wp_unslash( $_POST['client_token'] ) ) : ( $this->google_settings['client_token'] ?? '' ),
                 );
 
                 update_option('fdbgp_google_settings', $new_settings);
@@ -345,7 +347,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                         <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'sb-elementor-contact-form-db'); ?></label>
                                                     </th>
                                                     <td class="cool-formkit-table-td usage-share-data">
-                                                        <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
+                                                        <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo esc_attr($checked) ?>  class="regular-text cool-formkit-input"  />
                                                         <div class="description cool-formkit-description">
                                                             <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'sb-elementor-contact-form-db'); ?>
                                                             <a href="#" class="fdbgp-ccpw-see-terms">[<?php esc_html_e('See terms', 'sb-elementor-contact-form-db'); ?>]</a>

@@ -110,11 +110,11 @@ if(!class_exists('FDBGP_Admin')) {
                 
                 // Redirect to Elementor Editor
                 $redirect_url = admin_url( 'post.php?post=' . $post_id . '&action=elementor' );
-                wp_redirect($redirect_url);
+                wp_safe_redirect($redirect_url);
                 exit;
             }
             
-            wp_redirect(admin_url('post-new.php?post_type=page'));
+            wp_safe_redirect(admin_url('post-new.php?post_type=page'));
             exit;
         }
 
@@ -148,8 +148,9 @@ if(!class_exists('FDBGP_Admin')) {
 
         public function display_plugin_admin_page() {
             $allowed_tabs = array('forms-sheets', 'post-type', 'settings', 'advanced', 'old-submission');
-            $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'forms-sheets';
-            if (!in_array($tab, $allowed_tabs, true)) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab selection for navigation, no data modification.
+            $tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'forms-sheets';
+            if ( ! in_array( $tab, $allowed_tabs, true ) ) {
                 $tab = 'forms-sheets'; 
             }
 
@@ -254,14 +255,16 @@ if(!class_exists('FDBGP_Admin')) {
                 wp_add_inline_script('jquery-core', $custom_js);
             }
 
-            if (isset($_GET['page']) && (strpos($_GET['page'], 'formsdb') !== false || strpos($_GET['page'], 'cfkef-entries') !== false)) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page check for loading assets, no data modification.
+            $current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+            if ( strpos( $current_page, 'formsdb' ) !== false || strpos( $current_page, 'cfkef-entries' ) !== false ) {
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
                 wp_enqueue_style('dashicons');
 
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
                 
                 wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
-            }else if(isset($_GET['page']) && (strpos($_GET['page'], 'cool-formkit') !== false)){
+            } elseif ( strpos( $current_page, 'cool-formkit' ) !== false ) {
                 wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
             }
         }

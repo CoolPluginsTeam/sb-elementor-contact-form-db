@@ -40,7 +40,7 @@ class fdbgp_feedback {
         global $wpdb;
         // Server and WP environment details
         $server_info = [
-            'server_software'        => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field($_SERVER['SERVER_SOFTWARE']) : 'N/A',
+            'server_software'        => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : 'N/A',
             'mysql_version'          => $wpdb ? sanitize_text_field($wpdb->get_var("SELECT VERSION()")) : 'N/A',
             'php_version'            => sanitize_text_field(phpversion() ?: 'N/A'),
             'wp_version'             => sanitize_text_field(get_bloginfo('version') ?: 'N/A'),
@@ -170,10 +170,10 @@ class fdbgp_feedback {
 
 
 	function submit_deactivation_response() {
-		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_POST['_wpnonce'] ), '_cool-plugins_deactivate_feedback_nonce' ) || ! current_user_can( 'manage_options' )) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), '_cool-plugins_deactivate_feedback_nonce' ) || ! current_user_can( 'manage_options' )) {
 			wp_send_json_error();
 		} else {
-			$reason             = isset( $_POST['reason'] ) ? sanitize_text_field( $_POST['reason'] ) : '';
+			$reason             = isset( $_POST['reason'] ) ? sanitize_text_field( wp_unslash( $_POST['reason'] ) ) : '';
 			$deactivate_reasons = array(
 				'didnt_work_as_expected'         => array(
 					'title'             => __( 'The plugin didn\'t work as expected', 'sb-elementor-contact-form-db' ),
@@ -202,7 +202,8 @@ class fdbgp_feedback {
 			$deativation_reason = array_key_exists( $reason, $deactivate_reasons ) ? $reason : 'other';
 
 			$deativation_reason = esc_html($deativation_reason);
-			$sanitized_message = empty( $_POST['message'] ) || sanitize_text_field( $_POST['message'] ) == '' ? 'N/A' : sanitize_text_field( $_POST['message'] );
+			$message = isset( $_POST['message'] ) ? sanitize_text_field( wp_unslash( $_POST['message'] ) ) : '';
+			$sanitized_message = empty( $message ) ? 'N/A' : $message;
 			$admin_email       = sanitize_email( get_option( 'admin_email' ) );
 			$site_url          = esc_url( site_url() );
 			$feedback_url      = FDBGP_FEEDBACK_URL.'wp-json/coolplugins-feedback/v1/feedback';

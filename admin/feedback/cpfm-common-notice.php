@@ -74,7 +74,8 @@ class CPFM_Feedback_Notice {
 
  
         $screen         = get_current_screen();
-        $current_page   = isset($_GET['page'])? sanitize_key($_GET['page']):'';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page detection for loading assets, no data modification.
+        $current_page   = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
     
         // Gather all unique pages from registered notices
         $allowed_pages = [];
@@ -169,7 +170,8 @@ class CPFM_Feedback_Notice {
         }
 
         $screen         = get_current_screen();
-        $current_page   = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page detection for rendering notices, no data modification.
+        $current_page   = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
        
         $unread_count   = 0;
@@ -235,6 +237,7 @@ class CPFM_Feedback_Notice {
         $output .= '</div>'; 
      
         if ($unread_count > 0) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
             echo $output;
         }
     }

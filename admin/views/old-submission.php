@@ -60,9 +60,10 @@ class FDBGP_Old_Submission_View {
 
                 <p>
                     <?php 
-                    /* translators: %d: number of old form submissions */
                     printf(
+                        /* translators: %d: number of old form submissions */
                         esc_html__('You have %d old form submission(s) stored in the database.', 'sb-elementor-contact-form-db'),
+                        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
                         $total_count
                     ); 
                     ?>
@@ -78,14 +79,17 @@ class FDBGP_Old_Submission_View {
                                     <?php 
                                     ksort($forms);
                                     foreach ($forms as $form => $label): 
-                                        $selected = isset($_REQUEST['form_name']) && sanitize_text_field($_REQUEST['form_name']) == $form ? 'selected="selected"' : '';
+                                        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                                        $selected = isset($_REQUEST['form_name']) && sanitize_text_field(wp_unslash($_REQUEST['form_name'])) == $form ? 'selected="selected"' : '';
                                     ?>
+                                        <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <option <?php echo $selected; ?> value="<?php echo esc_attr($form); ?>">
                                             <?php echo esc_html($label); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                                 <input type="submit" name="preview_page" class="button-secondary" value="<?php esc_attr_e('Preview', 'sb-elementor-contact-form-db'); ?>" />
+                                <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                 <input name="fdbgp_old_export_nonce" type="hidden" value="<?php echo wp_create_nonce('fdbgp_old_export'); ?>" />
                             </form>
                         </div>
@@ -99,14 +103,17 @@ class FDBGP_Old_Submission_View {
                                     <?php 
                                     ksort($form_ids);
                                     foreach ($form_ids as $form): 
+                                        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                                         $selected = isset($_REQUEST['form_id']) && $_REQUEST['form_id'] == $form ? 'selected="selected"' : '';
                                     ?>
+                                    <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                         <option <?php echo $selected; ?> value="<?php echo esc_attr($form); ?>">
                                             <?php echo esc_html($form); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                                 <input type="submit" name="preview_form_id" class="button-secondary" value="<?php esc_attr_e('Preview', 'sb-elementor-contact-form-db'); ?>" />
+                                <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                                 <input name="fdbgp_old_export_nonce" type="hidden" value="<?php echo wp_create_nonce('fdbgp_old_export'); ?>" />
                             </form>
                         </div>
@@ -124,16 +131,16 @@ class FDBGP_Old_Submission_View {
     }
 
     private function render_preview() {
-        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce($_POST['fdbgp_old_export_nonce'], 'fdbgp_old_export')) {
+        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce(wp_unslash($_POST['fdbgp_old_export_nonce']), 'fdbgp_old_export')) {
             return; // Invalid or missing nonce - silently exit
         }
         
         if (isset($_REQUEST['preview_page']) && isset($_REQUEST['form_name'])) {
-            $form_name = sanitize_text_field($_REQUEST['form_name']);
+            $form_name = sanitize_text_field(wp_unslash($_REQUEST['form_name']));
             $rows = $this->helper->get_export_rows_by_page($form_name, 50);
             $this->render_preview_table($rows, 'form_name', $form_name, __('CSV Content (by Submitted Page)', 'sb-elementor-contact-form-db'));
         } elseif (isset($_REQUEST['preview_form_id']) && isset($_REQUEST['form_id'])) {
-            $form_id = sanitize_text_field($_REQUEST['form_id']);
+            $form_id = sanitize_text_field(wp_unslash($_REQUEST['form_id']));
             $rows = $this->helper->get_export_rows_by_form_id($form_id, 50);
             $this->render_preview_table($rows, 'form_id', $form_id, __('CSV Content (by Form ID)', 'sb-elementor-contact-form-db'));
         }
@@ -159,6 +166,7 @@ class FDBGP_Old_Submission_View {
             <form method="POST">
                 <input type="hidden" name="<?php echo esc_attr($field_name); ?>" value="<?php echo esc_attr($field_value); ?>" />
                 <input type="submit" name="download_old_csv" class="button-primary" value="<?php esc_attr_e('Download CSV File', 'sb-elementor-contact-form-db'); ?>" />
+                <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
                 <input name="fdbgp_old_export_nonce" type="hidden" value="<?php echo wp_create_nonce('fdbgp_old_export'); ?>" />
             </form>
         </div>
@@ -203,8 +211,8 @@ class FDBGP_Old_Submission_View {
                         <h3><?php esc_html_e('New Submissions', 'sb-elementor-contact-form-db'); ?></h3>
                         <p>
                             <?php 
-                            /* translators: %s: link to Elementor Submissions tab */
                             printf(
+                                /* translators: %s: link to Elementor Submissions tab */
                                 esc_html__( 'Please visit the %s for your new form entries.', 'sb-elementor-contact-form-db' ),
                                 '<a href="' . esc_url( admin_url( 'admin.php?page=e-form-submissions' ) ) . '" target="_blank">' . esc_html__( 'Elementor Submissions tab', 'sb-elementor-contact-form-db' ) . '</a>'
                             ); 
