@@ -69,17 +69,41 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 				if (empty(array_intersect($required_plugins, $active_plugins))) {
 
 					add_action('elementor/element/form/section_form_fields/before_section_end', [$this, 'fdbgp_marketing_controls'], 100, 2);
-
-					add_action(
-						'elementor/element/ehp-form/section_form_fields/before_section_end',
-						[$this, 'fdbgp_marketing_controls'],
-						100,
-						2
-					);
 				}
 				if (!in_array('loop-grid-extender-for-elementor-pro/loop-grid-extender-for-elementor-pro.php', $active_plugins, true)) {
 					add_action("elementor/element/taxonomy-filter/section_taxonomy_filter/before_section_end", [$this, 'fdbgp_register_controls'], 10);
 				}
+			}
+
+			if(in_array('hello-plus/hello-plus.php', $active_plugins)){
+
+				if(!in_array('elementor-pro/elementor-pro.php', $active_plugins) && !in_array('pro-elements/pro-elements.php', $active_plugins)){
+
+					add_action('elementor/init', [$this, 'fdbgp_init_hooks']);
+					
+				}
+
+				$required_plugins = [
+					'extensions-for-elementor-form/extensions-for-elementor-form.php',
+					'country-code-field-for-elementor-form/country-code-field-for-elementor-form.php',
+					'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php',
+					'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php',
+					'conditional-fields-for-elementor-form-pro/class-conditional-fields-for-elementor-form-pro.php',
+					'form-masks-for-elementor/form-masks-for-elementor.php',
+					'mask-form-elementor/index.php'
+				];
+
+				if (empty(array_intersect($required_plugins, $active_plugins))) {
+
+					add_action(
+							'elementor/element/ehp-form/section_form_fields/before_section_end',
+							[$this, 'fdbgp_marketing_controls'],
+							100,
+							2
+						);
+				}
+
+				
 			}
 
 			if (!is_plugin_active('timeline-widget-addon-for-elementor/timeline-widget-addon-for-elementor.php')) {
