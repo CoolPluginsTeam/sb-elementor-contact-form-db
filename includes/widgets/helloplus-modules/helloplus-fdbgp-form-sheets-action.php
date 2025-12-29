@@ -482,11 +482,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
         if ( empty( $fdbgp_google_settings['client_token'] ) ) {
             $fdbgp_html = sprintf(
                 '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb&tab=settings"> <strong>%2$s</strong></a>.</div>',
-<<<<<<< Updated upstream
                 esc_html__( 'Authentication required. Connect your Google account to use Sheets.', 'sb-elementor-contact-form-db' ),
-=======
-                esc_html__( 'Please genearate authentication code from Google Sheet Setting', 'sb-elementor-contact-form-db' ),
->>>>>>> Stashed changes
                 esc_html__( 'Click Here', 'sb-elementor-contact-form-db' )
             );
             $widget->start_controls_section(
@@ -651,16 +647,16 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->add_control(
                 $this->add_prefix( 'sheet_headers' ),
                 array(
-                    'label'       => esc_attr__( 'Select a data to save in sheet', 'fdbgp' ),
+                    'label'       => esc_attr__( 'Select a data to save in sheet', 'sb-elementor-contact-form-db' ),
                     'type'        => 'fdbgp_dynamic_select2',
                     'label_block' => true,
                     'multiple'    => true, 
                     'default'     => [ 'user_ip','page_url','submission_date' ],
                     'options'     => array(
-                        'user_ip'         => esc_html__( 'User IP', 'fdbgp' ),
-                        'user_agent'      => esc_html__( 'User Agent', 'fdbgp' ),
-                        'page_url'        => esc_html__( 'Page URL', 'fdbgp' ),
-                        'submission_date' => esc_html__( 'Submission DateTime', 'fdbgp' ),
+                        'user_ip'         => esc_html__( 'User IP', 'sb-elementor-contact-form-db' ),
+                        'user_agent'      => esc_html__( 'User Agent', 'sb-elementor-contact-form-db' ),
+                        'page_url'        => esc_html__( 'Page URL', 'sb-elementor-contact-form-db' ),
+                        'submission_date' => esc_html__( 'Submission DateTime', 'sb-elementor-contact-form-db' ),
                     ),
                     'condition'   => array(
                         $this->add_prefix( 'spreadsheetid' ) . '!' => array( '' ),

@@ -6,6 +6,9 @@ use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_List_Table;
 use Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard\FDBGP_Dashboard;
 use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Post_Bulk_Actions;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    die;
+}
 /**
  * Entries Posts
  */     

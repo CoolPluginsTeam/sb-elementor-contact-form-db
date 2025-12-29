@@ -2,6 +2,9 @@
 
 namespace Formsdb_Elementor_Forms\Admin\Entries;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    die;
+}
 use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Entries_Posts;
 use Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard\FDBGP_Dashboard;
 

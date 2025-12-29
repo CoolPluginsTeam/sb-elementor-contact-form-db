@@ -6,6 +6,10 @@ use WP_List_Table;
 use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Entries_Posts;
 use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Post_Bulk_Actions;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    die;
+}
+
 if(!class_exists('FDBGP_List_Table')) { 
 class FDBGP_List_Table extends WP_List_Table {
 
@@ -206,7 +210,7 @@ class FDBGP_List_Table extends WP_List_Table {
     
         $output .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' .
             /* translators: Hidden accessibility text. */
-            __( 'Show more details' ) .
+            __( 'Show more details', 'sb-elementor-contact-form-db' ) .
         '</span></button>';
     
         return $output;

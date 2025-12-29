@@ -60,6 +60,7 @@ class FDBGP_Old_Submission_View {
 
                 <p>
                     <?php 
+                    /* translators: %d: number of old form submissions */
                     printf(
                         esc_html__('You have %d old form submission(s) stored in the database.', 'sb-elementor-contact-form-db'),
                         $total_count
@@ -202,6 +203,7 @@ class FDBGP_Old_Submission_View {
                         <h3><?php esc_html_e('New Submissions', 'sb-elementor-contact-form-db'); ?></h3>
                         <p>
                             <?php 
+                            /* translators: %s: link to Elementor Submissions tab */
                             printf(
                                 esc_html__( 'Please visit the %s for your new form entries.', 'sb-elementor-contact-form-db' ),
                                 '<a href="' . esc_url( admin_url( 'admin.php?page=e-form-submissions' ) ) . '" target="_blank">' . esc_html__( 'Elementor Submissions tab', 'sb-elementor-contact-form-db' ) . '</a>'

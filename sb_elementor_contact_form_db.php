@@ -9,6 +9,8 @@
  * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
  * Text Domain: sb-elementor-contact-form-db
  * Requires Plugins: elementor
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Elementor tested up to: 3.34.0
  * Elementor Pro tested up to: 3.34.0
  */
@@ -73,7 +75,7 @@ if(!class_exists('FDBGP_Main')) {
 		public function fdbgp_plugin_row_meta( $plugin_meta, $plugin_file ) {
 			if ( FDBGP_PLUGIN_BASENAME === $plugin_file ) {
 				$row_meta = array(
-					'docs' => '<a href="' . esc_url('https://docs.coolplugins.net/plugin/formsdb-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list') . '" aria-label="' . esc_attr(esc_html__('View FormsDB Documentation', 'elementor-contact-form-db')) . '" target="_blank">' . esc_html__('Docs', 'elementor-contact-form-db') . '</a>',
+					'docs' => '<a href="' . esc_url('https://docs.coolplugins.net/plugin/formsdb-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list') . '" aria-label="' . esc_attr(esc_html__('View FormsDB Documentation', 'sb-elementor-contact-form-db')) . '" target="_blank">' . esc_html__('Docs', 'sb-elementor-contact-form-db') . '</a>',
 				);
 				$plugin_meta = array_merge( $plugin_meta, $row_meta );
 			}

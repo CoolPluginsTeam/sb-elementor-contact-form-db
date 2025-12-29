@@ -342,7 +342,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                 ?>            
                                                 <tr>
                                                     <th scope="row" class="cool-formkit-table-th">
-                                                        <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'elementor-contact-form-db'); ?></label>
+                                                        <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'sb-elementor-contact-form-db'); ?></label>
                                                     </th>
                                                     <td class="cool-formkit-table-td usage-share-data">
                                                         <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />

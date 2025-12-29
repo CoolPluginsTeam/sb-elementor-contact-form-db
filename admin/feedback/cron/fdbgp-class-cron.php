@@ -28,7 +28,7 @@ if (!class_exists('fdbgp_cronjob')) {
 
                 $schedules['every_30_days'] = array(
                     'interval' => 30 * 24 * 60 * 60, // 2,592,000 seconds
-                    'display'  => __('Once every 30 days'),
+                    'display'  => __('Once every 30 days', 'sb-elementor-contact-form-db'),
                 );
             }
 

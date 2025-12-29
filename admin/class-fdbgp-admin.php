@@ -126,8 +126,8 @@ if(!class_exists('FDBGP_Admin')) {
             if ( $is_conflicting_active ) {
                 add_submenu_page(
                     'elementor',
-                    __('FormsDB', 'elementor-contact-form-db'),
-                    __('↳ FormsDB', 'elementor-contact-form-db'),
+                    __('FormsDB', 'sb-elementor-contact-form-db'),
+                    __('↳ FormsDB', 'sb-elementor-contact-form-db'),
                     'manage_options',
                     'formsdb',
                     array($this, 'display_plugin_admin_page'),
@@ -137,8 +137,8 @@ if(!class_exists('FDBGP_Admin')) {
                 // Add as submenu under elementor (default behavior)
                 add_submenu_page(
                     'elementor',
-                    __('FormsDB', 'elementor-contact-form-db'),
-                    __('FormsDB', 'elementor-contact-form-db'),
+                    __('FormsDB', 'sb-elementor-contact-form-db'),
+                    __('FormsDB', 'sb-elementor-contact-form-db'),
                     'manage_options',
                     'formsdb',
                     array($this, 'display_plugin_admin_page')
@@ -168,12 +168,12 @@ if(!class_exists('FDBGP_Admin')) {
                         </a>
                     </div>
                     <div class="fdbgp-header-buttons">
-                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'elementor-contact-form-db'); ?></a>
+                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'sb-elementor-contact-form-db'); ?></a>
                     </div>
                 </div>
                 <h2 class="nav-tab-wrapper">
-                    <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'elementor-contact-form-db'); ?></a>
-                    <a href="?page=formsdb&tab=post-type" class="nav-tab <?php echo $tab == 'post-type' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Post Type', 'elementor-contact-form-db'); ?></a>
+                    <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'sb-elementor-contact-form-db'); ?></a>
+                    <a href="?page=formsdb&tab=post-type" class="nav-tab <?php echo $tab == 'post-type' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Post Type', 'sb-elementor-contact-form-db'); ?></a>
                     <?php
                     if (
                         is_plugin_active( 'hello-plus/hello-plus.php' ) &&
@@ -181,16 +181,16 @@ if(!class_exists('FDBGP_Admin')) {
                         ! is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' )
                     ) :
                     ?>
-                        <a href="?page=cfkef-entries" class="nav-tab <?php echo $tab == 'cfkef-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'elementor-contact-form-db'); ?></a>
+                        <a href="?page=cfkef-entries" class="nav-tab <?php echo $tab == 'cfkef-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
-                    <a href="?page=formsdb&tab=settings" class="nav-tab <?php echo $tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'elementor-contact-form-db'); ?></a>
+                    <a href="?page=formsdb&tab=settings" class="nav-tab <?php echo $tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'sb-elementor-contact-form-db'); ?></a>
                     <?php
                     if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
                     ?>
-                        <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'elementor-contact-form-db'); ?></a>
+                        <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
                     <?php if ($has_old_submissions) : ?>
-                        <a href="?page=formsdb&tab=old-submission" class="nav-tab <?php echo $tab == 'old-submission' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Old Submissions', 'elementor-contact-form-db'); ?></a>
+                        <a href="?page=formsdb&tab=old-submission" class="nav-tab <?php echo $tab == 'old-submission' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Old Submissions', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
                 </h2>
                 <div class="tab-content">
@@ -242,7 +242,7 @@ if(!class_exists('FDBGP_Admin')) {
             $screen = get_current_screen();
 
             if ( $screen && 'elementor_page_e-form-submissions' === $screen->id ) {
-                $button_text = __('Save Form Submissions To Google Sheet', 'elementor-contact-form-db');
+                $button_text = __('Save Form Submissions To Google Sheet', 'sb-elementor-contact-form-db');
                 $button_url = esc_url(admin_url('admin.php?page=formsdb'));
                 
                 $custom_js = "
