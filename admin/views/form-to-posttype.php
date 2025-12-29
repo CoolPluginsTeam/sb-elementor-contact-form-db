@@ -117,8 +117,8 @@ class FDBGP_Form_To_Post_Settings {
                 <div class="fdbgp-help-box">
                     <h4>NEED HELP?</h4>
                     <ul>
-                    <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-save-elementor-form-submissions-to-posts-type" target="_blank" rel="noopener noreferrer">▶ Watch Video Tutorial</a></li>
-                    <li><a href="https://docs.coolplugins.net/doc/save-form-submissions-post-type/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-save-elementor-form-submissions-to-posts-type" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
+                    <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">▶ Watch Video Tutorial</a></li>
+                    <li><a href="https://docs.coolplugins.net/doc/save-form-submissions-post-type/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
                     <li><a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db" target="_blank">🎧 Contact Support</a></li>
                     </ul>
                 </div>

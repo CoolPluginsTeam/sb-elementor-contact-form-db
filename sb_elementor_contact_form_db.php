@@ -1,16 +1,16 @@
 <?php
 
 /*
- * Plugin Name: FormsDB For Elementor Forms
- * Plugin URI:  https://coolformkit.com/
- * Description: A simple plugin to save contact form submissions in the database, designed for the Elementor Form Module
+ * Plugin Name: FormsDB for Elementor Forms
+ * Plugin URI:  https://coolplugins.net/product/formsdb-connect-elementor-forms-google-sheets/?utm_source=formsdb&utm_medium=inside&utm_campaign=plugin_page&utm_content=plugins_list
+ * Description: Connect Elementor forms with Google Sheets to sync form entries, or save frontend form submissions in any WordPress post type using Elementor Pro or Hello Plus forms.
  * Author:      Cool Plugins
  * Version:     2.0.0
- * Author URI:  https://coolplugins.net/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
+ * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
  * Text Domain: elementor-contact-form-db
  * Requires Plugins: elementor
- * Elementor tested up to: 3.33.4
- * Elementor Pro tested up to: 3.33.2
+ * Elementor tested up to: 3.34.0
+ * Elementor Pro tested up to: 3.34.0
  */
 
 namespace Formsdb_Elementor_Forms;
@@ -64,10 +64,20 @@ if(!class_exists('FDBGP_Main')) {
 
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
 			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
-
+			add_filter( 'plugin_row_meta', array( $this, 'fdbgp_plugin_row_meta' ), 10, 2 );
 
 			$this->includes();
 			
+		}
+
+		public function fdbgp_plugin_row_meta( $plugin_meta, $plugin_file ) {
+			if ( FDBGP_PLUGIN_BASENAME === $plugin_file ) {
+				$row_meta = array(
+					'docs' => '<a href="' . esc_url('https://docs.coolplugins.net/plugin/formsdb-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list') . '" aria-label="' . esc_attr(esc_html__('View FormsDB Documentation', 'elementor-contact-form-db')) . '" target="_blank">' . esc_html__('Docs', 'elementor-contact-form-db') . '</a>',
+				);
+				$plugin_meta = array_merge( $plugin_meta, $row_meta );
+			}
+			return $plugin_meta;
 		}
 
 		public function setting_redirect(){
@@ -77,31 +87,27 @@ if(!class_exists('FDBGP_Main')) {
 			
 			if(!empty($code)){
 				// Get Google settings
-			$google_settings = get_option(
-				'fdbgp_google_settings',
-				array(
-					'client_id'     => '',
-					'client_secret' => '',
-					'client_token'  => '',
-				)
-			);
+				$google_settings = get_option(
+					'fdbgp_google_settings',
+					array(
+						'client_id'     => '',
+						'client_secret' => '',
+						'client_token'  => '',
+					)
+				);
 
-			// Save token (already sanitized earlier)
-			$google_settings['client_token'] = sanitize_text_field( wp_unslash( $code ) );
-			update_option( 'fdbgp_google_settings', $google_settings );
+				// Save token (already sanitized earlier)
+				$google_settings['client_token'] = sanitize_text_field( wp_unslash( $code ) );
+				update_option( 'fdbgp_google_settings', $google_settings );
 
-			// Clean redirect URL safely
-			$redirect_url = remove_query_arg(
-				array( 'code', 'scope', 'state' )
-			);
+				// Clean redirect URL safely
+				$redirect_url = remove_query_arg(
+					array( 'code', 'scope', 'state' )
+				);
 
-			wp_safe_redirect( $redirect_url );
-			exit;
+				wp_safe_redirect( $redirect_url );
+				exit;
 
-
-				// Remove code from URL and redirect
-				// wp_safe_redirect($redirect_url);
-				// exit;
 			}
 		}
 

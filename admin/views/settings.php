@@ -342,7 +342,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                 ?>            
                                                 <tr>
                                                     <th scope="row" class="cool-formkit-table-th">
-                                                        <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'cool-formkit'); ?></label>
+                                                        <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'elementor-contact-form-db'); ?></label>
                                                     </th>
                                                     <td class="cool-formkit-table-td usage-share-data">
                                                         <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
@@ -452,8 +452,8 @@ if (!class_exists('FDBGP_Settings_Page')) {
                         <div class="fdbgp-help-box">
                             <h4>NEED HELP?</h4>
                             <ul>
-                                <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-generate-a-google-api-authentication-token" target="_blank" rel="noopener noreferrer">▶ Watch Video Tutorial</a></li>
-                                <li><a href="https://docs.coolplugins.net/doc/google-api-setup-connect-elementor-google-sheets/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar#how-to-generate-a-google-api-authentication-token" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
+                                <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">▶ Watch Video Tutorial</a></li>
+                                <li><a href="https://docs.coolplugins.net/doc/google-api-setup-connect-elementor-google-sheets/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">📄 Read Documentation</a></li>
                                 <li><a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db" target="_blank">🎧 Contact Support</a></li>
                             </ul>
                         </div>

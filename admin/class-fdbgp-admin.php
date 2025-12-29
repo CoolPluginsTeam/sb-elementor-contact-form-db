@@ -168,7 +168,7 @@ if(!class_exists('FDBGP_Admin')) {
                         </a>
                     </div>
                     <div class="fdbgp-header-buttons">
-                        <a href="https://coolformkit.com/features/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'elementor-contact-form-db'); ?></a>
+                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'elementor-contact-form-db'); ?></a>
                     </div>
                 </div>
                 <h2 class="nav-tab-wrapper">
