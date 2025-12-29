@@ -120,7 +120,7 @@ trait FDBGP_Ajax_Handlers {
             $sheets   = array();
             
             // Add Create New Tab option
-            $sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
+            $sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'sb-elementor-contact-form-db' );
             
             foreach ( $response->getSheets() as $s ) {
                 $title = $s['properties']['title'];

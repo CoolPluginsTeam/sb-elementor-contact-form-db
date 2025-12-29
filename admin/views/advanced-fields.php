@@ -23,7 +23,7 @@ $form_elements = array(
 
 
     'whatsapp_redirect' => array(
-        'label' => __('Whatsapp Redirect', 'cool-formkit'),
+        'label' => __('Whatsapp Redirect', 'sb-elementor-contact-form-db'),
         'how_to' => str_replace('utm_source=', 'utm_source=' . $first_plugin, 'https://coolformkit.com/features/whatsapp-redirect-elementor-form/?utm_source=&utm_medium=inside&utm_campaign=demo&utm_content=dashboard'),
         'demo' => str_replace('utm_source=cfkef_plugin', 'utm_source=' . $first_plugin, 'https://docs.coolplugins.net/doc/whatsapp-redirection-elementor-form/?utm_source=cfkef_plugin&utm_medium=inside&utm_campaign=docs&utm_content=dashboard'),
         'icon' => FDBGP_PLUGIN_URL . 'assets/icons/whatsapp-icon-min.svg',
@@ -31,21 +31,21 @@ $form_elements = array(
     ),
 
     'range_slider' => array(
-        'label' => __('Range Slider', 'cool-formkit'),
+        'label' => __('Range Slider', 'sb-elementor-contact-form-db'),
         'how_to' => str_replace('utm_source=', 'utm_source=' . $first_plugin, 'https://coolformkit.com/features/range-slider-for-elementor-form/?utm_source=&utm_medium=inside&utm_campaign=demo&utm_content=dashboard'),
         'demo' => str_replace('utm_source=cfkef_plugin', 'utm_source=' . $first_plugin, 'https://docs.coolplugins.net/doc/range-slider-elementor-form/?utm_source=cfkef_plugin&utm_medium=inside&utm_campaign=docs&utm_content=dashboard'),
         'icon' => FDBGP_PLUGIN_URL . 'assets/icons/range-slider-min.svg',
         'pro' => true
     ),
     'calculator_field' => array(
-        'label' => __('Calculator Field', 'cool-formkit'),
+        'label' => __('Calculator Field', 'sb-elementor-contact-form-db'),
         'how_to' => str_replace('utm_source=', 'utm_source=' . $first_plugin, 'https://coolformkit.com/features/calculator-for-elementor/?utm_source=&utm_medium=inside&utm_campaign=demo&utm_content=dashboard'),
         'demo' => str_replace('utm_source=cfkef_plugin', 'utm_source=' . $first_plugin, 'https://docs.coolplugins.net/doc/calculator-field-elementor-form/?utm_source=cfkef_plugin&utm_medium=inside&utm_campaign=docs&utm_content=dashboard'),
         'icon' => FDBGP_PLUGIN_URL . 'assets/icons/calculator-field-min.svg',
         'pro' => true
     ),
     'rating_field' => array(
-        'label' => __('Rating Field', 'cool-formkit'),
+        'label' => __('Rating Field', 'sb-elementor-contact-form-db'),
         'how_to' => str_replace('utm_source=', 'utm_source=' . $first_plugin, 'https://coolformkit.com/features/rating-field-for-elementor-form/?utm_source=&utm_medium=inside&utm_campaign=demo&utm_content=dashboard'),
         'demo' => str_replace('utm_source=cfkef_plugin', 'utm_source=' . $first_plugin, 'https://docs.coolplugins.net/doc/rating-field-elementor-form/?utm_source=cfkef_plugin&utm_medium=inside&utm_campaign=docs&utm_content=dashboard'),
         'icon' => FDBGP_PLUGIN_URL . 'assets/icons/rating-field-min.svg',

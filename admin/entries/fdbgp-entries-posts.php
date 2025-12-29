@@ -70,38 +70,38 @@ class FDBGP_Entries_Posts {
     public function register_post_type() {
         
         $labels = array(
-            'name'                  => esc_html_x( 'Form Entries', 'Post Type General Name', 'cool-formkit' ),
-            'singular_name'         => esc_html_x( 'Entrie', 'Post Type Singular Name', 'cool-formkit' ),
-            'menu_name'             => esc_html__( 'Entrie', 'cool-formkit' ),
-            'name_admin_bar'        => esc_html__( 'Entrie', 'cool-formkit' ),
-            'archives'              => esc_html__( 'Entrie Archives', 'cool-formkit' ),
-            'attributes'            => esc_html__( 'Entrie Attributes', 'cool-formkit' ),
-            'parent_item_colon'     => esc_html__( 'Parent Item:', 'cool-formkit' ),
-            'all_items'             => esc_html__( 'Entries', 'cool-formkit' ),
-            'add_new_item'          => esc_html__( 'Add New Item', 'cool-formkit' ),
-            'add_new'               => esc_html__( 'Add New', 'cool-formkit' ),
-            'new_item'              => esc_html__( 'New Item', 'cool-formkit' ),
-            'edit_item'             => esc_html__( 'View Entry', 'cool-formkit' ),
-            'update_item'           => esc_html__( 'Update Item', 'cool-formkit' ),
-            'view_item'             => esc_html__( 'View Item', 'cool-formkit' ),
-            'view_items'            => esc_html__( 'View Items', 'cool-formkit' ),
-            'search_items'          => esc_html__( 'Search Item', 'cool-formkit' ),
-            'not_found'             => esc_html__( 'Not found', 'cool-formkit' ),
-            'not_found_in_trash'    => esc_html__( 'Not found in Trash', 'cool-formkit' ),
-            'featured_image'        => esc_html__( 'Featured Image', 'cool-formkit' ),
-            'set_featured_image'    => esc_html__( 'Set featured image', 'cool-formkit' ),
-            'remove_featured_image' => esc_html__( 'Remove featured image', 'cool-formkit' ),
-            'use_featured_image'    => esc_html__( 'Use as featured image', 'cool-formkit' ),
-            'insert_into_item'      => esc_html__( 'Insert into item', 'cool-formkit' ),
-            'uploaded_to_this_item' => esc_html__( 'Uploaded to this item', 'cool-formkit' ),
-            'items_list'            => esc_html__( 'Form entries list', 'cool-formkit' ),
-            'items_list_navigation' => esc_html__( 'Form entries list navigation', 'cool-formkit' ),
-            'filter_items_list'     => esc_html__( 'Filter from entry list', 'cool-formkit' ),
+            'name'                  => esc_html_x( 'Form Entries', 'Post Type General Name', 'sb-elementor-contact-form-db' ),
+            'singular_name'         => esc_html_x( 'Entrie', 'Post Type Singular Name', 'sb-elementor-contact-form-db' ),
+            'menu_name'             => esc_html__( 'Entrie', 'sb-elementor-contact-form-db' ),
+            'name_admin_bar'        => esc_html__( 'Entrie', 'sb-elementor-contact-form-db' ),
+            'archives'              => esc_html__( 'Entrie Archives', 'sb-elementor-contact-form-db' ),
+            'attributes'            => esc_html__( 'Entrie Attributes', 'sb-elementor-contact-form-db' ),
+            'parent_item_colon'     => esc_html__( 'Parent Item:', 'sb-elementor-contact-form-db' ),
+            'all_items'             => esc_html__( 'Entries', 'sb-elementor-contact-form-db' ),
+            'add_new_item'          => esc_html__( 'Add New Item', 'sb-elementor-contact-form-db' ),
+            'add_new'               => esc_html__( 'Add New', 'sb-elementor-contact-form-db' ),
+            'new_item'              => esc_html__( 'New Item', 'sb-elementor-contact-form-db' ),
+            'edit_item'             => esc_html__( 'View Entry', 'sb-elementor-contact-form-db' ),
+            'update_item'           => esc_html__( 'Update Item', 'sb-elementor-contact-form-db' ),
+            'view_item'             => esc_html__( 'View Item', 'sb-elementor-contact-form-db' ),
+            'view_items'            => esc_html__( 'View Items', 'sb-elementor-contact-form-db' ),
+            'search_items'          => esc_html__( 'Search Item', 'sb-elementor-contact-form-db' ),
+            'not_found'             => esc_html__( 'Not found', 'sb-elementor-contact-form-db' ),
+            'not_found_in_trash'    => esc_html__( 'Not found in Trash', 'sb-elementor-contact-form-db' ),
+            'featured_image'        => esc_html__( 'Featured Image', 'sb-elementor-contact-form-db' ),
+            'set_featured_image'    => esc_html__( 'Set featured image', 'sb-elementor-contact-form-db' ),
+            'remove_featured_image' => esc_html__( 'Remove featured image', 'sb-elementor-contact-form-db' ),
+            'use_featured_image'    => esc_html__( 'Use as featured image', 'sb-elementor-contact-form-db' ),
+            'insert_into_item'      => esc_html__( 'Insert into item', 'sb-elementor-contact-form-db' ),
+            'uploaded_to_this_item' => esc_html__( 'Uploaded to this item', 'sb-elementor-contact-form-db' ),
+            'items_list'            => esc_html__( 'Form entries list', 'sb-elementor-contact-form-db' ),
+            'items_list_navigation' => esc_html__( 'Form entries list navigation', 'sb-elementor-contact-form-db' ),
+            'filter_items_list'     => esc_html__( 'Filter from entry list', 'sb-elementor-contact-form-db' ),
         );
 
         $args = array(
-            'label'                 => esc_html__( 'Form Entries', 'cool-formkit' ),
-            'description'           => esc_html__( 'cool-formkit-entry', 'cool-formkit' ),
+            'label'                 => esc_html__( 'Form Entries', 'sb-elementor-contact-form-db' ),
+            'description'           => esc_html__( 'cool-formkit-entry', 'sb-elementor-contact-form-db' ),
             'labels'                => $labels,
             'supports'              => false,
             'capabilities'          => ['create_posts' => 'do_not_allow'],
@@ -137,7 +137,7 @@ class FDBGP_Entries_Posts {
                     <div class="wrapper-header">
                         <div class="cfkef-save-all">
                             <div class="cfkef-title-desc">
-                                <h2><?php esc_html_e( 'Hello+ Form Entries', 'elementor-contact-form-db' ); ?></h2>
+                                <h2><?php esc_html_e( 'Hello+ Form Entries', 'sb-elementor-contact-form-db' ); ?></h2>
                             </div>
                         </div>
                     </div>
@@ -154,7 +154,7 @@ class FDBGP_Entries_Posts {
                                         <input type="hidden" name="page" value="<?php echo esc_attr(self::$post_type); ?>">
                                         <input type="hidden" name="view" value="<?php echo esc_attr(self::get_view()); ?>">
                                         <?php 
-                                        $list_table->search_box( esc_html__( 'Search Forms', 'cool-formkit' ), 'cfkef-entries-search' );
+                                        $list_table->search_box( esc_html__( 'Search Forms', 'sb-elementor-contact-form-db' ), 'cfkef-entries-search' );
                                         $list_table->display();
                                         ?>
                                     </form>
@@ -176,45 +176,45 @@ class FDBGP_Entries_Posts {
         ?>
         <div class="fdbgp-card cfk-left">
             <h2 class="fdbgp-card-title">
-                <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'elementor-contact-form-db' ); ?>
+                <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'sb-elementor-contact-form-db' ); ?>
             </h2>
 
             <div class="fdbgp-steps">
                 <div class="fdbgp-step">
                     <div class="fdbgp-step-number">1</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'Create Form', 'elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'Create a page with Hello+ Form widget', 'elementor-contact-form-db' ); ?></p>
+                        <h3><?php esc_html_e( 'Create Form', 'sb-elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Create a page with Hello+ Form widget', 'sb-elementor-contact-form-db' ); ?></p>
                     </div>
                 </div>
 
                 <div class="fdbgp-step">
                     <div class="fdbgp-step-number">2</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'Enable Action', 'elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'Enable "Collect Submissions" action in form settings.', 'elementor-contact-form-db' ); ?></p>
+                        <h3><?php esc_html_e( 'Enable Action', 'sb-elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Enable "Collect Submissions" action in form settings.', 'sb-elementor-contact-form-db' ); ?></p>
                     </div>
                 </div>
 
                 <div class="fdbgp-step">
                     <div class="fdbgp-step-number">3</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'Submit Form', 'elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'Submit your form from the frontend to save entries.', 'elementor-contact-form-db' ); ?></p>
+                        <h3><?php esc_html_e( 'Submit Form', 'sb-elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'Submit your form from the frontend to save entries.', 'sb-elementor-contact-form-db' ); ?></p>
                     </div>
                 </div>
 
                 <div class="fdbgp-step">
                     <div class="fdbgp-step-number">4</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'View Entries', 'elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'All submissions will appear in this list.', 'elementor-contact-form-db' ); ?></p>
+                        <h3><?php esc_html_e( 'View Entries', 'sb-elementor-contact-form-db' ); ?></h3>
+                        <p><?php esc_html_e( 'All submissions will appear in this list.', 'sb-elementor-contact-form-db' ); ?></p>
                     </div>
                 </div>
             </div>
 
             <div class="fdbgp-help-box">
-                <h4><?php esc_html_e( 'NEED HELP?', 'elementor-contact-form-db' ); ?></h4>
+                <h4><?php esc_html_e( 'NEED HELP?', 'sb-elementor-contact-form-db' ); ?></h4>
                 <ul>
                     <li><a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db" target="_blank">🎧 Contact Support</a></li>
                 </ul>

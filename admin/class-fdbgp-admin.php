@@ -48,8 +48,8 @@ if(!class_exists('FDBGP_Admin')) {
                 }
 
                 $notice = [
-                    'title' => __('Elementor Form Addons by Cool Plugins', 'cool-formkit-for-elementor-forms'),
-                    'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'cool-plugins-feedback'),
+                    'title' => __('Elementor Form Addons by Cool Plugins', 'sb-elementor-contact-form-db'),
+                    'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'sb-elementor-contact-form-db'),
                     'pages' => ['cool-formkit','cfkef-entries','cool-formkit&tab=recaptcha-settings','formsdb'],
                     'always_show_on' => ['cool-formkit','cfkef-entries','cool-formkit&tab=recaptcha-settings','formsdb'], // This enables auto-show
                     'plugin_name'=>'fdbgp'

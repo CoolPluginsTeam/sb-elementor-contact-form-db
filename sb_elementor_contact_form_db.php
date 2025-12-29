@@ -6,8 +6,12 @@
  * Description: Connect Elementor forms with Google Sheets to sync form entries, or save frontend form submissions in any WordPress post type using Elementor Pro or Hello Plus forms.
  * Author:      Cool Plugins
  * Version:     2.0.0
+<<<<<<< Updated upstream
  * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
- * Text Domain: elementor-contact-form-db
+=======
+ * Author URI:  https://coolplugins.net/?utm_source=fdbgp_plugin&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
+>>>>>>> Stashed changes
+ * Text Domain: sb-elementor-contact-form-db
  * Requires Plugins: elementor
  * Elementor tested up to: 3.34.0
  * Elementor Pro tested up to: 3.34.0

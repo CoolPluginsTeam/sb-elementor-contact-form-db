@@ -375,7 +375,7 @@ class FDBGP_List_Table extends WP_List_Table {
 			'<div class="tablenav-pages one-page">
 				<span class="displaying-num">%s</span>
 			</div>',
-			esc_html__( '0 items', 'cool-formkit' )
+			esc_html__( '0 items', 'sb-elementor-contact-form-db' )
 		);
 	}
 

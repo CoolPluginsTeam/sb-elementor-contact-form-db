@@ -348,12 +348,12 @@ class FDBGP_Post_Bulk_Actions {
 
 		if ( $this->view === 'trash' ) {
 			$items = [
-				'restore' => esc_html__( 'Restore', 'cool-formkit' ),
-				'delete'  => esc_html__( 'Delete Permanently', 'cool-formkit' ),
+				'restore' => esc_html__( 'Restore', 'sb-elementor-contact-form-db' ),
+				'delete'  => esc_html__( 'Delete Permanently', 'sb-elementor-contact-form-db' ),
 			];
 		} else {
 			$items = [
-				'trash' => esc_html__( 'Move to Trash', 'cool-formkit' ),
+				'trash' => esc_html__( 'Move to Trash', 'sb-elementor-contact-form-db' ),
 			];
 		}
 
@@ -400,7 +400,7 @@ class FDBGP_Post_Bulk_Actions {
 		// Display notice in case of error.
 		if ( in_array( 'error', $results, true ) ) {
 			add_action( 'cfkef_admin_notices', function() {
-				echo '<div class="notice notice-error"><p>' . esc_html__( 'Security check failed. Please try again.', 'cool-formkit' ) . '</p></div>';
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'Security check failed. Please try again.', 'sb-elementor-contact-form-db' ) . '</p></div>';
 			});
 
 			return;
@@ -481,17 +481,17 @@ class FDBGP_Post_Bulk_Actions {
 		switch ( $action ) {
 			case 'restored':
 				/* translators: %1$d - restored forms count. */
-				$notice = _n( '%1$d form has been restored successfully.', '%1$d forms have been restored successfully.', $count, 'cool-formkit' );
+				$notice = _n( '%1$d form has been restored successfully.', '%1$d forms have been restored successfully.', $count, 'sb-elementor-contact-form-db' );
 				break;
 
 			case 'deleted':
 				/* translators: %1$d - deleted forms count. */
-				$notice = _n( '%1$d form has been permanently deleted.', '%1$d forms have been permanently deleted.', $count, 'cool-formkit' );
+				$notice = _n( '%1$d form has been permanently deleted.', '%1$d forms have been permanently deleted.', $count, 'sb-elementor-contact-form-db' );
 				break;
 
 			case 'trashed':
 				/* translators: %1$d - trashed forms count. */
-				$notice = _n( '%1$d form has been moved to Trash.', '%1$d forms have been moved to Trash.', $count, 'cool-formkit' );
+				$notice = _n( '%1$d form has been moved to Trash.', '%1$d forms have been moved to Trash.', $count, 'sb-elementor-contact-form-db' );
 				break;
 
 			default:
