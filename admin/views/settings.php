@@ -347,18 +347,18 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                     <td class="cool-formkit-table-td usage-share-data">
                                                         <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
                                                         <div class="description cool-formkit-description">
-                                                            <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'ccpw'); ?>
-                                                            <a href="#" class="fdbgp-ccpw-see-terms">[<?php esc_html_e('See terms', 'ccpw'); ?>]</a>
+                                                            <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'sb-elementor-contact-form-db'); ?>
+                                                            <a href="#" class="fdbgp-ccpw-see-terms">[<?php esc_html_e('See terms', 'sb-elementor-contact-form-db'); ?>]</a>
                         
                                                             <div id="termsBox" style="display: none; padding-left: 20px; margin-top: 10px; font-size: 12px; color: #999;">
                                                                 <p>
-                                                                    <?php esc_html_e('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'ccpw'); ?>
+                                                                    <?php esc_html_e('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'sb-elementor-contact-form-db'); ?>
                                                                     <a href="https://my.coolplugins.net/terms/usage-tracking/" target="_blank">Click Here</a>
 
                                                                 </p>
                                                                 <ul style="list-style-type: auto;">
-                                                                    <li><?php esc_html_e('Your website home URL and WordPress admin email.', 'ccpw'); ?></li>
-                                                                    <li><?php esc_html_e('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'ccpw'); ?></li>
+                                                                    <li><?php esc_html_e('Your website home URL and WordPress admin email.', 'sb-elementor-contact-form-db'); ?></li>
+                                                                    <li><?php esc_html_e('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'sb-elementor-contact-form-db'); ?></li>
                                                                 </ul>
                                                             </div>
                                                         </div>
