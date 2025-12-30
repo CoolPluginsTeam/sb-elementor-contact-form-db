@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class Save_Form_Data {
     public function __construct() {
         add_action('elementor/element/ehp-form/section_integration/after_section_start', [$this, 'add_controls'], 10, 2);

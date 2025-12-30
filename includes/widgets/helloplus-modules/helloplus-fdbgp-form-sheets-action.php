@@ -51,6 +51,7 @@ add_action( 'elementor/controls/register', function ( $controls_manager ) {
 /**
  * Class HelloPlus_FDBGP_Form_Sheets_Action
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
     
     use FDBGP_Ajax_Handlers;

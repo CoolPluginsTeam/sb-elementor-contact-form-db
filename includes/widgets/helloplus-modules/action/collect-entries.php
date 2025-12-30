@@ -6,6 +6,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound	
 class HelloPlus_Collect_Entries extends Action_Base {
     public function get_name(): string {
         return 'cool_formkit_collect_entries';

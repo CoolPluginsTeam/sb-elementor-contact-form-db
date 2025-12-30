@@ -15,6 +15,7 @@ use HelloPlus\Includes\Utils;
 /**
  * Register post after form submit.
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class HelloPlus_FDBGP_Register_Post extends Action_Base {
 
 	private static $registered_actions = [];
