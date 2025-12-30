@@ -1,0 +1,87 @@
+{
+  "landingPage": "/wp-admin/post.php?post=85398&action=elementor",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "siteOptions": {
+    "elementor_onboarded": "1"
+  },
+  "phpExtensionBundles": ["kitchen-sink"],
+  "steps": [
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "wordpress.org/themes",
+        "slug": "hello-biz"
+      },
+      "options": { "activate": true }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "elementor"
+      },
+      "options": { "activate": true }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "sb-elementor-contact-form-db"
+      },
+      "options": { "activate": true }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "hello-plus"
+      },
+      "options": { "activate": true }
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/force-disable-hello-plus-wizard.php",
+      "data": "<?php\nadd_action('admin_init', function () {\n  if (isset($_GET['page']) && $_GET['page'] === 'hello-plus-setup-wizard') {\n    wp_safe_redirect(admin_url());\n    exit;\n  }\n  update_option('hello_plus_setup_wizard_completed', true);\n  update_option('_hello_plus_setup_wizard_completed', true);\n}, 1);\n\nadd_action('admin_menu', function () {\n  remove_submenu_page('themes.php', 'hello-plus-setup-wizard');\n}, 999);\n?>"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "sb-elementor-contact-form-db"
+      },
+      "options": { "activate": true }
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/hide-notices.php",
+      "data": "<?php\nadd_action('admin_head', function() {\n  echo '<style>\n  .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1,\n  .notice.e-notice.e-notice--cta.e-notice--dismissible.e-notice--extended {\n    display: none !important;\n  }\n  </style>';\n});"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/elementor-force-close-popup.php",
+      "data": "<?php\nif (!defined('ABSPATH')) { exit; }\n\nadd_action('elementor/editor/footer', function () {\n  echo '<script>\n    var checkInterval = setInterval(function() {\n      if (window.elementor !== undefined) {\n        setInterval(function() {\n          var btn = document.querySelector(\"#e-announcements-root .close-button\");\n          if (btn) btn.click();\n        }, 300);\n        clearInterval(checkInterval);\n      }\n    }, 200);\n  </script>';\n});"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/elementor-open-google-sheets-section.php",
+      "data": "<?php\nif (!defined('ABSPATH')) { exit; }\n\nadd_action('elementor/editor/footer', function () {\n?>\n<script>\n(function () {\n  function openGoogleSheetSection() {\n    const section = document.querySelector('.elementor-control-fdbgp_section_google_sheets');\n    if (!section) return false;\n    if (section.classList.contains('elementor-open')) return true;\n    const header = section.querySelector('.elementor-panel-heading');\n    if (header) {\n      header.click();\n      return true;\n    }\n    return false;\n  }\n\n  let attempts = 0;\n  const timer = setInterval(function () {\n    attempts++;\n    if (openGoogleSheetSection() || attempts > 30) {\n      clearInterval(timer);\n    }\n  }, 300);\n})();\n</script>\n<?php\n});\n"
+    },
+    {
+      "step": "importWxr",
+      "file": {
+        "resource": "url",
+        "url": "https://raw.githubusercontent.com/CoolPluginsTeam/wp-playground-repo/main/coolform/formsDB-for-elementor-forms.xml"
+      }
+    }
+  ],
+  "features": {},
+  "login": true
+}
