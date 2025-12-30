@@ -5,7 +5,7 @@ Tags: elementor forms, google sheets, form submissions, contact form db, form en
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor tested up to: 3.34.0
@@ -217,6 +217,10 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
+= 2.0.1 (Dec 30, 2025) =
+* Fixed issues reported by "Plugin Check" plugin.
+* Improved code quality to follow WordPress coding standards.
+
 = 2.0.0 (Dec 26, 2025) =
 * Plugin acquired, fully rebuilt, and rebranded as **[FormsDB](https://coolplugins.net/product/formsdb-connect-elementor-forms-google-sheets/?utm_source=formsdb&utm_medium=readme&utm_campaign=plugin_page&utm_content=changelog)** by **[Cool Plugins](https://coolplugins.net/?utm_source=formsdb&utm_medium=readme&utm_campaign=home&utm_content=changelog)**.
 * Introduced **Google Sheets integration** to sync Elementor form submissions.
@@ -268,9 +272,5 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Upgrade Notice ==
 
-= 2.0.0 =
+= 2.0.1 =
 This is a major update where the plugin has been fully rebuilt and rebranded as **FormsDB** by **Cool Plugins**. The new version introduces Google Sheets sync, frontend post submission, and Hello Plus form entry support, as the old functionality is now available inside Elementor Pro. Users upgrading from older versions can export previous entries from **FormsDB → Old Submissions** after updating.
-
-= 2.0.1 (Dec 29, 2025) =
-* Fixed issues reported by "Plugin Check" plugin.
-* Improved code quality to follow WordPress coding standards.
