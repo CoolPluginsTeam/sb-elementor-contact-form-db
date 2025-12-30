@@ -48,8 +48,8 @@ if(!class_exists('FDBGP_Admin')) {
                 }
 
                 $notice = [
-                    'title' => __('Elementor Form Addons by Cool Plugins', 'cool-formkit-for-elementor-forms'),
-                    'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'cool-plugins-feedback'),
+                    'title' => __('Elementor Form Addons by Cool Plugins', 'sb-elementor-contact-form-db'),
+                    'message' => __('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'sb-elementor-contact-form-db'),
                     'pages' => ['cool-formkit','cfkef-entries','cool-formkit&tab=recaptcha-settings','formsdb'],
                     'always_show_on' => ['cool-formkit','cfkef-entries','cool-formkit&tab=recaptcha-settings','formsdb'], // This enables auto-show
                     'plugin_name'=>'fdbgp'
@@ -58,9 +58,11 @@ if(!class_exists('FDBGP_Admin')) {
                 CPFM_Feedback_Notice::cpfm_register_notice('cool_forms', $notice);
 
                     if (!isset($GLOBALS['cool_plugins_feedback'])) {
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Shared across Cool Plugins products.
                         $GLOBALS['cool_plugins_feedback'] = [];
                     }
                     
+                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Shared across Cool Plugins products.
                     $GLOBALS['cool_plugins_feedback']['cool_forms'][] = $notice;
             
             });
@@ -110,11 +112,11 @@ if(!class_exists('FDBGP_Admin')) {
                 
                 // Redirect to Elementor Editor
                 $redirect_url = admin_url( 'post.php?post=' . $post_id . '&action=elementor' );
-                wp_redirect($redirect_url);
+                wp_safe_redirect($redirect_url);
                 exit;
             }
             
-            wp_redirect(admin_url('post-new.php?post_type=page'));
+            wp_safe_redirect(admin_url('post-new.php?post_type=page'));
             exit;
         }
 
@@ -126,8 +128,8 @@ if(!class_exists('FDBGP_Admin')) {
             if ( $is_conflicting_active ) {
                 add_submenu_page(
                     'elementor',
-                    __('FormsDB', 'elementor-contact-form-db'),
-                    __('↳ FormsDB', 'elementor-contact-form-db'),
+                    __('FormsDB', 'sb-elementor-contact-form-db'),
+                    __('↳ FormsDB', 'sb-elementor-contact-form-db'),
                     'manage_options',
                     'formsdb',
                     array($this, 'display_plugin_admin_page'),
@@ -137,8 +139,8 @@ if(!class_exists('FDBGP_Admin')) {
                 // Add as submenu under elementor (default behavior)
                 add_submenu_page(
                     'elementor',
-                    __('FormsDB', 'elementor-contact-form-db'),
-                    __('FormsDB', 'elementor-contact-form-db'),
+                    __('FormsDB', 'sb-elementor-contact-form-db'),
+                    __('FormsDB', 'sb-elementor-contact-form-db'),
                     'manage_options',
                     'formsdb',
                     array($this, 'display_plugin_admin_page')
@@ -148,8 +150,9 @@ if(!class_exists('FDBGP_Admin')) {
 
         public function display_plugin_admin_page() {
             $allowed_tabs = array('forms-sheets', 'post-type', 'settings', 'advanced', 'old-submission');
-            $tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'forms-sheets';
-            if (!in_array($tab, $allowed_tabs, true)) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tab selection for navigation, no data modification.
+            $tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'forms-sheets';
+            if ( ! in_array( $tab, $allowed_tabs, true ) ) {
                 $tab = 'forms-sheets'; 
             }
 
@@ -168,12 +171,12 @@ if(!class_exists('FDBGP_Admin')) {
                         </a>
                     </div>
                     <div class="fdbgp-header-buttons">
-                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'elementor-contact-form-db'); ?></a>
+                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'sb-elementor-contact-form-db'); ?></a>
                     </div>
                 </div>
                 <h2 class="nav-tab-wrapper">
-                    <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'elementor-contact-form-db'); ?></a>
-                    <a href="?page=formsdb&tab=post-type" class="nav-tab <?php echo $tab == 'post-type' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Post Type', 'elementor-contact-form-db'); ?></a>
+                    <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'sb-elementor-contact-form-db'); ?></a>
+                    <a href="?page=formsdb&tab=post-type" class="nav-tab <?php echo $tab == 'post-type' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Post Type', 'sb-elementor-contact-form-db'); ?></a>
                     <?php
                     if (
                         is_plugin_active( 'hello-plus/hello-plus.php' ) &&
@@ -181,16 +184,16 @@ if(!class_exists('FDBGP_Admin')) {
                         ! is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' )
                     ) :
                     ?>
-                        <a href="?page=cfkef-entries" class="nav-tab <?php echo $tab == 'cfkef-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'elementor-contact-form-db'); ?></a>
+                        <a href="?page=cfkef-entries" class="nav-tab <?php echo $tab == 'cfkef-entries' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Hello+ Form Entries', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
-                    <a href="?page=formsdb&tab=settings" class="nav-tab <?php echo $tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'elementor-contact-form-db'); ?></a>
+                    <a href="?page=formsdb&tab=settings" class="nav-tab <?php echo $tab == 'settings' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Settings', 'sb-elementor-contact-form-db'); ?></a>
                     <?php
                     if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
                     ?>
-                        <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'elementor-contact-form-db'); ?></a>
+                        <a href="?page=formsdb&tab=advanced" class="nav-tab <?php echo $tab == 'advanced' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Advanced Fields', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
                     <?php if ($has_old_submissions) : ?>
-                        <a href="?page=formsdb&tab=old-submission" class="nav-tab <?php echo $tab == 'old-submission' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Old Submissions', 'elementor-contact-form-db'); ?></a>
+                        <a href="?page=formsdb&tab=old-submission" class="nav-tab <?php echo $tab == 'old-submission' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Old Submissions', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
                 </h2>
                 <div class="tab-content">
@@ -242,7 +245,7 @@ if(!class_exists('FDBGP_Admin')) {
             $screen = get_current_screen();
 
             if ( $screen && 'elementor_page_e-form-submissions' === $screen->id ) {
-                $button_text = __('Save Form Submissions To Google Sheet', 'elementor-contact-form-db');
+                $button_text = __('Save Form Submissions To Google Sheet', 'sb-elementor-contact-form-db');
                 $button_url = esc_url(admin_url('admin.php?page=formsdb'));
                 
                 $custom_js = "
@@ -254,14 +257,16 @@ if(!class_exists('FDBGP_Admin')) {
                 wp_add_inline_script('jquery-core', $custom_js);
             }
 
-            if (isset($_GET['page']) && (strpos($_GET['page'], 'formsdb') !== false || strpos($_GET['page'], 'cfkef-entries') !== false)) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page check for loading assets, no data modification.
+            $current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+            if ( strpos( $current_page, 'formsdb' ) !== false || strpos( $current_page, 'cfkef-entries' ) !== false ) {
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
                 wp_enqueue_style('dashicons');
 
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
                 
                 wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
-            }else if(isset($_GET['page']) && (strpos($_GET['page'], 'cool-formkit') !== false)){
+            } elseif ( strpos( $current_page, 'cool-formkit' ) !== false ) {
                 wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
             }
         }

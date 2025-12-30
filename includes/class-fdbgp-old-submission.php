@@ -69,7 +69,8 @@ class FDBGP_Old_Submission {
                 'sb_elem_cfd_form_id'
             );
 
-        $results = $wpdb->get_results($sql);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above with $wpdb->prepare().        
+        $results = $wpdb->get_results( $sql );
         $form_ids = array();
 
         if ($results) {
@@ -101,7 +102,8 @@ class FDBGP_Old_Submission {
                     p.post_type = 'elementor_cf_db'
                     AND p.post_status = 'publish'";
 
-        $results = $wpdb->get_results($sql);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query uses hardcoded safe values, no user input.
+        $results = $wpdb->get_results( $sql );
         $pages = array();
 
         if ($results) {
@@ -129,7 +131,8 @@ class FDBGP_Old_Submission {
             $post_id
         );
 
-        $meta = $wpdb->get_var($sql);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above with $wpdb->prepare().
+        $meta = $wpdb->get_var( $sql );
         
         if ($meta) {
             return maybe_unserialize($meta);
@@ -149,8 +152,10 @@ class FDBGP_Old_Submission {
         $rows = array();
         $args = array(
             'post_type' => 'elementor_cf_db',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
             'meta_key' => 'sb_elem_cfd_submitted_on_id',
             'posts_per_page' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_value' => $submitted_id,
             'post_status' => 'publish'
         );
@@ -206,7 +211,9 @@ class FDBGP_Old_Submission {
         $args = array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
             'meta_key' => 'sb_elem_cfd_form_id',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_value' => $form_id,
             'post_status' => 'publish'
         );
@@ -258,31 +265,33 @@ class FDBGP_Old_Submission {
             return;
         }
 
-        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce($_POST['fdbgp_old_export_nonce'], 'fdbgp_old_export')) {
+        $nonce = isset( $_POST['fdbgp_old_export_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['fdbgp_old_export_nonce'] ) ) : '';
+        if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'fdbgp_old_export' ) ) {
             return;
         }
 
-        if (!current_user_can('manage_options')) {
+        if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
         $rows = array();
         $filename = 'old-submissions';
 
-        if (isset($_REQUEST['form_name']) && !empty($_REQUEST['form_name'])) {
-            $form_name = sanitize_text_field($_REQUEST['form_name']);
-            $rows = $this->get_export_rows_by_page($form_name);
-            $filename = sanitize_title($form_name);
-        } elseif (isset($_REQUEST['form_id']) && !empty($_REQUEST['form_id'])) {
-            $form_id = sanitize_text_field($_REQUEST['form_id']);
-            $rows = $this->get_export_rows_by_form_id($form_id);
-            $filename = sanitize_title($form_id);
+        if ( isset( $_REQUEST['form_name'] ) && ! empty( $_REQUEST['form_name'] ) ) {
+            $form_name = sanitize_text_field( wp_unslash( $_REQUEST['form_name'] ) );
+            $rows = $this->get_export_rows_by_page( $form_name );
+            $filename = sanitize_title( $form_name );
+        } elseif ( isset( $_REQUEST['form_id'] ) && ! empty( $_REQUEST['form_id'] ) ) {
+            $form_id = sanitize_text_field( wp_unslash( $_REQUEST['form_id'] ) );
+            $rows = $this->get_export_rows_by_form_id( $form_id );
+            $filename = sanitize_title( $form_id );
         }
 
         if (!empty($rows)) {
             header('Content-Type: application/csv');
             header('Content-Disposition: attachment; filename=' . $filename . '.csv');
             header('Pragma: no-cache');
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
             echo implode("\n", $rows);
             exit;
         }

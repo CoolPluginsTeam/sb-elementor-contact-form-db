@@ -7,8 +7,10 @@
  * Author:      Cool Plugins
  * Version:     2.0.0
  * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
- * Text Domain: elementor-contact-form-db
+ * Text Domain: sb-elementor-contact-form-db
  * Requires Plugins: elementor
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Elementor tested up to: 3.34.0
  * Elementor Pro tested up to: 3.34.0
  */
@@ -73,7 +75,7 @@ if(!class_exists('FDBGP_Main')) {
 		public function fdbgp_plugin_row_meta( $plugin_meta, $plugin_file ) {
 			if ( FDBGP_PLUGIN_BASENAME === $plugin_file ) {
 				$row_meta = array(
-					'docs' => '<a href="' . esc_url('https://docs.coolplugins.net/plugin/formsdb-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list') . '" aria-label="' . esc_attr(esc_html__('View FormsDB Documentation', 'elementor-contact-form-db')) . '" target="_blank">' . esc_html__('Docs', 'elementor-contact-form-db') . '</a>',
+					'docs' => '<a href="' . esc_url('https://docs.coolplugins.net/plugin/formsdb-for-elementor-forms/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=plugins_list') . '" aria-label="' . esc_attr(esc_html__('View FormsDB Documentation', 'sb-elementor-contact-form-db')) . '" target="_blank">' . esc_html__('Docs', 'sb-elementor-contact-form-db') . '</a>',
 				);
 				$plugin_meta = array_merge( $plugin_meta, $row_meta );
 			}
@@ -81,9 +83,9 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function setting_redirect(){
-			
 			// Handle OAuth callback
-			$code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field(wp_unslash($_GET['code'])) : '';
 			
 			if(!empty($code)){
 				// Get Google settings
@@ -97,7 +99,7 @@ if(!class_exists('FDBGP_Main')) {
 				);
 
 				// Save token (already sanitized earlier)
-				$google_settings['client_token'] = sanitize_text_field( wp_unslash( $code ) );
+				$google_settings['client_token'] = $code;
 				update_option( 'fdbgp_google_settings', $google_settings );
 
 				// Clean redirect URL safely
@@ -112,6 +114,10 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function FDBGP_plugins_loaded() {
+			if (!get_option( 'formsdb_initial_version' ) ) {
+                add_option( 'formsdb_initial_version', FDBGP_PLUGIN_VERSION );
+            }
+			
 			// Add plugin dashboard link
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'FDBGP_plugin_dashboard_link' ) );
 

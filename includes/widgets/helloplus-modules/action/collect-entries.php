@@ -12,7 +12,7 @@ class HelloPlus_Collect_Entries extends Action_Base {
     }
 
     public function get_label(): string {
-        return esc_html__('Collect Entries', 'cool-formkit-for-elementor-forms');
+        return esc_html__('Collect Entries', 'sb-elementor-contact-form-db');
     }
 
     public function register_settings_section($widget): void {
@@ -33,8 +33,8 @@ class HelloPlus_Collect_Entries extends Action_Base {
                 'type' => \Elementor\Controls_Manager::ALERT,
                 'alert_type' => 'info',
                 'content' => sprintf(
-                    esc_html__('This action will collect the entries and store it in a variable. You can use this variable in the next action or in the same form.', 'cool-formkit-for-elementor-forms'),
-                    sprintf('<a href="%s" target="_blank">%s</a>', get_admin_url() . 'admin.php?page=cool-formkit-for-elementor-forms', esc_html__('Learn More', 'cool-formkit-for-elementor-forms')),
+                    esc_html__('This action will collect the entries and store it in a variable. You can use this variable in the next action or in the same form.', 'sb-elementor-contact-form-db'),
+                    sprintf('<a href="%s" target="_blank">%s</a>', get_admin_url() . 'admin.php?page=cool-formkit-for-elementor-forms', esc_html__('Learn More', 'sb-elementor-contact-form-db')),
                 ),
             ]
         );
@@ -42,11 +42,11 @@ class HelloPlus_Collect_Entries extends Action_Base {
         $widget->add_control(
             'collect_entries_field',
             [
-                'label' => esc_html__('Collect Entries Field', 'cool-formkit-for-elementor-forms'),
+                'label' => esc_html__('Collect Entries Field', 'sb-elementor-contact-form-db'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'options' => [
-                    'all' => esc_html__('All', 'cool-formkit-for-elementor-forms'),
-                    'selected' => esc_html__('Selected', 'cool-formkit-for-elementor-forms'),
+                    'all' => esc_html__('All', 'sb-elementor-contact-form-db'),
+                    'selected' => esc_html__('Selected', 'sb-elementor-contact-form-db'),
                 ],
             ]
         );
@@ -54,11 +54,11 @@ class HelloPlus_Collect_Entries extends Action_Base {
         $widget->add_control(
             'collect_entries_meta_data',
             [
-                'label' => esc_html__('Collect Entries Meta Data', 'cool-formkit-for-elementor-forms'),
+                'label' => esc_html__('Collect Entries Meta Data', 'sb-elementor-contact-form-db'),
                 'type' => \Elementor\Controls_Manager::SELECT2,
                 'options' => [
-                    'remote_ip' => esc_html__('User IP', 'cool-formkit-for-elementor-forms'),
-                    'user_agent' => esc_html__('User Agent', 'cool-formkit-for-elementor-forms')
+                    'remote_ip' => esc_html__('User IP', 'sb-elementor-contact-form-db'),
+                    'user_agent' => esc_html__('User Agent', 'sb-elementor-contact-form-db')
                 ],
                 'render_type' => 'none',
                 'multiple' => true,
@@ -87,6 +87,7 @@ class HelloPlus_Collect_Entries extends Action_Base {
         $settings = $record->get_form_settings('save_form_data');
         if($settings == 'yes'){
             $save_entries = new CFKEF_Save_Entries();
+            // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound					
             do_action('cfkef/form/entries', $record, $ajax_handler, $this,'ehp-form');
         }
     }

@@ -140,18 +140,20 @@ if (!class_exists('FDBGP_Settings_Page')) {
                 'client_token' => ''
             ));
 
-            $this->oauth_code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field($_GET['code']) : '';
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- OAuth callback from Google doesn't include nonce.
+            $this->oauth_code = isset( $_GET['code'] ) && ! empty( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : '';
             
-            $site_url = parse_url(site_url(), PHP_URL_HOST);
-            $this->site_domain = str_replace('www.', '', $site_url);
-            $this->redirect_uri = admin_url('admin.php?page=formsdb&tab=settings');
+            $site_url = wp_parse_url( site_url(), PHP_URL_HOST );
+            $this->site_domain = str_replace( 'www.', '', $site_url );
+            $this->redirect_uri = admin_url( 'admin.php?page=formsdb&tab=settings' );
         }
 
         /**
          * Process form submission.
          */
         private function process_form_submission() {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['fdbgp_settings_nonce'])) {
+            $request_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '';
+            if ( 'POST' !== $request_method || ! isset( $_POST['fdbgp_settings_nonce'] ) ) {
                 return;
             }
 
@@ -160,26 +162,26 @@ if (!class_exists('FDBGP_Settings_Page')) {
             }
 
             if (!check_admin_referer('fdbgp_settings_action', 'fdbgp_settings_nonce')) {
-                $this->error_message = __('Security check failed. Please try again.', 'elementor-contact-form-db');
+                $this->error_message = __('Security check failed. Please try again.', 'sb-elementor-contact-form-db');
                 return;
             }
 
-            $cfef_usage_share_data = isset($_POST['cfef_usage_share_data']) ? sanitize_text_field($_POST['cfef_usage_share_data']) : '';
-            update_option("cfef_usage_share_data", $cfef_usage_share_data);
+            $cfef_usage_share_data = isset( $_POST['cfef_usage_share_data'] ) ? sanitize_text_field( wp_unslash( $_POST['cfef_usage_share_data'] ) ) : '';
+            update_option( 'cfef_usage_share_data', $cfef_usage_share_data );
 
             fdbgp_handle_unchecked_checkbox();
 
             // Save Google Settings
-            if (isset($_POST['save_google_settings'])) {
+            if ( isset( $_POST['save_google_settings'] ) ) {
                 $new_settings = array(
-                    'client_id' => sanitize_text_field($_POST['client_id'] ?? ''),
-                    'client_secret' => sanitize_text_field($_POST['client_secret'] ?? ''),
-                    'client_token' => sanitize_text_field($_POST['client_token'] ?? $this->google_settings['client_token'] ?? ''),
+                    'client_id'     => isset( $_POST['client_id'] ) ? sanitize_text_field( wp_unslash( $_POST['client_id'] ) ) : '',
+                    'client_secret' => isset( $_POST['client_secret'] ) ? sanitize_text_field( wp_unslash( $_POST['client_secret'] ) ) : '',
+                    'client_token'  => isset( $_POST['client_token'] ) ? sanitize_text_field( wp_unslash( $_POST['client_token'] ) ) : ( $this->google_settings['client_token'] ?? '' ),
                 );
 
                 update_option('fdbgp_google_settings', $new_settings);
                 $this->google_settings = $new_settings;
-                $this->success_message = __('Settings saved successfully!', 'elementor-contact-form-db');
+                $this->success_message = __('Settings saved successfully!', 'sb-elementor-contact-form-db');
             }
 
             // Revoke Token
@@ -187,7 +189,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                 $this->google_settings['client_token'] = '';
                 update_option('fdbgp_google_settings', $this->google_settings);
                 delete_option('fdbgp_google_access_token');
-                $this->success_message = __('Token revoked successfully!', 'elementor-contact-form-db');
+                $this->success_message = __('Token revoked successfully!', 'sb-elementor-contact-form-db');
             }
 
             // Reset Settings
@@ -195,7 +197,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                 delete_option('fdbgp_google_settings');
                 delete_option('fdbgp_google_access_token');
                 $this->google_settings = array('client_id' => '', 'client_secret' => '', 'client_token' => '');
-                $this->success_message = __('Settings reset successfully!', 'elementor-contact-form-db');
+                $this->success_message = __('Settings reset successfully!', 'sb-elementor-contact-form-db');
             }
         }
 
@@ -219,11 +221,11 @@ if (!class_exists('FDBGP_Settings_Page')) {
                             <div class="wrapper-header">
                                 <div class="fdbgp-save-all">
                                     <div class="fdbgp-title-desc">
-                                        <h2><?php esc_html_e('Settings', 'elementor-contact-form-db'); ?></h2>
+                                        <h2><?php esc_html_e('Settings', 'sb-elementor-contact-form-db'); ?></h2>
                                     </div>
                                     <div class="fdbgp-save-controls">
                                         <button type="submit" name="save_google_settings" class="button button-primary">
-                                            <?php esc_html_e('Save Changes', 'elementor-contact-form-db'); ?>
+                                            <?php esc_html_e('Save Changes', 'sb-elementor-contact-form-db'); ?>
                                         </button>
                                     </div>
                                 </div>
@@ -244,15 +246,15 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                 <?php endif; ?>
 
                                 <div class="cool-formkit-left-side-setting">
-                                    <h3><?php esc_html_e('Google API Settings', 'elementor-contact-form-db'); ?></h3>
-                                    <p class="description"><?php esc_html_e('Connect your Google account to sync form data with Google Sheets.', 'elementor-contact-form-db'); ?></p>
+                                    <h3><?php esc_html_e('Google API Settings', 'sb-elementor-contact-form-db'); ?></h3>
+                                    <p class="description"><?php esc_html_e('Connect your Google account to sync form data with Google Sheets.', 'sb-elementor-contact-form-db'); ?></p>
 
                                     <table class="form-table cool-formkit-table">
                                         <!-- Client ID -->
                                         <tr>
                                             <th class="cool-formkit-table-th">
                                                 <label for="client_id" class="cool-formkit-label">
-                                                    <?php esc_html_e('Client ID', 'elementor-contact-form-db'); ?>
+                                                    <?php esc_html_e('Client ID', 'sb-elementor-contact-form-db'); ?>
                                                 </label>
                                             </th>
                                             <td class="cool-formkit-table-td">
@@ -263,7 +265,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                     value="<?php echo esc_attr($google_settings['client_id']); ?>"
                                                     placeholder="Enter your Client ID"
                                                     <?php echo !empty($google_settings['client_id']) ? 'readonly' : ''; ?> />
-                                                <p class="description"><?php esc_html_e('Enter your Google API Client ID', 'elementor-contact-form-db'); ?></p>
+                                                <p class="description"><?php esc_html_e('Enter your Google API Client ID', 'sb-elementor-contact-form-db'); ?></p>
                                             </td>
                                         </tr>
 
@@ -271,7 +273,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                         <tr>
                                             <th class="cool-formkit-table-th">
                                                 <label for="client_secret" class="cool-formkit-label">
-                                                    <?php esc_html_e('Client Secret Key', 'elementor-contact-form-db'); ?>
+                                                    <?php esc_html_e('Client Secret Key', 'sb-elementor-contact-form-db'); ?>
                                                 </label>
                                             </th>
                                             <td class="cool-formkit-table-td">
@@ -282,7 +284,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                     value="<?php echo esc_attr($google_settings['client_secret']); ?>"
                                                     placeholder="Enter your Client Secret key"
                                                     <?php echo !empty($google_settings['client_secret']) ? 'readonly' : ''; ?> />
-                                                <p class="description"><?php esc_html_e('Enter your Google API Client Secret key', 'elementor-contact-form-db'); ?></p>
+                                                <p class="description"><?php esc_html_e('Enter your Google API Client Secret key', 'sb-elementor-contact-form-db'); ?></p>
                                             </td>
                                         </tr>
 
@@ -291,7 +293,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                             <tr>
                                                 <th class="cool-formkit-table-th">
                                                     <label for="client_token" class="cool-formkit-label">
-                                                        <?php esc_html_e('Authentication Token', 'elementor-contact-form-db'); ?>
+                                                        <?php esc_html_e('Authentication Token', 'sb-elementor-contact-form-db'); ?>
                                                     </label>
                                                 </th>
                                                 <td class="cool-formkit-table-td">
@@ -299,7 +301,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                         <?php $auth_url = $instance_api->getClient(); ?>
                                                         <div id="authbtn" style="margin-bottom: 10px;">
                                                             <a href="<?php echo esc_url($auth_url); ?>" id="authlink" target="_blank" class="button button-secondary">
-                                                                <?php esc_html_e('Generate Authentication Token', 'elementor-contact-form-db'); ?>
+                                                                <?php esc_html_e('Generate Authentication Token', 'sb-elementor-contact-form-db'); ?>
                                                             </a>
                                                         </div>
                                                     <?php endif; ?>
@@ -317,14 +319,14 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                                                                     <path fill="#11ec38" d="M10 2c-4.42 0-8 3.58-8 8s3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8m-.615 12.66h-1.34l-3.24-4.54l1.341-1.25l2.569 2.4l5.141-5.931l1.34.94z" />
                                                                 </svg>
-                                                                <?php esc_html_e('Token is configured', 'elementor-contact-form-db'); ?>
+                                                                <?php esc_html_e('Token is configured', 'sb-elementor-contact-form-db'); ?>
                                                             </p>
                                                         <?php endif; ?>
                                                     </div>
                                                     <?php if (!empty($google_settings['client_token'])) : ?>
                                                         <input type="submit" name="revoke_token" class="revoke-button revoke-button-secondary"
-                                                            value="<?php esc_html_e('Revoke Token', 'elementor-contact-form-db'); ?>"
-                                                            onclick="return confirm('<?php esc_attr_e('Are you sure you want to revoke the token?', 'elementor-contact-form-db'); ?>');">
+                                                            value="<?php esc_html_e('Revoke Token', 'sb-elementor-contact-form-db'); ?>"
+                                                            onclick="return confirm('<?php esc_attr_e('Are you sure you want to revoke the token?', 'sb-elementor-contact-form-db'); ?>');">
                                                         </input>
                                                     <?php endif; ?>
                                                 </td>
@@ -342,23 +344,23 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                                 ?>            
                                                 <tr>
                                                     <th scope="row" class="cool-formkit-table-th">
-                                                        <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'elementor-contact-form-db'); ?></label>
+                                                        <label for="cfef_usage_share_data" class="usage-share-data-label"><?php esc_html_e('Help Improve Plugin', 'sb-elementor-contact-form-db'); ?></label>
                                                     </th>
                                                     <td class="cool-formkit-table-td usage-share-data">
-                                                        <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo $checked ?>  class="regular-text cool-formkit-input"  />
+                                                        <input type="checkbox" id="cfef_usage_share_data" name="cfef_usage_share_data" value="on" <?php echo esc_attr($checked) ?>  class="regular-text cool-formkit-input"  />
                                                         <div class="description cool-formkit-description">
-                                                            <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'ccpw'); ?>
-                                                            <a href="#" class="fdbgp-ccpw-see-terms">[<?php esc_html_e('See terms', 'ccpw'); ?>]</a>
+                                                            <?php esc_html_e('Help us make this plugin more compatible with your site by sharing non-sensitive site data.', 'sb-elementor-contact-form-db'); ?>
+                                                            <a href="#" class="fdbgp-ccpw-see-terms">[<?php esc_html_e('See terms', 'sb-elementor-contact-form-db'); ?>]</a>
                         
                                                             <div id="termsBox" style="display: none; padding-left: 20px; margin-top: 10px; font-size: 12px; color: #999;">
                                                                 <p>
-                                                                    <?php esc_html_e('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'ccpw'); ?>
+                                                                    <?php esc_html_e('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'sb-elementor-contact-form-db'); ?>
                                                                     <a href="https://my.coolplugins.net/terms/usage-tracking/" target="_blank">Click Here</a>
 
                                                                 </p>
                                                                 <ul style="list-style-type: auto;">
-                                                                    <li><?php esc_html_e('Your website home URL and WordPress admin email.', 'ccpw'); ?></li>
-                                                                    <li><?php esc_html_e('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'ccpw'); ?></li>
+                                                                    <li><?php esc_html_e('Your website home URL and WordPress admin email.', 'sb-elementor-contact-form-db'); ?></li>
+                                                                    <li><?php esc_html_e('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'sb-elementor-contact-form-db'); ?></li>
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -371,12 +373,12 @@ if (!class_exists('FDBGP_Settings_Page')) {
 
                                 <?php wp_nonce_field('fdbgp_settings_action', 'fdbgp_settings_nonce'); ?>
                                 <button type="submit" name="save_google_settings" class="button button-primary">
-                                    <?php esc_html_e('Save Settings', 'elementor-contact-form-db'); ?>
+                                    <?php esc_html_e('Save Settings', 'sb-elementor-contact-form-db'); ?>
                                 </button>
                                 <?php if (!empty($google_settings['client_id']) || !empty($google_settings['client_secret'])) : ?>
                                     <button type="submit" name="reset_google_settings" class="button button-secondary"
-                                        onclick="return confirm('<?php esc_attr_e('Are you sure you want to reset all Google API settings?', 'elementor-contact-form-db'); ?>');">
-                                        <?php esc_html_e('Reset Google Settings', 'elementor-contact-form-db'); ?>
+                                        onclick="return confirm('<?php esc_attr_e('Are you sure you want to reset all Google API settings?', 'sb-elementor-contact-form-db'); ?>');">
+                                        <?php esc_html_e('Reset Google Settings', 'sb-elementor-contact-form-db'); ?>
                                     </button>
                                 <?php endif; ?>
 
@@ -423,7 +425,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                     <h3>Add Authorized Domain</h3>
                                     <code id="auth-domain"><?php echo esc_html($site_domain); ?></code>
                                     <button type="button" class="button button-small copy-btn" data-clipboard-target="#auth-domain">
-                                        <?php esc_html_e('Copy', 'elementor-contact-form-db'); ?>
+                                        <?php esc_html_e('Copy', 'sb-elementor-contact-form-db'); ?>
                                     </button>
                                 </div>
                             </div>
@@ -434,7 +436,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                                     <h3>Add Authorized Redirect URI</h3>
                                     <code id="redirect-uri"><?php echo esc_url($redirect_uri); ?></code>
                                     <button type="button" class="button button-small copy-btn" data-clipboard-target="#redirect-uri">
-                                        <?php esc_html_e('Copy', 'elementor-contact-form-db'); ?>
+                                        <?php esc_html_e('Copy', 'sb-elementor-contact-form-db'); ?>
                                     </button>
                                 </div>
                             </div>

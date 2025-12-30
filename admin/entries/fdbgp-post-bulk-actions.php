@@ -2,6 +2,9 @@
 
 namespace Formsdb_Elementor_Forms\Admin\Entries;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    die;
+}
 use Formsdb_Elementor_Forms\Admin\Entries\FDBGP_Entries_Posts;
 use Formsdb_Elementor_Forms\Admin\Register_Menu_Dashboard\FDBGP_Dashboard;
 
@@ -110,9 +113,9 @@ class FDBGP_Post_Bulk_Actions {
 		
 		$this->ids    = isset( $_GET['entry_id'] ) ? array_map( 'absint', (array) $_GET['entry_id'] ) : [];
 
-		$action=isset($_REQUEST['action']) ? str_replace(' ', '_', strtolower($_REQUEST['action'])) : false;
+		$action = isset( $_REQUEST['action'] ) ? str_replace( ' ', '_', strtolower( sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) ) ) : false;
 
-		$this->action = isset( $_REQUEST['action'] ) ? sanitize_key( $action ) : false;
+		$this->action = $action ? sanitize_key( $action ) : false;
 
 		if ( $this->action === '-1' ) {
 			$this->action = ! empty( $_REQUEST['action2'] ) ? sanitize_key( $_REQUEST['action2'] ) : false;
@@ -298,7 +301,7 @@ class FDBGP_Post_Bulk_Actions {
 		]);
 
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended
-        $search= isset($_GET['cfkef-entries-search']) ? sanitize_text_field($_GET['cfkef-entries-search']) : '';
+        $search = isset( $_GET['cfkef-entries-search'] ) ? sanitize_text_field( wp_unslash( $_GET['cfkef-entries-search'] ) ) : '';
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$args = [
@@ -309,21 +312,21 @@ class FDBGP_Post_Bulk_Actions {
 
 		global $wpdb;
 
-		$post_placeholders=implode(',', array_fill(0, count($args['post_status']), "%s"));
+		// Build post status placeholders for IN clause.
+		$post_status_placeholders = implode( ', ', array_fill( 0, count( $args['post_status'] ), '%s' ) );
 
-        $post_status_query = $wpdb->prepare("post_status IN ($post_placeholders)", array_map('esc_sql', $args['post_status']));
+		// Build the base query with all placeholders.
+		$query = $wpdb->prepare(
+			"SELECT * FROM {$wpdb->posts} WHERE post_type = %s AND post_status IN ($post_status_placeholders)", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders are dynamically generated for IN clause.
+			array_merge( array( $this->posts_type ), $args['post_status'] )
+		);
 
+		if ( ! empty( $search ) ) {
+			$query .= $wpdb->prepare( ' AND post_title LIKE %s', '%' . $wpdb->esc_like( $search ) . '%' );
+		}
 
-        $query = $wpdb->prepare(
-            "SELECT * FROM $wpdb->posts WHERE post_type = '%s' AND $post_status_query",
-            $this->posts_type,
-        );
-
-        if(!empty($search)){
-            $query .= $wpdb->prepare(" AND post_title LIKE '%%%s%%'", $wpdb->esc_like($search));
-        }
-
-		$posts=$wpdb->get_results($wpdb->prepare($query));
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is incrementally prepared above.
+		$posts = $wpdb->get_results( $query );
 		
 		foreach($posts as $post){
 			if ( ! current_user_can( 'delete_post', $post->ID ) ) {
@@ -348,12 +351,12 @@ class FDBGP_Post_Bulk_Actions {
 
 		if ( $this->view === 'trash' ) {
 			$items = [
-				'restore' => esc_html__( 'Restore', 'cool-formkit' ),
-				'delete'  => esc_html__( 'Delete Permanently', 'cool-formkit' ),
+				'restore' => esc_html__( 'Restore', 'sb-elementor-contact-form-db' ),
+				'delete'  => esc_html__( 'Delete Permanently', 'sb-elementor-contact-form-db' ),
 			];
 		} else {
 			$items = [
-				'trash' => esc_html__( 'Move to Trash', 'cool-formkit' ),
+				'trash' => esc_html__( 'Move to Trash', 'sb-elementor-contact-form-db' ),
 			];
 		}
 
@@ -366,6 +369,7 @@ class FDBGP_Post_Bulk_Actions {
 		 *
 		 * @param array $items Dropdown items.
 		 */
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$items = apply_filters( 'cfkef_admin_entries_bulk_actions_get_dropdown_items', $items );
 
 		// phpcs:enable WPForms.Comments.ParamTagHooks.InvalidParamTagsQuantity
@@ -400,7 +404,7 @@ class FDBGP_Post_Bulk_Actions {
 		// Display notice in case of error.
 		if ( in_array( 'error', $results, true ) ) {
 			add_action( 'cfkef_admin_notices', function() {
-				echo '<div class="notice notice-error"><p>' . esc_html__( 'Security check failed. Please try again.', 'cool-formkit' ) . '</p></div>';
+				echo '<div class="notice notice-error"><p>' . esc_html__( 'Security check failed. Please try again.', 'sb-elementor-contact-form-db' ) . '</p></div>';
 			});
 
 			return;
@@ -481,17 +485,17 @@ class FDBGP_Post_Bulk_Actions {
 		switch ( $action ) {
 			case 'restored':
 				/* translators: %1$d - restored forms count. */
-				$notice = _n( '%1$d form has been restored successfully.', '%1$d forms have been restored successfully.', $count, 'cool-formkit' );
+				$notice = _n( '%1$d form has been restored successfully.', '%1$d forms have been restored successfully.', $count, 'sb-elementor-contact-form-db' );
 				break;
 
 			case 'deleted':
 				/* translators: %1$d - deleted forms count. */
-				$notice = _n( '%1$d form has been permanently deleted.', '%1$d forms have been permanently deleted.', $count, 'cool-formkit' );
+				$notice = _n( '%1$d form has been permanently deleted.', '%1$d forms have been permanently deleted.', $count, 'sb-elementor-contact-form-db' );
 				break;
 
 			case 'trashed':
 				/* translators: %1$d - trashed forms count. */
-				$notice = _n( '%1$d form has been moved to Trash.', '%1$d forms have been moved to Trash.', $count, 'cool-formkit' );
+				$notice = _n( '%1$d form has been moved to Trash.', '%1$d forms have been moved to Trash.', $count, 'sb-elementor-contact-form-db' );
 				break;
 
 			default:

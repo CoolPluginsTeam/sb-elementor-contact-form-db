@@ -19,7 +19,7 @@ use Formsdb_Elementor_Forms\Lib_Helpers\FDBGP_Ajax_Handlers;
  * Register Custom Control
  */
 add_action( 'elementor/controls/register', function ( $controls_manager ) {
-    
+    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound	
     class HelloPlus_FDBGP_Control_Dynamic_Select2 extends \Elementor\Base_Data_Control {
         public function get_type() {
             return 'fdbgp_dynamic_select2';
@@ -89,7 +89,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
      * @return string
      */
     public function get_label() : string{
-        return esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' );
+        return esc_html__( 'Save Submissions in Google Sheet', 'sb-elementor-contact-form-db' );
     }
 
     /**
@@ -345,10 +345,10 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             }
 
             // Add System Fields for mapping
-            $fdbgp_fields['user_ip']         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( $_SERVER['REMOTE_ADDR'] ) : '';
-            $fdbgp_fields['user_agent']      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ) : '';
+            $fdbgp_fields['user_ip']         = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash($_SERVER['REMOTE_ADDR']) ) : '';
+            $fdbgp_fields['user_agent']      = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash($_SERVER['HTTP_USER_AGENT']) ) : '';
             $fdbgp_fields['submission_date'] = current_time( 'mysql' );
-            $fdbgp_fields['page_url']        = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( $_SERVER['HTTP_REFERER'] ) : '';
+            $fdbgp_fields['page_url']        = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash($_SERVER['HTTP_REFERER']) ) : '';
             
             try {
                 $fdbgp_headers = isset( $fdbgp_settings[ $this->add_prefix( 'sheet_headers' ) ] ) ? $fdbgp_settings[ $this->add_prefix( 'sheet_headers' ) ] : [];
@@ -482,13 +482,13 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
         if ( empty( $fdbgp_google_settings['client_token'] ) ) {
             $fdbgp_html = sprintf(
                 '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb&tab=settings"> <strong>%2$s</strong></a>.</div>',
-                esc_html__( 'Authentication required. Connect your Google account to use Sheets.', 'elementor-contact-form-db' ),
-                esc_html__( 'Click Here', 'elementor-contact-form-db' )
+                esc_html__( 'Authentication required. Connect your Google account to use Sheets.', 'sb-elementor-contact-form-db' ),
+                esc_html__( 'Click Here', 'sb-elementor-contact-form-db' )
             );
             $widget->start_controls_section(
                 $this->add_prefix('section_google_sheets'),
                 array(
-                    'label'     => esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
+                    'label'     => esc_html__( 'Save Submissions in Google Sheet', 'sb-elementor-contact-form-db' ),
                     'tab'       => 'connect_google_sheets_tab',
                     'condition' => array(
                         'cool_formkit_submit_actions' => $this->get_name(),
@@ -510,8 +510,8 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             if ( 'Invalid token format' === (string) $fdbgp_error || 'invalid_grant' === (string) $fdbgp_error ) {
                 $fdbgp_html = sprintf(
                     '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb"> <strong>%2$s</strong></a>.</div>',
-                    esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'elementor-contact-form-db' ),
-                    esc_html__( 'Click Here', 'elementor-contact-form-db' )
+                    esc_html__( 'Error: Invalid Token - Revoke Token with Google Sheet Setting and try again.', 'sb-elementor-contact-form-db' ),
+                    esc_html__( 'Click Here', 'sb-elementor-contact-form-db' )
                 );
             } else {
                 $fdbgp_html = sprintf(
@@ -522,7 +522,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->start_controls_section(
                 $this->add_prefix('section_google_sheets'),
                 array(
-                    'label'     => esc_attr__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
+                    'label'     => esc_attr__( 'Save Submissions in Google Sheet', 'sb-elementor-contact-form-db' ),
                     'condition' => array(
                         'cool_formkit_submit_actions' => $this->get_name(),
                     ),
@@ -541,7 +541,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->start_controls_section(
                 $this->add_prefix('section_google_sheets'),
                 array(
-                    'label'     => esc_html__( 'Save Submissions in Google Sheet', 'elementor-contact-form-db' ),
+                    'label'     => esc_html__( 'Save Submissions in Google Sheet', 'sb-elementor-contact-form-db' ),
                     'tab'       => 'connect_google_sheets_tab',
                     'condition' => array(
                         'cool_formkit_submit_actions' => $this->get_name(),
@@ -556,12 +556,12 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
                 $fdbgp_spreadsheets = array();
             }
             
-            $fdbgp_spreadsheets = array( '' => esc_html__( 'Please Select a Spreadsheet', 'elementor-contact-form-db' ) ) + $fdbgp_spreadsheets;
+            $fdbgp_spreadsheets = array( '' => esc_html__( 'Please Select a Spreadsheet', 'sb-elementor-contact-form-db' ) ) + $fdbgp_spreadsheets;
 
             $widget->add_control(
                 $this->add_prefix( 'spreadsheetid' ),
                 array(
-                    'label'       => esc_attr__( 'Select Spreadsheet', 'elementor-contact-form-db' ),
+                    'label'       => esc_attr__( 'Select Spreadsheet', 'sb-elementor-contact-form-db' ),
                     'type'        => Controls_Manager::SELECT,
                     'default'     => '',
                     'options'     => $fdbgp_spreadsheets,
@@ -573,7 +573,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->add_control(
                 $this->add_prefix( 'new_spreadsheet_name' ),
                 array(
-                    'label'       => esc_attr__( 'Spreadsheet Name', 'elementor-contact-form-db' ),
+                    'label'       => esc_attr__( 'Spreadsheet Name', 'sb-elementor-contact-form-db' ),
                     'type'        => Controls_Manager::TEXT,
                     'label_block' => true,
                     'condition'   => array(
@@ -586,7 +586,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->add_control(
                 $this->add_prefix( 'sheet_name' ),
                 array(
-                    'label'       => esc_attr__( 'Sheet Tab Name', 'elementor-contact-form-db' ),
+                    'label'       => esc_attr__( 'Sheet Tab Name', 'sb-elementor-contact-form-db' ),
                     'type'        => Controls_Manager::TEXT,
                     'label_block' => true,
                     'condition'   => array(
@@ -597,8 +597,8 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             );
 
             // Populate Sheet List based on selection (Fixed logic)
-            $fdbgp_sheets = array( '' => esc_html__( 'Please Enter Sheet Tab Name', 'elementor-contact-form-db' ) );
-            $fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
+            $fdbgp_sheets = array( '' => esc_html__( 'Please Enter Sheet Tab Name', 'sb-elementor-contact-form-db' ) );
+            $fdbgp_sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'sb-elementor-contact-form-db' );
             
             if ( ! empty( $local_spreadsheet_id ) && $local_spreadsheet_id !== 'new' ) {
                 try {
@@ -618,7 +618,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->add_control(
                 $this->add_prefix( 'sheet_list' ),
                 array(
-                    'label'       => esc_attr__( 'Select Sheet Tab Name', 'elementor-contact-form-db' ),
+                    'label'       => esc_attr__( 'Select Sheet Tab Name', 'sb-elementor-contact-form-db' ),
                     'type'        => Controls_Manager::SELECT,
                     'default'     => '',
                     'options'     => $fdbgp_sheets,
@@ -633,7 +633,7 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->add_control(
                 $this->add_prefix( 'new_sheet_tab_name' ),
                 array(
-                    'label'       => esc_attr__( 'New Sheet Tab Name', 'elementor-contact-form-db' ),
+                    'label'       => esc_attr__( 'New Sheet Tab Name', 'sb-elementor-contact-form-db' ),
                     'type'        => Controls_Manager::TEXT,
                     'label_block' => true,
                     'condition'   => array(
@@ -647,16 +647,16 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
             $widget->add_control(
                 $this->add_prefix( 'sheet_headers' ),
                 array(
-                    'label'       => esc_attr__( 'Select a data to save in sheet', 'fdbgp' ),
+                    'label'       => esc_attr__( 'Select a data to save in sheet', 'sb-elementor-contact-form-db' ),
                     'type'        => 'fdbgp_dynamic_select2',
                     'label_block' => true,
                     'multiple'    => true, 
                     'default'     => [ 'user_ip','page_url','submission_date' ],
                     'options'     => array(
-                        'user_ip'         => esc_html__( 'User IP', 'fdbgp' ),
-                        'user_agent'      => esc_html__( 'User Agent', 'fdbgp' ),
-                        'page_url'        => esc_html__( 'Page URL', 'fdbgp' ),
-                        'submission_date' => esc_html__( 'Submission DateTime', 'fdbgp' ),
+                        'user_ip'         => esc_html__( 'User IP', 'sb-elementor-contact-form-db' ),
+                        'user_agent'      => esc_html__( 'User Agent', 'sb-elementor-contact-form-db' ),
+                        'page_url'        => esc_html__( 'Page URL', 'sb-elementor-contact-form-db' ),
+                        'submission_date' => esc_html__( 'Submission DateTime', 'sb-elementor-contact-form-db' ),
                     ),
                     'condition'   => array(
                         $this->add_prefix( 'spreadsheetid' ) . '!' => array( '' ),
