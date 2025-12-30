@@ -217,6 +217,14 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
+= 2.0.2 (Dec 31, 2025) =
+* Added other plugin recommendations for Elementor users.
+* Improved code.
+
+= 2.0.1 (Dec 30, 2025) =
+* Fixed issues reported by "Plugin Check" plugin.
+* Improved code quality to follow WordPress coding standards.
+
 = 2.0.0 (Dec 26, 2025) =
 * Plugin acquired, fully rebuilt, and rebranded as **[FormsDB](https://coolplugins.net/product/formsdb-connect-elementor-forms-google-sheets/?utm_source=formsdb&utm_medium=readme&utm_campaign=plugin_page&utm_content=changelog)** by **[Cool Plugins](https://coolplugins.net/?utm_source=formsdb&utm_medium=readme&utm_campaign=home&utm_content=changelog)**.
 * Introduced **Google Sheets integration** to sync Elementor form submissions.
