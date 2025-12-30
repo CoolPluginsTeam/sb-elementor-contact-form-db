@@ -407,7 +407,7 @@
                     try {
                         const model = elementor.getPanelView()?.getCurrentPageView?.().model;
                         const savedSheet = model?.getSetting('fdbgp_sheet_list');
-                        if (savedSheet && savedSheet !== 'create_new_tab') {
+                        if (savedSheet && savedSheet !== 'create_new_tab' && response.data.sheets && Object.prototype.hasOwnProperty.call(response.data.sheets, savedSheet)) {
                             $sheetSelect.val(savedSheet);
                             this.saveWidgetState(savedSheet);
                         }
