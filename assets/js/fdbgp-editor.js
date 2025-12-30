@@ -648,13 +648,17 @@
                 localStorage.removeItem(cacheKey);
             };
 
-            if (typeof $e !== 'undefined' && $e.commands) {
-                $e.commands.on('run:after', (component, command) => {
-                    if (command?.startsWith('document/save/')) clearCache();
-                });
-            } else if (elementor.channels?.editor) {
-                elementor.channels.editor.on('saved', clearCache);
-            }
+            window.addEventListener('beforeunload', () => {
+                clearCache();
+            });
+
+            // if (typeof $e !== 'undefined' && $e.commands) {
+            //     $e.commands.on('run:after', (component, command) => {
+            //         if (command?.startsWith('document/save/')) clearCache();
+            //     });
+            // } else if (elementor.channels?.editor) {
+            //     elementor.channels.editor.on('saved', clearCache);
+            // }
         }
 
         startPollingFallback() {
