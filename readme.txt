@@ -4,7 +4,7 @@ Donate link: https://donate.stripe.com/5kQdR92iBevO75WbPm6c00i
 Tags: elementor forms, google sheets, form submissions, contact form db, form entries
 Requires at least: 5.0
 Tested up to: 6.9
-Requires PHP: 7.2
+Requires PHP: 7.4
 Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
