@@ -66,7 +66,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 					'mask-form-elementor/index.php'
 				];
 
-				if (empty(array_intersect($required_plugins, $active_plugins))) {
+				if (empty(array_intersect($required_plugins, $active_plugins)) && empty(array_intersect(['timeline-widget-addon-for-elementor/timeline-widget-addon-for-elementor.php'], $active_plugins))) {
 
 					add_action('elementor/element/form/section_form_fields/before_section_end', [$this, 'fdbgp_marketing_controls'], 100, 2);
 				}
@@ -624,7 +624,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 					'label_on'     => esc_html__('Yes', 'conditional-fields-for-elementor-form'),
 					'label_off'    => esc_html__('No', 'conditional-fields-for-elementor-form'),
 					'condition'    => array(
-						'field_type' => array('text', 'email', 'textarea', 'number', 'select', 'radio', 'checkbox', 'tel'),
+						'field_type' => array('text', 'email', 'textarea', 'number', 'select', 'radio', 'checkbox', 'tel', 'ehp-tel'),
 					),
 					'tab'          => 'content',
 					'default'      => 'no',
@@ -652,7 +652,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 
 					'tab'             => 'content',
 					'condition'       => array(
-						'field_type' => array('text', 'email', 'textarea', 'number', 'select', 'radio', 'checkbox', 'tel'),
+						'field_type' => array('text', 'email', 'textarea', 'number', 'select', 'radio', 'checkbox', 'tel', 'ehp-tel'),
 						'cfdbgp-mkt-conditional-conditions' => 'yes'
 					),
 					'inner_tab'       => 'form_fields_advanced_tab',
