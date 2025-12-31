@@ -28,9 +28,174 @@ class FDBGP_Old_Submission {
      * Constructor
      */
     private function __construct() {
+        // Init hooks
+        add_action('init', array($this, 'init_hooks'));
         add_action('admin_init', array($this, 'handle_csv_download'));
+        add_action('admin_init', array($this, 'handle_actions'));
+        // add_action('elementor_pro/forms/new_record', array($this, 'save_legacy_record'), 10, 2);
     }
 
+    /**
+     * Initialize hooks and post type
+     */
+    public function init_hooks() {
+        // Register post type if not exists (it might be registered by old plugin if active, but we should ensure it exists)
+        // $this->register_post_type();
+    }
+
+    /**
+     * Register Custom Post Type for Legacy Submissions
+     */
+    private function register_post_type() {
+        if (!post_type_exists('elementor_cf_db')) {
+            $labels = array(
+                'name'               => _x( 'Elementor DB', 'post type general name', 'sb-elementor-contact-form-db' ),
+                'singular_name'      => _x( 'Elementor DB', 'post type singular name', 'sb-elementor-contact-form-db' ),
+                'menu_name'          => _x( 'Elementor DB', 'admin menu', 'sb-elementor-contact-form-db' ),
+                'name_admin_bar'     => _x( 'Elementor DB', 'add new on admin bar', 'sb-elementor-contact-form-db' ),
+                'add_new'            => _x( 'Add New', 'elementor_cf_db', 'sb-elementor-contact-form-db' ),
+                'add_new_item'       => __( 'Add New Submission', 'sb-elementor-contact-form-db' ),
+                'new_item'           => __( 'New Submission', 'sb-elementor-contact-form-db' ),
+                'edit_item'          => __( 'Edit Submission', 'sb-elementor-contact-form-db' ),
+                'view_item'          => __( 'View Submission', 'sb-elementor-contact-form-db' ),
+                'all_items'          => __( 'All Submissions', 'sb-elementor-contact-form-db' ),
+                'search_items'       => __( 'Search Submissions', 'sb-elementor-contact-form-db' ),
+                'parent_item_colon'  => __( 'Parent Submissions:', 'sb-elementor-contact-form-db' ),
+                'not_found'          => __( 'No submissions found.', 'sb-elementor-contact-form-db' ),
+                'not_found_in_trash' => __( 'No submissions found in Trash.', 'sb-elementor-contact-form-db' )
+            );
+    
+            $args = array(
+                'labels'             => $labels,
+                'public'             => false,
+                'publicly_queryable' => false,
+                'show_ui'            => false, // We use our own UI
+                'show_in_menu'       => false,
+                'query_var'          => true,
+                'rewrite'            => array( 'slug' => 'elementor_cf_db' ),
+                'capability_type'    => 'post',
+                'has_archive'        => true,
+                'hierarchical'       => false,
+                'menu_position'      => null,
+                'supports'           => array( 'title', 'editor', 'author' )
+            );
+    
+            register_post_type( 'elementor_cf_db', $args );
+        }
+    }
+
+    /**
+     * Save record in legacy format
+     * 
+     * @param \ElementorPro\Modules\Forms\Classes\Record $record
+     * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $handler
+     */
+    public function save_legacy_record($record, $handler) {
+        // Check if legacy saving is enabled
+        $is_enabled = get_option('fdbgp_legacy_save_enabled', '0');
+        
+        // If not enabled, do not save
+        if ($is_enabled !== '1') {
+            return;
+        }
+
+        $form_name = $record->get_form_settings('form_name');
+        $form_id = $record->get_form_settings('form_id');
+        $raw_fields = $record->get('fields');
+
+        // Prepare data matching old plugin structure
+        $fields = array();
+        foreach ($raw_fields as $id => $field) {
+            $fields[$id] = array(
+                'label' => $field['title'],
+                'value' => $field['value']
+            );
+        }
+
+        $meta = array(
+            'form_id' => $form_name,
+            'data' => $fields,
+            'extra' => array(
+                'submitted_on' => get_the_title(),
+                'submitted_on_id' => get_the_ID(),
+                'submitted_by' => is_user_logged_in() ? wp_get_current_user()->display_name : 'Guest',
+                'submitted_by_id' => is_user_logged_in() ? get_current_user_id() : 0,
+            )
+        );
+
+        $post_data = array(
+            'post_title' => $form_name . ' - ' . date('Y-m-d H:i:s'),
+            'post_status' => 'publish',
+            'post_type' => 'elementor_cf_db',
+        );
+
+        $post_id = wp_insert_post($post_data);
+
+        if ($post_id && !is_wp_error($post_id)) {
+            update_post_meta($post_id, 'sb_elem_cfd', $meta);
+            update_post_meta($post_id, 'sb_elem_cfd_form_id', $form_name);
+            update_post_meta($post_id, 'sb_elem_cfd_submitted_on_id', get_the_ID());
+            
+            // Add read status
+            $read = array(
+                'by_name' => '',
+                'by' => 0,
+                'on' => 0
+            );
+            update_post_meta($post_id, 'sb_elem_cfd_read', 0); // 0 means unread
+        }
+    }
+
+    /**
+     * Handle actions (toggle legacy mode, delete submission)
+     */
+    public function handle_actions() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        // Toggle Legacy Mode
+        if (isset($_POST['fdbgp_toggle_legacy_save']) && check_admin_referer('fdbgp_legacy_action', 'fdbgp_legacy_nonce')) {
+            $enable = isset($_POST['enable_legacy_save']) ? '1' : '0';
+            update_option('fdbgp_legacy_save_enabled', $enable);
+            wp_safe_redirect(remove_query_arg(array('fdbgp_toggle_legacy_save', 'enable_legacy_save')));
+            exit;
+        }
+
+        // Delete Submission
+        if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_delete_submission' && isset($_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_delete_submission_' . $_GET['post_id'])) {
+                $post_id = intval($_GET['post_id']);
+                wp_delete_post($post_id, true);
+                wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
+                exit;
+            }
+        }
+    }
+
+    /**
+     * Get legacy save status
+     */
+    public function is_legacy_save_enabled() {
+        return get_option('fdbgp_legacy_save_enabled', '0') === '1';
+    }
+
+    /**
+     * Get all submissions with pagination
+     */
+    public function get_all_submissions($per_page = 20, $page = 1) {
+        $args = array(
+            'post_type' => 'elementor_cf_db',
+            'post_status' => 'publish',
+            'posts_per_page' => $per_page,
+            'paged' => $page,
+            'orderby' => 'date',
+            'order' => 'DESC'
+        );
+
+        return new WP_Query($args);
+    }
+    
     /**
      * Check if old submissions exist in the database
      * 
