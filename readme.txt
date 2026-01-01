@@ -217,6 +217,10 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
+= 2.0.2 (Dec 31, 2025) =
+* Added other plugin recommendations for Elementor users.
+* Improved code.
+
 = 2.0.1 (Dec 30, 2025) =
 * Fixed issues reported by "Plugin Check" plugin.
 * Improved code quality to follow WordPress coding standards.

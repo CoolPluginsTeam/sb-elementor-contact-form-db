@@ -124,6 +124,11 @@ if(!class_exists('FDBGP_Main')) {
 			// Get the loader instance
 			\FDBGP_Loader::get_instance();
 
+			if ( did_action( 'elementor/loaded' ) && class_exists( '\Elementor\Plugin' ) ) {
+
+				require_once FDBGP_PLUGIN_DIR . '/admin/marketing/fdbgp-marketing-common.php';
+			}
+
 		}
 
 		function FDBGP_plugin_dashboard_link( $links ) {
