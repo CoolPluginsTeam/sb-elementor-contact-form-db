@@ -43,11 +43,6 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 		{
 			$active_plugins = get_option('active_plugins', []);
 
-				add_action('elementor/element/after_section_end', function ($element) {
-					// var_dump($element->get_name());
-				});
-
-
 			if (in_array('elementor-pro/elementor-pro.php', $active_plugins) || in_array('pro-elements/pro-elements.php', $active_plugins)) {
 
 				add_action('elementor/init', [$this, 'fdbgp_init_hooks']);
@@ -217,7 +212,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 			}
 
 			wp_enqueue_script(
-				'coolplugin-editor-js',
+				'fdbgp-coolplugin-editor-js',
 				FDBGP_PLUGIN_URL . 'admin/marketing/js/fdbgp-form-marketing.js',
 				['jquery'],
 				FDBGP_PLUGIN_VERSION,
@@ -325,7 +320,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 		{
 
 			wp_enqueue_script(
-				'coolplugin-editor-js',
+				'fdbgp-coolplugin-editor-js',
 				FDBGP_PLUGIN_URL . 'admin/marketing/js/fdbgp-form-marketing.js',
 				['jquery'],
 				FDBGP_PLUGIN_VERSION,
