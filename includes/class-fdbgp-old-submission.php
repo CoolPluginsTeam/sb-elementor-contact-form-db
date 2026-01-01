@@ -92,10 +92,7 @@ class FDBGP_Old_Submission {
      */
     public function save_legacy_record($record, $handler) {
         // Check if legacy saving is enabled
-        $is_enabled = get_option('fdbgp_legacy_save_enabled', '1');
-        
-        // If not enabled, do not save
-        if ($is_enabled !== '1') {
+        if (!$this->is_legacy_save_enabled()) {
             return;
         }
 
@@ -202,7 +199,8 @@ class FDBGP_Old_Submission {
      * Get legacy save status
      */
     public function is_legacy_save_enabled() {
-        return get_option( 'fdbgp_legacy_save_enabled', '1' ) === '1';
+        $default = self::has_old_submissions() ? '1' : '0';
+        return get_option( 'fdbgp_legacy_save_enabled', $default ) === '1';
     }
 
     /**
