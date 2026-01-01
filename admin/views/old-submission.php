@@ -179,6 +179,25 @@ class FDBGP_Old_Submission_View {
                         </div>
                     <?php endif; ?>
 
+                <?php elseif($page > 1): ?>
+                    <p><?php esc_html_e('Please switch to another tab.', 'sb-elementor-contact-form-db'); ?></p>
+                    <div class="formsdb-tablenav bottom">
+                        <div class="tablenav-pages">
+                            <?php 
+                            $submissions_query = $this->helper->get_all_submissions(10, 1);
+                            if(!empty($submissions_query)) {
+                                echo paginate_links(array(
+                                    'base' => add_query_arg('paged', '%#%'),
+                                    'format' => '',
+                                    'prev_text' => __('&laquo;'),
+                                    'next_text' => __('&raquo;'),
+                                    'total' => $submissions_query->max_num_pages,
+                                    'current' => $page
+                                )); 
+                            }
+                            ?>
+                        </div>
+                    </div>
                 <?php else: ?>
                     <p><?php esc_html_e('No legacy submissions found.', 'sb-elementor-contact-form-db'); ?></p>
                 <?php endif; ?>
