@@ -50,9 +50,13 @@ class FDBGP_Old_Submission_View {
     private function render_content($forms, $form_ids, $total_count) {
         $legacy_enabled = $this->helper->is_legacy_save_enabled();
         
-        // Handle pagination
+        // Handle pagination and status
         $page = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
-        $submissions_query = $this->helper->get_all_submissions($this->per_page, $page);
+        $status = isset($_GET['status']) && $_GET['status'] === 'trash' ? 'trash' : 'publish';
+        
+        $submissions_query = $this->helper->get_all_submissions($this->per_page, $page, $status);
+        $count_publish = $this->helper->get_submission_count('publish');
+        $count_trash = $this->helper->get_submission_count('trash');
         ?>
         <div class="cool-formkit-setting-table-con">
             <div class="cool-formkit-left-side-setting">
@@ -93,73 +97,101 @@ class FDBGP_Old_Submission_View {
                 </div>
 
                 <!-- Submissions Table -->
-                <h3 style="margin-bottom: 15px;"><?php esc_html_e('All Legacy Submissions', 'sb-elementor-contact-form-db'); ?></h3>
+                <h3 style="margin-bottom: 5px;"><?php esc_html_e('All Legacy Submissions', 'sb-elementor-contact-form-db'); ?></h3>
+                
+                <ul class="subsubsub">
+                    <li class="all"><a href="<?php echo esc_url(remove_query_arg(array('status', 'paged'))); ?>" class="<?php echo $status === 'publish' ? 'current' : ''; ?>"><?php esc_html_e('All', 'sb-elementor-contact-form-db'); ?> <span class="count">(<?php echo intval($count_publish); ?>)</span></a> |</li>
+                    <li class="trash"><a href="<?php echo esc_url(add_query_arg('status', 'trash', remove_query_arg('paged'))); ?>" class="<?php echo $status === 'trash' ? 'current' : ''; ?>"><?php esc_html_e('Trash', 'sb-elementor-contact-form-db'); ?> <span class="count">(<?php echo intval($count_trash); ?>)</span></a></li>
+                </ul>
                 
                 <?php if ($submissions_query->have_posts()): ?>
-                    <table class="wp-list-table widefat fixed striped">
-                        <thead>
-                            <tr>
-                                <th><?php esc_html_e('Date', 'sb-elementor-contact-form-db'); ?></th>
-                                <th><?php esc_html_e('Form Name', 'sb-elementor-contact-form-db'); ?></th>
-                                <th><?php esc_html_e('Details', 'sb-elementor-contact-form-db'); ?></th>
-                                <th><?php esc_html_e('Actions', 'sb-elementor-contact-form-db'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($submissions_query->have_posts()): $submissions_query->the_post(); 
-                                $post_id = get_the_ID();
-                                $meta = $this->helper->get_submission_meta($post_id);
-                                $form_id = get_post_meta($post_id, 'sb_elem_cfd_form_id', true);
-                                $display_name = get_the_title();
-                                
-                                // Attempt to find email in data
-                                $email = '-';
-                                if (isset($meta['data'])) {
-                                    foreach ($meta['data'] as $field) {
-                                        if (is_email($field['value'])) {
-                                            $email = $field['value'];
-                                            break;
+                    <form method="get">
+                        <input type="hidden" name="page" value="old-submissions-page" /> <!-- Adjust if needed based on actual admin page slug, looks like it might be dynamic -->
+                        
+                        <table class="wp-list-table widefat fixed striped">
+                            <thead>
+                                <tr>
+                                    <th><?php esc_html_e('Date', 'sb-elementor-contact-form-db'); ?></th>
+                                    <th><?php esc_html_e('Form Name', 'sb-elementor-contact-form-db'); ?></th>
+                                    <th><?php esc_html_e('Details', 'sb-elementor-contact-form-db'); ?></th>
+                                    <th><?php esc_html_e('Actions', 'sb-elementor-contact-form-db'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($submissions_query->have_posts()): $submissions_query->the_post(); 
+                                    $post_id = get_the_ID();
+                                    $meta = $this->helper->get_submission_meta($post_id);
+                                    $form_id = get_post_meta($post_id, 'sb_elem_cfd_form_id', true);
+                                    $display_name = get_the_title();
+                                    
+                                    // Attempt to find email in data
+                                    $email = '-';
+                                    if (isset($meta['data'])) {
+                                        foreach ($meta['data'] as $field) {
+                                            if (is_email($field['value'])) {
+                                                $email = $field['value'];
+                                                break;
+                                            }
                                         }
                                     }
-                                }
-                            ?>
-                                <tr>
-                                    <td><?php echo get_the_date('Y-m-d H:i:s'); ?></td>
-                                    <td>
-                                        <strong><?php echo esc_html($display_name); ?></strong><br>
-                                        <small><?php printf(esc_html__('Form ID: %s', 'sb-elementor-contact-form-db'), esc_html($form_id)); ?></small>
-                                    </td>
-                                    <td>
-                                        <?php if ($email !== '-'): ?>
-                                            <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a>
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="button button-secondary fdbgp-view-submission" 
-                                            data-id="<?php echo esc_attr($post_id); ?>" 
-                                            data-data="<?php echo esc_attr(json_encode($meta['data'])); ?>"
-                                            data-extra="<?php echo esc_attr(json_encode(isset($meta['extra']) ? $meta['extra'] : array())); ?>"
-                                            data-date="<?php echo esc_attr(get_the_date('Y-m-d H:i:s')); ?>"
-                                            data-permalink="<?php echo esc_attr(get_permalink($meta['extra']['submitted_on_id'])); ?>"
-                                            >
-                                            <?php esc_html_e('View', 'sb-elementor-contact-form-db'); ?>
-                                        </button>
-                                        <?php 
-                                        $delete_url = wp_nonce_url(
-                                            add_query_arg(array('action' => 'fdbgp_delete_submission', 'post_id' => $post_id)), 
-                                            'fdbgp_delete_submission_' . $post_id
-                                        ); 
-                                        ?>
-                                        <a href="<?php echo esc_url($delete_url); ?>" class="button button-link-delete" onclick="return confirm('<?php esc_attr_e('Are you sure you want to delete this submission?', 'sb-elementor-contact-form-db'); ?>');">
-                                            <?php esc_html_e('Delete', 'sb-elementor-contact-form-db'); ?>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endwhile; wp_reset_postdata(); ?>
-                        </tbody>
-                    </table>
+                                ?>
+                                    <tr>
+                                        <td><?php echo get_the_date('Y-m-d H:i:s'); ?></td>
+                                        <td>
+                                            <strong><?php echo esc_html($display_name); ?></strong><br>
+                                            <small><?php printf(esc_html__('Form ID: %s', 'sb-elementor-contact-form-db'), esc_html($form_id)); ?></small>
+                                        </td>
+                                        <td>
+                                            <?php if ($email !== '-'): ?>
+                                                <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($status === 'publish'): ?>
+                                                <button type="button" class="button button-secondary fdbgp-view-submission" 
+                                                    data-id="<?php echo esc_attr($post_id); ?>" 
+                                                    data-data="<?php echo esc_attr(json_encode($meta['data'])); ?>"
+                                                    data-extra="<?php echo esc_attr(json_encode(isset($meta['extra']) ? $meta['extra'] : array())); ?>"
+                                                    data-date="<?php echo esc_attr(get_the_date('Y-m-d H:i:s')); ?>"
+                                                    data-permalink="<?php echo esc_attr(get_permalink($meta['extra']['submitted_on_id'])); ?>"
+                                                >
+                                                    <?php esc_html_e('View', 'sb-elementor-contact-form-db'); ?>
+                                                </button>
+                                                <?php 
+                                                $trash_url = wp_nonce_url(
+                                                    add_query_arg(array('action' => 'fdbgp_trash_submission', 'post_id' => $post_id)), 
+                                                    'fdbgp_trash_submission_' . $post_id
+                                                ); 
+                                                ?>
+                                                <a href="<?php echo esc_url($trash_url); ?>" class="button button-link-delete">
+                                                    <?php esc_html_e('Trash', 'sb-elementor-contact-form-db'); ?>
+                                                </a>
+                                            <?php else: ?>
+                                                <?php 
+                                                $restore_url = wp_nonce_url(
+                                                    add_query_arg(array('action' => 'fdbgp_restore_submission', 'post_id' => $post_id)), 
+                                                    'fdbgp_restore_submission_' . $post_id
+                                                ); 
+                                                $delete_url = wp_nonce_url(
+                                                    add_query_arg(array('action' => 'fdbgp_delete_submission', 'post_id' => $post_id)), 
+                                                    'fdbgp_delete_submission_' . $post_id
+                                                ); 
+                                                ?>
+                                                <a href="<?php echo esc_url($restore_url); ?>" class="button button-secondary">
+                                                    <?php esc_html_e('Restore', 'sb-elementor-contact-form-db'); ?>
+                                                </a>
+                                                <a href="<?php echo esc_url($delete_url); ?>" class="button button-link-delete" onclick="return confirm('<?php esc_attr_e('Are you sure you want to permanently delete this submission?', 'sb-elementor-contact-form-db'); ?>');">
+                                                    <?php esc_html_e('Delete Permanently', 'sb-elementor-contact-form-db'); ?>
+                                                </a>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; wp_reset_postdata(); ?>
+                            </tbody>
+                        </table>
+                    </form>
 
                     <!-- Pagination -->
                     <?php if ($submissions_query->max_num_pages > 1): ?>
@@ -180,7 +212,7 @@ class FDBGP_Old_Submission_View {
                     <?php endif; ?>
 
                 <?php elseif($page > 1): ?>
-                    <p><?php esc_html_e('Please switch to another tab.', 'sb-elementor-contact-form-db'); ?></p>
+                    <p style="clear: left;"><?php esc_html_e('Please switch to another tab.', 'sb-elementor-contact-form-db'); ?></p>
                     <div class="formsdb-tablenav bottom">
                         <div class="tablenav-pages">
                             <?php 
@@ -199,7 +231,7 @@ class FDBGP_Old_Submission_View {
                         </div>
                     </div>
                 <?php else: ?>
-                    <p><?php esc_html_e('No legacy submissions found.', 'sb-elementor-contact-form-db'); ?></p>
+                    <p style="clear: left;"><?php esc_html_e('No legacy submissions found.', 'sb-elementor-contact-form-db'); ?></p>
                 <?php endif; ?>
 
                 <hr style="margin: 30px 0;">

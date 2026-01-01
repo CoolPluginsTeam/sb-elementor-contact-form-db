@@ -162,7 +162,31 @@ class FDBGP_Old_Submission {
             exit;
         }
 
-        // Delete Submission
+        // Trash Submission
+        if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_trash_submission' && isset($_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_trash_submission_' . $_GET['post_id'])) {
+                $post_id = intval($_GET['post_id']);
+                wp_trash_post($post_id);
+                wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
+                exit;
+            }
+        }
+
+        // Restore Submission
+        if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_restore_submission' && isset($_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_restore_submission_' . $_GET['post_id'])) {
+                $post_id = intval($_GET['post_id']);
+                wp_untrash_post($post_id);
+                wp_update_post(array(
+                    'ID'          => $post_id,
+                    'post_status' => 'publish',
+                ));
+                wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
+                exit;
+            }
+        }
+
+        // Permanent Delete Submission
         if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_delete_submission' && isset($_GET['post_id'])) {
             if (check_admin_referer('fdbgp_delete_submission_' . $_GET['post_id'])) {
                 $post_id = intval($_GET['post_id']);
@@ -183,10 +207,10 @@ class FDBGP_Old_Submission {
     /**
      * Get all submissions with pagination
      */
-    public function get_all_submissions($per_page = 20, $page = 1) {
+    public function get_all_submissions($per_page = 20, $page = 1, $status = 'publish') {
         $args = array(
             'post_type' => 'elementor_cf_db',
-            'post_status' => 'publish',
+            'post_status' => $status,
             'posts_per_page' => $per_page,
             'paged' => $page,
             'orderby' => 'date',
@@ -205,12 +229,20 @@ class FDBGP_Old_Submission {
         $posts = get_posts(array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => 1,
-            'post_status' => 'publish',
+            'post_status' => array('publish', 'trash'), // Check trash too
             'fields' => 'ids'
         ));
         
         return !empty($posts);
     }
+    
+    // ... (get_form_ids and get_submitted_pages skipped for brevity if unchanged, but actually I need to preserve them. I will include everything to be safe or use replace correctly) ...
+    // Wait, replace_file_content replaces a block. I need to be careful not to cut off methods.
+    // I will replace from handle_actions down to get_submission_count, modifying what's needed.
+
+    // ...
+
+
 
     /**
      * Get all unique form IDs from old submissions
@@ -465,13 +497,14 @@ class FDBGP_Old_Submission {
     /**
      * Get total submission count
      * 
+     * @param string $status
      * @return int
      */
-    public function get_submission_count() {
+    public function get_submission_count($status = 'publish') {
         $posts = get_posts(array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => -1,
-            'post_status' => 'publish',
+            'post_status' => $status,
             'fields' => 'ids'
         ));
         
