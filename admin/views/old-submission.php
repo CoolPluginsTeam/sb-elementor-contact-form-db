@@ -51,7 +51,9 @@ class FDBGP_Old_Submission_View {
         $legacy_enabled = $this->helper->is_legacy_save_enabled();
         
         // Handle pagination and status
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended	
         $page = isset($_GET['paged']) ? max(1, intval($_GET['paged'])) : 1;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended	
         $status = isset($_GET['status']) && $_GET['status'] === 'trash' ? 'trash' : 'publish';
         
         $submissions_query = $this->helper->get_all_submissions($this->per_page, $page, $status);
@@ -139,7 +141,12 @@ class FDBGP_Old_Submission_View {
                                         <td><?php echo get_the_date('Y-m-d H:i:s'); ?></td>
                                         <td>
                                             <strong><?php echo esc_html($display_name); ?></strong><br>
-                                            <small><?php printf(esc_html__('Form ID: %s', 'sb-elementor-contact-form-db'), esc_html($form_id)); ?></small>
+                                            <small><?php 
+                                                printf(
+                                                    /* translators: %s: Contact form ID */
+                                                    esc_html__('Form ID: %s', 'sb-elementor-contact-form-db'), esc_html($form_id)
+                                                );
+                                             ?></small>
                                         </td>
                                         <td>
                                             <?php if ($email !== '-'): ?>
@@ -198,14 +205,14 @@ class FDBGP_Old_Submission_View {
                         <div class="formsdb-tablenav bottom">
                             <div class="tablenav-pages">
                                 <?php 
-                                echo paginate_links(array(
+                                echo wp_kses_post(paginate_links(array(
                                     'base' => add_query_arg('paged', '%#%'),
                                     'format' => '',
-                                    'prev_text' => __('&laquo;'),
-                                    'next_text' => __('&raquo;'),
+                                    'prev_text' => '&laquo;',
+                                    'next_text' => '&raquo;',
                                     'total' => $submissions_query->max_num_pages,
                                     'current' => $page
-                                )); 
+                                ))); 
                                 ?>
                             </div>
                         </div>
@@ -218,14 +225,14 @@ class FDBGP_Old_Submission_View {
                             <?php 
                             $submissions_query = $this->helper->get_all_submissions(10, 1);
                             if(!empty($submissions_query)) {
-                                echo paginate_links(array(
+                                echo wp_kses_post(paginate_links(array(
                                     'base' => add_query_arg('paged', '%#%'),
                                     'format' => '',
-                                    'prev_text' => __('&laquo;'),
-                                    'next_text' => __('&raquo;'),
+                                    'prev_text' => '&laquo;',
+                                    'next_text' => '&raquo;',
                                     'total' => $submissions_query->max_num_pages,
                                     'current' => $page
-                                )); 
+                                ))); 
                             }
                             ?>
                         </div>

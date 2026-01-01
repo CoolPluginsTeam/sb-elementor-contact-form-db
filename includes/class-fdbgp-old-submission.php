@@ -32,7 +32,7 @@ class FDBGP_Old_Submission {
         add_action('init', array($this, 'init_hooks'));
         add_action('admin_init', array($this, 'handle_csv_download'));
         add_action('admin_init', array($this, 'handle_actions'));
-        // add_action('elementor_pro/forms/new_record', array($this, 'save_legacy_record'), 10, 2);
+        add_action('elementor_pro/forms/new_record', array($this, 'save_legacy_record'), 10, 2);
     }
 
     /**
@@ -124,6 +124,7 @@ class FDBGP_Old_Submission {
         );
 
         $post_data = array(
+            // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
             'post_title' => $form_name . ' - ' . date('Y-m-d H:i:s'),
             'post_status' => 'publish',
             'post_type' => 'elementor_cf_db',
@@ -164,7 +165,7 @@ class FDBGP_Old_Submission {
 
         // Trash Submission
         if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_trash_submission' && isset($_GET['post_id'])) {
-            if (check_admin_referer('fdbgp_trash_submission_' . $_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_trash_submission_' . sanitize_text_field(wp_unslash($_GET['post_id'])))) {
                 $post_id = intval($_GET['post_id']);
                 wp_trash_post($post_id);
                 wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
@@ -174,7 +175,7 @@ class FDBGP_Old_Submission {
 
         // Restore Submission
         if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_restore_submission' && isset($_GET['post_id'])) {
-            if (check_admin_referer('fdbgp_restore_submission_' . $_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_restore_submission_' . sanitize_text_field(wp_unslash($_GET['post_id'])))) {
                 $post_id = intval($_GET['post_id']);
                 wp_untrash_post($post_id);
                 wp_update_post(array(
@@ -188,7 +189,7 @@ class FDBGP_Old_Submission {
 
         // Permanent Delete Submission
         if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_delete_submission' && isset($_GET['post_id'])) {
-            if (check_admin_referer('fdbgp_delete_submission_' . $_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_delete_submission_' . sanitize_text_field(wp_unslash($_GET['post_id'])))) {
                 $post_id = intval($_GET['post_id']);
                 wp_delete_post($post_id, true);
                 wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
