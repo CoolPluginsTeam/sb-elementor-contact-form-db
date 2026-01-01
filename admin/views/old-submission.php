@@ -69,9 +69,9 @@ class FDBGP_Old_Submission_View {
                         <?php wp_nonce_field('fdbgp_legacy_action', 'fdbgp_legacy_nonce'); ?>
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div>
-                                <h3 style="margin: 0 0 10px 0;"><?php esc_html_e('Legacy Data Saving', 'sb-elementor-contact-form-db'); ?></h3>
+                                <h3 style="margin: 0 0 10px 0;"><?php esc_html_e('Continue Using Old Submission Method', 'sb-elementor-contact-form-db'); ?></h3>
                                 <p style="margin: 0;">
-                                    <?php esc_html_e('Do you want to continue saving new submissions to this legacy format? Enables saving to "elementor_cf_db" post type.', 'sb-elementor-contact-form-db'); ?>
+                                    <?php esc_html_e('When enabled, new form submissions will continue to be saved using the old automatic method (used in plugin version 1.8.1 and earlier).', 'sb-elementor-contact-form-db'); ?>
                                 </p>
                             </div>
                             <div style="flex-shrink: 0; margin-left: 20px;">
@@ -85,21 +85,15 @@ class FDBGP_Old_Submission_View {
                         </div>
                         <?php if ($legacy_enabled): ?>
                             <div class="notice notice-info inline" style="margin: 10px 0 0 0;">
-                                <p><?php esc_html_e('Note: Future submissions will be saved to the database in the legacy format. If you disable this, new submissions will only be handled by the new system.', 'sb-elementor-contact-form-db'); ?></p>
+                                <p><?php esc_html_e('If you disable this option, new submissions will not be saved using the old system. To save new submissions, you must edit your form in Elementor and select Save Submission under Actions After Submit.', 'sb-elementor-contact-form-db'); ?></p>
                             </div>
                         <?php endif; ?>
                     </form>
                 </div>
-
-                <div class="notice notice-warning" style="margin: 0 0 20px 0;">
-                    <p>
-                        <strong><?php esc_html_e('Legacy Data Notice:', 'sb-elementor-contact-form-db'); ?></strong>
-                        <?php esc_html_e('This tab displays old form submissions from a previous plugin version. These submissions are read-only and cannot be modified. You can export this data to CSV format.', 'sb-elementor-contact-form-db'); ?>
-                    </p>
-                </div>
-
+                
                 <!-- Submissions Table -->
-                <h3 style="margin-bottom: 5px;"><?php esc_html_e('All Legacy Submissions', 'sb-elementor-contact-form-db'); ?></h3>
+                <h3 style="margin-bottom: 5px;"><?php esc_html_e('Your Old (Legacy) Form Submissions', 'sb-elementor-contact-form-db'); ?></h3>
+                <p style="margin-bottom: 5px;"><?php esc_html_e('Here you can view all form submissions that were saved using the legacy method supported in plugin version 1.8.1 or earlier.', 'sb-elementor-contact-form-db'); ?></p>
                 
                 <ul class="subsubsub">
                     <li class="all"><a href="<?php echo esc_url(remove_query_arg(array('status', 'paged'))); ?>" class="<?php echo $status === 'publish' ? 'current' : ''; ?>"><?php esc_html_e('All', 'sb-elementor-contact-form-db'); ?> <span class="count">(<?php echo intval($count_publish); ?>)</span></a> |</li>
@@ -242,6 +236,9 @@ class FDBGP_Old_Submission_View {
                 <?php endif; ?>
 
                 <hr style="margin: 30px 0;">
+
+                
+                <h3><?php esc_html_e('Use the options below to export your old submissions for backup or migration.', 'sb-elementor-contact-form-db'); ?></h3>
 
                 <p>
                     <?php 
@@ -420,40 +417,34 @@ class FDBGP_Old_Submission_View {
                 <div class="fdbgp-step">
                     <div class="fdbgp-step-number">ℹ️</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Legacy Data', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php esc_html_e('These are form submissions from a previous version of the plugin.', 'sb-elementor-contact-form-db'); ?></p>
+                        <h3><?php esc_html_e('Legacy Submissions', 'sb-elementor-contact-form-db'); ?></h3>
+                        <p><?php esc_html_e('These are form submissions saved automatically by plugin version 1.8.1 or earlier.', 'sb-elementor-contact-form-db'); ?></p>
                     </div>
                 </div>
 
                 <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">📤</div>
+                    <div class="fdbgp-step-number">ℹ️</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Export Options', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php esc_html_e('Export your old data to CSV format for backup or migration to a new system.', 'sb-elementor-contact-form-db'); ?></p>
+                        <h3><?php esc_html_e('Continue Using Old Method', 'sb-elementor-contact-form-db'); ?></h3>
+                        <p><?php esc_html_e('If you don\'t want to edit many existing forms, you can keep using the old automatic saving method by keeping it enabled here.', 'sb-elementor-contact-form-db'); ?></p>
                     </div>
                 </div>
 
                 <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">🔒</div>
+                    <div class="fdbgp-step-number">ℹ️</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Read Only', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php esc_html_e('New submissions are no longer saved in this format. Use Google Sheets or Post Type integration for new forms.', 'sb-elementor-contact-form-db'); ?></p>
+                        <h3><?php esc_html_e('Enable New Submissions (Recommended)', 'sb-elementor-contact-form-db'); ?></h3>
+                        <p><?php _e('If you prefer the new method, disable legacy saving from this page. Then edit your form in Elementor and enable the Save Submission action.
+                        
+                        New entries will appear in <a href="admin.php?page=e-form-submissions" target="_blank">Elementor → Submissions</a>.', 'sb-elementor-contact-form-db'); ?></p>
                     </div>
                 </div>
 
                 <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">📝</div>
+                    <div class="fdbgp-step-number">ℹ️</div>
                     <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('New Submissions', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p>
-                            <?php 
-                            printf(
-                                /* translators: %s: link to Elementor Submissions tab */
-                                esc_html__( 'Please visit the %s for your new form entries.', 'sb-elementor-contact-form-db' ),
-                                '<a href="' . esc_url( admin_url( 'admin.php?page=e-form-submissions' ) ) . '" target="_blank">' . esc_html__( 'Elementor Submissions tab', 'sb-elementor-contact-form-db' ) . '</a>'
-                            ); 
-                            ?>
-                        </p>
+                        <h3><?php esc_html_e('Export Your Old Data', 'sb-elementor-contact-form-db'); ?></h3>
+                        <p><?php esc_html_e('You can export all legacy submissions to CSV format for backup or future use.', 'sb-elementor-contact-form-db'); ?></p>
                     </div>
                 </div>
             </div>

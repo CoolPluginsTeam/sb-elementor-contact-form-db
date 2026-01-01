@@ -142,7 +142,7 @@ class FDBGP_Form_To_Post_Settings {
      */
     private function render_forms_table( array $forms, $total_items, $current_page ) {
         ?>
-        <p><?php esc_html_e( 'View all your Elementor forms here and connect them to WordPress posts, pages, or custom post types. Use form submissions to create content directly from the frontend.', 'sb-elementor-contact-form-db' ); ?></p>
+        <p><?php esc_html_e( 'Connect Elementor forms with WordPress posts, pages, or custom post types. New form submissions can create content automatically from the frontend.', 'sb-elementor-contact-form-db' ); ?></p>
         <div class="cool-formkit-setting-table-con">
             <div class="cool-formkit-left-side-setting">
                 <?php
@@ -150,10 +150,10 @@ class FDBGP_Form_To_Post_Settings {
                 echo '<thead>
                         <tr>
                             <th>' . esc_html__( 'Form Name', 'sb-elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Page Title', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Used On Page', 'sb-elementor-contact-form-db' ) . '</th>
                             <th>' . esc_html__( 'Status', 'sb-elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Post Type', 'sb-elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Action', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Connected Post Type', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Manage', 'sb-elementor-contact-form-db' ) . '</th>
                         </tr>
                     </thead><tbody>';
 

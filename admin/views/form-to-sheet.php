@@ -81,7 +81,7 @@ class FDBGP_Form_To_Sheet_Settings {
                 <div class="wrapper-header">
                     <div class="cfkef-save-all">
                         <div class="cfkef-title-desc">
-                            <h2><?php esc_html_e( 'Save Form Submissions to Google Sheets', 'sb-elementor-contact-form-db' ); ?></h2>
+                            <h2><?php esc_html_e( 'Connect Elementor Forms to Google Sheets', 'sb-elementor-contact-form-db' ); ?></h2>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,8 @@ class FDBGP_Form_To_Sheet_Settings {
      */
     private function render_forms_table( array $forms, $total_items, $current_page ) {
         ?>
-        <p><?php esc_html_e( 'View all your Elementor forms here and manage their connection with Google Sheets. Automatically send new form submissions to your selected Google Sheet.', 'sb-elementor-contact-form-db' ); ?></p>
+        <p><?php esc_html_e( 'See all your Elementor forms and connect them to Google Sheets.
+        New form submissions will be saved automatically in your selected sheet.', 'sb-elementor-contact-form-db' ); ?></p>
         <div class="cool-formkit-setting-table-con">
             <div class="cool-formkit-left-side-setting">
                 <?php
@@ -173,10 +174,10 @@ class FDBGP_Form_To_Sheet_Settings {
                 echo '<thead>
                         <tr>
                             <th>' . esc_html__( 'Form Name', 'sb-elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Page Title', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Used On Page', 'sb-elementor-contact-form-db' ) . '</th>
                             <th>' . esc_html__( 'Status', 'sb-elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Google Sheet', 'sb-elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Action', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Connected Sheet', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Manage', 'sb-elementor-contact-form-db' ) . '</th>
                         </tr>
                     </thead><tbody>';
 

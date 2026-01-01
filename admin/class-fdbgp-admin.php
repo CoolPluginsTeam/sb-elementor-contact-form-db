@@ -245,7 +245,7 @@ if(!class_exists('FDBGP_Admin')) {
             $screen = get_current_screen();
 
             if ( $screen && 'elementor_page_e-form-submissions' === $screen->id ) {
-                $button_text = __('Save Form Submissions To Google Sheet', 'sb-elementor-contact-form-db');
+                $button_text = __('Save To Google Sheet', 'sb-elementor-contact-form-db');
                 $button_url = esc_url(admin_url('admin.php?page=formsdb'));
                 
                 $custom_js = "

@@ -5,7 +5,7 @@ Tags: elementor forms, google sheets, form submissions, contact form db, form en
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor tested up to: 3.34.0
@@ -217,7 +217,10 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
-= 2.0.2 (Dec 31, 2025) =
+= 2.1.0 (Jan 01, 2026) =
+* Added support for legacy users to continue using the old form submission saving method available in version 1.8.1 and earlier, based on user feedback.
+* Added an option to enable or disable the legacy saving method from the Old Submissions tab (visible only to users upgrading from older versions).
+* Minor UI improvements and text updates across FormsDB admin screens.
 * Added other plugin recommendations for Elementor users.
 * Improved code.
 

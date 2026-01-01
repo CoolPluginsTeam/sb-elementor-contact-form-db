@@ -331,12 +331,12 @@ $input_form_mask_features = array(
                     <div class="wrapper-header">
                         <div class="cfkef-save-all">
                             <div class="cfkef-title-desc">
-                                <h2><?php esc_html_e('What is Cool FormKit?', 'sb-elementor-contact-form-db'); ?></h2>
+                                <h2><?php esc_html_e('Unlock Advanced Form Fields & Features with Cool FormKit', 'sb-elementor-contact-form-db'); ?></h2>
                             </div>
 
                             <div class="cfkef-save-controls">
 
-                                <a target="_blank" href="https://coolformkit.com/pricing/?utm_source=<?php echo esc_attr($first_plugin) ?>&utm_medium=inside&utm_campaign=get_pro&utm_content=dashboard" class="button">Get Pro</a>
+                                <a target="_blank" href="https://coolformkit.com/pricing/?utm_source=<?php echo esc_attr($first_plugin) ?>&utm_medium=inside&utm_campaign=get_pro&utm_content=dashboard" class="button">Get Cool FormKit</a>
                             </div>
 
                         </div>
@@ -345,7 +345,7 @@ $input_form_mask_features = array(
                     <div class="wrapper-body">
 
 
-                        <p>All-in-one plugin, An addon for Elementor Pro forms that provides many extra features and advanced fields to extend your form-building experience using Elementor form widget.</p>
+                        <p>Cool FormKit adds powerful fields and features to Elementor forms, helping you build smarter and more interactive forms.</p>
 
 
                         <div class="cfkef-form-element-box">
