@@ -180,11 +180,11 @@ class FDBGP_Old_Submission_View {
                                                     'fdbgp_delete_submission_' . $post_id
                                                 ); 
                                                 ?>
-                                                <a href="<?php echo esc_url($restore_url); ?>" class="button button-secondary">
+                                                <a style="margin-top: 5px;" href="<?php echo esc_url($restore_url); ?>" class="button button-secondary">
                                                     <?php esc_html_e('Restore', 'sb-elementor-contact-form-db'); ?>
                                                 </a>
-                                                <a href="<?php echo esc_url($delete_url); ?>" class="button button-link-delete" onclick="return confirm('<?php esc_attr_e('Are you sure you want to permanently delete this submission?', 'sb-elementor-contact-form-db'); ?>');">
-                                                    <?php esc_html_e('Delete Permanently', 'sb-elementor-contact-form-db'); ?>
+                                                <a style="margin-top: 5px;" href="<?php echo esc_url($delete_url); ?>" class="button button-link-delete" onclick="return confirm('<?php esc_attr_e('Are you sure you want to permanently delete this submission?', 'sb-elementor-contact-form-db'); ?>');">
+                                                    <?php esc_html_e('Delete', 'sb-elementor-contact-form-db'); ?>
                                                 </a>
                                             <?php endif; ?>
                                         </td>

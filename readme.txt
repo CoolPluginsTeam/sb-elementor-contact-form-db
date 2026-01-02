@@ -217,12 +217,10 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
-= 2.1.0 (Jan 01, 2026) =
+= 2.1.0 (Jan 02, 2026) =
 * Added support for legacy users to continue using the old form submission saving method available in version 1.8.1 and earlier, based on user feedback.
 * Added an option to enable or disable the legacy saving method from the Old Submissions tab (visible only to users upgrading from older versions).
 * Minor UI improvements and text updates across FormsDB admin screens.
-* Added other plugin recommendations for Elementor users.
-* Improved code.
 
 = 2.0.1 (Dec 30, 2025) =
 * Fixed issues reported by "Plugin Check" plugin.

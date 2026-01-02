@@ -237,6 +237,8 @@ class FDBGP_Dashboard {
     }
 
     public function fdbgp_get_tabs(){
+        $has_old_submissions = \FDBGP_Old_Submission::has_old_submissions();
+
         $default_tabs = array(
             array(
                 'title' => 'Forms To Sheet',
@@ -265,6 +267,14 @@ class FDBGP_Dashboard {
                 'title' => 'Hello+ Form Entries',
                 'position' => 3,
                 'slug' => 'cfkef-entries',
+            );
+        }
+
+        if($has_old_submissions){
+            $default_tabs[] = array(
+                'title' => 'Old Submissions',
+                'position' => 6,
+                'slug' => 'formsdb&tab=old-submission',
             );
         }
 
