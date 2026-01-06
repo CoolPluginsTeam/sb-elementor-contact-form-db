@@ -74,7 +74,7 @@ if(!class_exists('FDBGP_Main')) {
 				global $wpdb;
 				$current_version = get_option( 'formsdb_initial_version' );
 
-				if ( $current_version && version_compare( $current_version, '1.8.0', '>' ) && ! get_option('formdb_initial_version_migration', false) ) {					
+				if ( $current_version && version_compare( $current_version, '1.8.1', '>' ) && ! get_option('formdb_initial_version_migration', false) ) {					
 					$post_type_exists = $wpdb->get_var(
 						$wpdb->prepare(
 							"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s LIMIT 1",
@@ -83,7 +83,7 @@ if(!class_exists('FDBGP_Main')) {
 					);
 	
 					if ( $post_type_exists ) {
-						update_option( 'formsdb_initial_version', '1.8.0' );
+						update_option( 'formsdb_initial_version', '1.8.1' );
 					}						
 					update_option('formdb_initial_version_migration', true);
 				}
