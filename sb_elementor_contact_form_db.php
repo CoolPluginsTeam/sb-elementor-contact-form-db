@@ -70,6 +70,24 @@ if(!class_exists('FDBGP_Main')) {
 
 			$this->includes();
 			
+			add_action( 'init', function () {
+				global $wpdb;
+				$current_version = get_option( 'formsdb_initial_version' );
+
+				if ( $current_version && version_compare( $current_version, '1.8.0', '>' ) && ! get_option('formdb_initial_version_migration', false) ) {					
+					$post_type_exists = $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s LIMIT 1",
+								'elementor_cf_db'
+						)
+					);
+	
+					if ( $post_type_exists ) {
+						update_option( 'formsdb_initial_version', '1.8.0' );
+					}						
+					update_option('formdb_initial_version_migration', true);
+				}
+			},20);
 		}
 
 		public function fdbgp_plugin_row_meta( $plugin_meta, $plugin_file ) {
