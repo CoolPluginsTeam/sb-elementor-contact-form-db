@@ -2048,7 +2048,7 @@ a.button-primary.upgrade-pro-btn {
 
 .fdbgp-help-box li {
   font-size: 14px;
-  padding: 6px 0;
+  padding: 3px 0px 3px 0px;
   color: #333;
   cursor: pointer;
 }
@@ -2059,7 +2059,7 @@ a.button-primary.upgrade-pro-btn {
 
 }
 
-.fdbgp-help-box a:hover {
+.fdbgp-help-box a {
   color: #2f6df6;
 }
 
