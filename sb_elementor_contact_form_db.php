@@ -67,6 +67,7 @@ if(!class_exists('FDBGP_Main')) {
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
 			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
 			add_filter( 'plugin_row_meta', array( $this, 'fdbgp_plugin_row_meta' ), 10, 2 );
+			add_action( 'activated_plugin', array( $this, 'fdbgp_plugin_redirection' ) );
 
 			$this->includes();
 			
@@ -88,6 +89,15 @@ if(!class_exists('FDBGP_Main')) {
 					update_option('formdb_initial_version_migration', true);
 				}
 			},20);
+		}
+
+		/**
+		 * redirection metehod for plugin redirection on plugin activation
+		 */
+		public function fdbgp_plugin_redirection( $plugin ) {
+			if ( $plugin == FDBGP_PLUGIN_BASENAME ) {
+				exit( wp_safe_redirect( admin_url( 'admin.php?page=formsdb' ) ) );
+			}
 		}
 
 		public function fdbgp_plugin_row_meta( $plugin_meta, $plugin_file ) {
