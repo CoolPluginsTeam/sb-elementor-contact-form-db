@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
     $.post(
       adminNotice.ajaxurl,
       {
-        action: "cpfm_handle_opt_in",
+        action: "cpfm_handle_opt_in_fdbgp",
         nonce: adminNotice.nonce,
         category: category,
         opt_in: optIn,
