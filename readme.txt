@@ -217,6 +217,10 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
+= 2.1.1 (Jan 07, 2026) =
+* Fixed Wrong initial version bug.
+* Minor UI improvements and text updates across FormsDB admin screens.
+
 = 2.1.0 (Jan 02, 2026) =
 * Added support for legacy users to continue using the old form submission saving method available in version 1.8.1 and earlier, based on user feedback.
 * Added an option to enable or disable the legacy saving method from the Old Submissions tab (visible only to users upgrading from older versions).
