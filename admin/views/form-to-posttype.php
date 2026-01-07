@@ -122,7 +122,7 @@ class FDBGP_Form_To_Post_Settings {
                         <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothly within 24 hours.</span></li>
                     </ul>
 
-                    <a href="https://buy.stripe.com/5kQ9AT4qJgDW1LC6v26c00j" class="button button-primary" target="_blank">
+                    <a href="https://coolplugins.net/hire-expert" class="button button-primary" target="_blank">
                         Hire Expert Developer
                     </a>
                 </div>

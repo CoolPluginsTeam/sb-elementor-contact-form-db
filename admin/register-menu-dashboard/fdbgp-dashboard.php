@@ -210,18 +210,30 @@ class FDBGP_Dashboard {
                     </a>
                 </div>
 
-                <?php if(!is_plugin_active('cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php')) : ?>
-
                 <div class="fdbgp-header-buttons">
-                <?php
-                    if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
-                ?>
+
+                    <?php
+                        if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
+                    ?>
+
                     <span>Unlock advanced fields and features for Elementor Forms.</span>
-                    <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-primary" target="_blank"><?php esc_html_e('Try Cool FormKit for Elementor', 'sb-elementor-contact-form-db'); ?></a>
-                <?php endif; ?>
+                    <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-primary " target="_blank"><?php 
+                        esc_html_e('Try Cool FormKit for Elementor', 'sb-elementor-contact-form-db');
+                     ?></a>
+
+                    <?php else: ?>
+
+                    <span>Use advanced fields and features for Elementor Forms.</span>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=cool-formkit' ))?>" class="button button-primary fdbgp-try-cool-form" target="_blank"><?php 
+                        esc_html_e('use Cool FormKit for Elementor', 'sb-elementor-contact-form-db');
+                     ?></a>
+
+                    <?php endif; ?>
+
+                
+                    
                 </div>
 
-                <?php endif; ?>
             </div>
         <?php
 

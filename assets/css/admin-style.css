@@ -5,6 +5,10 @@
   --secondary-color: #7b98ee;
 }
 
+.fdbgp-try-cool-form{
+  margin-left: 16px;
+}
+
 .fdbgp-toggle-switch {
   position: relative;
   display: inline-block;
