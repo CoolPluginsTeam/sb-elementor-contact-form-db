@@ -325,7 +325,14 @@ body.elementor_page_cfkef-entries {
 .elementor_page_formsdb .notice {
   margin: 2px 20px 20px 0;
 }
-
+.cool-formkit-left-side-setting table{
+    
+  display: block;
+    width: 100%;
+    overflow-x: auto;
+    
+    overflow-y: hidden;
+}
 .fdbgp-wrapper .button {
   padding: 7px 14px;
   background-color: #3f415e;
@@ -339,7 +346,11 @@ body.elementor_page_cfkef-entries {
   line-height: 14px;
   align-self: center;
   text-shadow: 1px 1px 1px #323348;
-  margin-left: 16px;
+  
+}
+
+.fdbgp-help-box a.button.button-primary {
+    margin-left: 16px;
 }
 
 .fdbgp-wrapper .button:focus {
