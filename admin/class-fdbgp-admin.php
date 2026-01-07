@@ -171,7 +171,11 @@ if(!class_exists('FDBGP_Admin')) {
                         </a>
                     </div>
                     <div class="fdbgp-header-buttons">
+                    <?php
+                    if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
+                    ?>
                         <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'sb-elementor-contact-form-db'); ?></a>
+                    <?php endif; ?>
                     </div>
                 </div>
                 <h2 class="nav-tab-wrapper">
@@ -211,8 +215,13 @@ if(!class_exists('FDBGP_Admin')) {
                             include_once 'views/form-to-sheet.php';
                             break;
                         case 'advanced':
-                            include_once 'views/advanced-fields.php';
-                            break;
+                            if(is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )){
+                                include_once 'views/form-to-sheet.php';
+                                break;
+                            }else{
+                                include_once 'views/advanced-fields.php';
+                                break;
+                            }
                         case 'old-submission':
                             include_once 'views/old-submission.php';
                             break;
