@@ -178,7 +178,7 @@ if(!class_exists('FDBGP_Admin')) {
                         ?>
                     
                         <span>Unlock advanced fields and features for Elementor Forms.</span>
-                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-primary " target="_blank"><?php 
+                        <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-primary fdbgp-try-cool-form" target="_blank"><?php 
                             esc_html_e('Try Cool FormKit for Elementor', 'sb-elementor-contact-form-db');?></a>
 
                         <?php else: ?>
