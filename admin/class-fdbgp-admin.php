@@ -170,13 +170,18 @@ if(!class_exists('FDBGP_Admin')) {
                             <img src="<?php echo esc_url(FDBGP_PLUGIN_URL . 'assets/images/formsDB-logo.svg'); ?>" alt="Cool FormKit Logo">
                         </a>
                     </div>
+
+                    <?php if(!is_plugin_active('cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php')) : ?>
+
                     <div class="fdbgp-header-buttons">
                     <?php
                     if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
                     ?>
+                        <span>Unlock advanced fields and features for Elementor Forms.</span>
                         <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-secondary" target="_blank"><?php esc_html_e('Advanced Form Builder For Elementor', 'sb-elementor-contact-form-db'); ?></a>
                     <?php endif; ?>
                     </div>
+                    <?php endif; ?>
                 </div>
                 <h2 class="nav-tab-wrapper">
                     <a href="?page=formsdb&tab=forms-sheets" class="nav-tab <?php echo $tab == 'forms-sheets' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e('Forms To Sheet', 'sb-elementor-contact-form-db'); ?></a>

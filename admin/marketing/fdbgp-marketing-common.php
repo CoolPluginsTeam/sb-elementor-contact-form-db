@@ -144,6 +144,16 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 
 		public function fdbgp_register_controls($element)
 		{
+			// Get all controls registered on this element
+			$controls = $element->get_controls();
+
+			// Control ID you want to check
+			$control_id = 'lgefep_taxonomy_dropdown';
+
+			// If control already exists, stop
+			if ( isset( $controls[ $control_id ] ) ) {
+				return;
+			}
 
 			$element->add_control(
 				'lgefep_taxonomy_dropdown',
@@ -279,6 +289,17 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 
 		public function fdbgp_add_acf_repeater_mkt_query_controls($element)
 		{
+
+			// Get all controls registered on this element
+			$controls = $element->get_controls();
+
+			// Control ID you want to check
+			$control_id = 'lgefep_mkt_country_notice';
+
+			// If control already exists, stop
+			if ( isset( $controls[ $control_id ] ) ) {
+				return;
+			}
 
 			$element->add_control(
 

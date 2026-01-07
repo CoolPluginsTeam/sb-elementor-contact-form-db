@@ -423,6 +423,8 @@ body.elementor_page_cfkef-entries {
 
 .fdbgp-header-buttons {
   display: flex;
+  align-items: center;
+  gap: 10px;
   gap: 15px;
 }
 
@@ -2039,19 +2041,24 @@ a.button-primary.upgrade-pro-btn {
 }
 
 .fdbgp-help-box ul {
-  list-style: none;
-  padding: 0;
+  list-style: square;
+  padding-left: 16px;
   margin: 0;
 }
 
 .fdbgp-help-box li {
   font-size: 14px;
-  padding: 6px 0;
   color: #333;
   cursor: pointer;
 }
 
-.fdbgp-help-box li:hover {
+.fdbgp-help-box .hire-developer-text{
+
+  color: #18b018;
+
+}
+
+.fdbgp-help-box a {
   color: #2f6df6;
 }
 

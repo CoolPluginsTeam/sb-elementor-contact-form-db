@@ -149,6 +149,9 @@ if(!class_exists('FDBGP_Main')) {
 			// Add plugin dashboard link
 			add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'FDBGP_plugin_dashboard_link' ) );
 
+
+
+
 			// Get the loader instance
 			\FDBGP_Loader::get_instance();
 
@@ -159,9 +162,11 @@ if(!class_exists('FDBGP_Main')) {
 
 		}
 
-		function FDBGP_plugin_dashboard_link( $links ) {
+		public function FDBGP_plugin_dashboard_link($links){
+			$get_help_link = '<a href="https://buy.stripe.com/5kQ9AT4qJgDW1LC6v26c00j" style="font-weight: bold; color: green;" target="_blank">Get Help</a>';
 			$settings_link = '<a href="' . admin_url( 'admin.php?page=formsdb' ) . '">Settings</a>';
-			array_unshift( $links, $settings_link );
+			array_unshift( $links, $get_help_link, $settings_link );
+
 			return $links;
 		}
 
