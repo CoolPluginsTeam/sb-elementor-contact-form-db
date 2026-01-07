@@ -94,7 +94,9 @@ input:checked+.fdbgp-slider::before {
   vertical-align: middle;
   white-space: nowrap;
 }
-
+span.hire-developer-text {
+    cursor: auto;
+}
 /* Element Card Wrapper Styler */
 .fdbgp-form-element-wrapper:nth-child(1) .wrapper-body .fdbgp-form-element-card {
   width: calc(33.333% - 15px);
