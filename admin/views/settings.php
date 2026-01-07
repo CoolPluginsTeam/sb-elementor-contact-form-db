@@ -455,7 +455,7 @@ if (!class_exists('FDBGP_Settings_Page')) {
                             <h4>NEED HELP & SETUP GUIDANCE?</h4>
                             <ul>
                                 <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">Watch Video Tutorial</a> or <a href="https://docs.coolplugins.net/doc/google-api-setup-connect-elementor-google-sheets/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">read the docs</a></li>
-                                <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothy within 24 hours.</span></li>
+                                <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothly within 24 hours.</span></li>
                             </ul>
 
                             <a href="https://buy.stripe.com/5kQ9AT4qJgDW1LC6v26c00j" class="button button-primary" target="_blank">

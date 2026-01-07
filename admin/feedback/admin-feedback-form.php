@@ -10,7 +10,6 @@ class fdbgp_feedback {
 		private $plugin_version = FDBGP_PLUGIN_VERSION;
 		private $plugin_name    = 'FormsDB For Elementor Forms';
 		private $plugin_slug    = 'fdbgp';
-		private $installation_date_option = 'fdbgp-installDate';
 
 	/*
 	|-----------------------------------------------------------------|

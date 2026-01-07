@@ -452,7 +452,7 @@ class FDBGP_Old_Submission_View {
             <div class="fdbgp-help-box">
                 <h4><?php esc_html_e('NEED HELP & SETUP GUIDANCE?', 'sb-elementor-contact-form-db'); ?></h4>
                 <ul>
-                    <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothy within 24 hours.</span></li>
+                    <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothly within 24 hours.</span></li>
                 </ul>
 
                 <a href="https://buy.stripe.com/5kQ9AT4qJgDW1LC6v26c00j" class="button button-primary">
