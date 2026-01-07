@@ -177,7 +177,7 @@ class FDBGP_Form_To_Post_Settings {
                             <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
                             <td>' . wp_kses_post($post_type_status) . '</td>
                             <td>
-                                <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
+                                <a class="button button-secondary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
                                     ' . esc_html__( 'Edit Form', 'sb-elementor-contact-form-db' ) . '
                                 </a>
                             </td>

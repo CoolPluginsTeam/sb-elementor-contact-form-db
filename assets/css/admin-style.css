@@ -343,7 +343,11 @@ body.elementor_page_cfkef-entries {
   line-height: 14px;
   align-self: center;
   text-shadow: 1px 1px 1px #323348;
-  margin-left: 16px;
+  
+}
+
+.fdbgp-help-box a.button.button-primary {
+    margin-left: 16px;
 }
 
 .fdbgp-wrapper .button:focus {
@@ -2138,6 +2142,15 @@ a.button-primary.upgrade-pro-btn {
     font-size: 10px;
   }
 
+}
+
+@media (max-width: 600px) {
+  .cool-formkit-left-side-setting table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 }
 
 @media screen and (max-width: 782px) {
