@@ -325,14 +325,7 @@ body.elementor_page_cfkef-entries {
 .elementor_page_formsdb .notice {
   margin: 2px 20px 20px 0;
 }
-.cool-formkit-left-side-setting table{
-    
-  display: block;
-    width: 100%;
-    overflow-x: auto;
-    
-    overflow-y: hidden;
-}
+
 .fdbgp-wrapper .button {
   padding: 7px 14px;
   background-color: #3f415e;
@@ -2145,6 +2138,15 @@ a.button-primary.upgrade-pro-btn {
     font-size: 10px;
   }
 
+}
+
+@media (max-width: 600px) {
+  .cool-formkit-left-side-setting table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 }
 
 @media screen and (max-width: 782px) {
