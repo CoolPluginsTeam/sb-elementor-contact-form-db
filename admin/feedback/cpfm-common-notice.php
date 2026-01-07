@@ -11,7 +11,7 @@ class CPFM_Feedback_Notice {
 
         add_action('admin_init', [ $this, 'cpfm_listen_for_external_notice_registration' ]);
         add_action('admin_enqueue_scripts', [ $this, 'cpfm_enqueue_assets' ]);
-        add_action('wp_ajax_cpfm_handle_opt_in', [ $this, 'cpfm_handle_opt_in_choice' ]);
+        add_action('wp_ajax_cpfm_handle_opt_in_fdbgp', [ $this, 'cpfm_handle_opt_in_choice' ]);
         add_action('admin_footer', [ $this, 'cpfm_render_notice_panel' ]);
     }
     
@@ -56,7 +56,7 @@ class CPFM_Feedback_Notice {
          *     'pages' => ['dashboard', 'cpfm_'],
          * ]);
          */
-        
+        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
         do_action('cpfm_register_notice');
     }
 
@@ -74,7 +74,8 @@ class CPFM_Feedback_Notice {
 
  
         $screen         = get_current_screen();
-        $current_page   = isset($_GET['page'])? sanitize_key($_GET['page']):'';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page detection for loading assets, no data modification.
+        $current_page   = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
     
         // Gather all unique pages from registered notices
         $allowed_pages = [];
@@ -94,7 +95,7 @@ class CPFM_Feedback_Notice {
 
 
 
-        wp_enqueue_style('cpfm-common-review-style', FDBGP_PLUGIN_URL . 'admin/feedback/css/cpfm-admin-feedback.css');
+        wp_enqueue_style( 'cpfm-common-review-style', FDBGP_PLUGIN_URL . 'admin/feedback/css/cpfm-admin-feedback.css', array(), FDBGP_PLUGIN_VERSION );
 
 
         wp_enqueue_script(
@@ -152,7 +153,7 @@ class CPFM_Feedback_Notice {
                     $plugin_name = isset($notice['plugin_name'])?sanitize_key($notice['plugin_name']):'';
 
                     if($plugin_name){
-
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
                         do_action('cpfm_after_opt_in_' . $plugin_name, $category);
                     }
               
@@ -169,7 +170,8 @@ class CPFM_Feedback_Notice {
         }
 
         $screen         = get_current_screen();
-        $current_page   = isset($_GET['page']) ? sanitize_key($_GET['page']) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only page detection for rendering notices, no data modification.
+        $current_page   = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 
        
         $unread_count   = 0;
@@ -185,7 +187,7 @@ class CPFM_Feedback_Notice {
     
         $output = '';
         $output .= '<div id="cpfNoticePanel" class="notice-panel"' . ($auto_show ? ' data-auto-show="true"' : '') . '>';
-        $output .= '<div class="notice-panel-header">' . esc_html__('Help Improve Plugins', 'ccpw') . ' <span class="dashicons dashicons-no" id="cpfm_remove_notice"></span></div>';
+        $output .= '<div class="notice-panel-header">' . esc_html__('Help Improve Plugins', 'sb-elementor-contact-form-db') . ' <span class="dashicons dashicons-no" id="cpfm_remove_notice"></span></div>';
         $output .= '<div class="notice-panel-content">';
     
         foreach (self::$registered_notices as $key => $notice) {
@@ -211,21 +213,21 @@ class CPFM_Feedback_Notice {
             $output .= '<strong>' . esc_html($notice['title']) . '</strong>';
             
             $output .= '<div class="notice-message-with-toggle">';
-            $output .= '<p>' . esc_html($notice['message']) . '<a href="#" class="cpf-toggle-extra">' . esc_html__(' More info', 'ccpw') . '</a></p>';
+            $output .= '<p>' . esc_html($notice['message']) . '<a href="#" class="cpf-toggle-extra">' . esc_html__(' More info', 'sb-elementor-contact-form-db') . '</a></p>';
             $output .= '</div>';
             
             $output .= '<div class="cpf-extra-info">';
-            $output .= '<p>' . esc_html__('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'ccpw') . '</p>';
+            $output .= '<p>' . esc_html__('Opt in to receive email updates about security improvements, new features, helpful tutorials, and occasional special offers. We\'ll collect:', 'sb-elementor-contact-form-db') . '</p>';
             $output .= '<ul>';
-            $output .= '<li>' . esc_html__('Your website home URL and WordPress admin email.', 'ccpw') . '</li>';
-            $output .= '<li>' . esc_html__('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'ccpw') . '</li>';
+            $output .= '<li>' . esc_html__('Your website home URL and WordPress admin email.', 'sb-elementor-contact-form-db') . '</li>';
+            $output .= '<li>' . esc_html__('To check plugin compatibility, we will collect the following: list of active plugins and themes, server type, MySQL version, WordPress version, memory limit, site language and database prefix.', 'sb-elementor-contact-form-db') . ' <a href="https://my.coolplugins.net/terms/usage-tracking/" target="_blank">Click Here</a> </li>';
             $output .= '</ul>';
             
             $output .= '</div>';
             
             $output .= '<div class="notice-actions">';
-            $output .= '<button class="button button-primary opt-in-yes" data-category="' . esc_attr($key) . '" id="yes-share-data" value="yes">' . esc_html__("Yes, I Agree", 'ccpw') . '</button>';
-            $output .= '<button class="button opt-in-no" data-category="' . esc_attr($key) . '" id="no-share-data" value="no">' . esc_html__('No, Thanks', 'ccpw') . '</button>';
+            $output .= '<button class="button button-primary opt-in-yes" data-category="' . esc_attr($key) . '" id="yes-share-data" value="yes">' . esc_html__("Yes, I Agree", 'sb-elementor-contact-form-db') . '</button>';
+            $output .= '<button class="button opt-in-no" data-category="' . esc_attr($key) . '" id="no-share-data" value="no">' . esc_html__('No, Thanks', 'sb-elementor-contact-form-db') . '</button>';
             $output .= '</div>';
             
             $output .= '</div>';
@@ -235,6 +237,7 @@ class CPFM_Feedback_Notice {
         $output .= '</div>'; 
      
         if ($unread_count > 0) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
             echo $output;
         }
     }
