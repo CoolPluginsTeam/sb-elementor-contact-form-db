@@ -117,7 +117,7 @@ if(!class_exists('FDBGP_Main')) {
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if(!isset($_GET['page']) && sanitize_key($_GET['page']) !== 'formsdb'){
+			if(!isset($_GET['page'])){
 				return;
 			}
 
