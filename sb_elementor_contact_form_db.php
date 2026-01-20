@@ -112,6 +112,19 @@ if(!class_exists('FDBGP_Main')) {
 
 		public function setting_redirect(){
 			// Handle OAuth callback
+			if ( ! is_admin() ) {
+				return;
+			}
+
+			if ( ! is_user_logged_in() || ! current_user_can('manage_options') ) {
+				return;
+			}
+
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if(!isset($_GET['page']) && sanitize_key($_GET['page']) !== 'formsdb'){
+				return;
+			}
+
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$code = isset($_GET['code']) && !empty($_GET['code']) ? sanitize_text_field(wp_unslash($_GET['code'])) : '';
 			
