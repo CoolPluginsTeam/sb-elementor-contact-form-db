@@ -172,9 +172,8 @@ if(!class_exists('FDBGP_Main')) {
 		}
 
 		public function FDBGP_plugin_dashboard_link($links){
-			$get_help_link = '<a href="https://coolplugins.net/hire-expert" style="font-weight: bold; color: green;" target="_blank">Get Help</a>';
 			$settings_link = '<a href="' . admin_url( 'admin.php?page=formsdb' ) . '">Settings</a>';
-			array_unshift( $links, $get_help_link, $settings_link );
+			array_unshift( $links,  $settings_link );
 
 			return $links;
 		}

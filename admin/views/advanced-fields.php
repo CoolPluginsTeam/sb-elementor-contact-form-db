@@ -413,32 +413,34 @@ $input_form_mask_features = array(
                     
                     <div class="fdbgp-card">
                         <?php
-                        // Check if Cool Formkit plugin is active
-                        $is_cool_formkit_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+                        // Check if Cool Formkit plugin is active (only cool-formkit, not extensions)
+                        $is_cool_formkit_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' );
+                        $is_extensions_active = is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
                         
                         if ( ! $is_cool_formkit_active ) :
                         ?>
-                        <div class="fdbgp-card-wrapper" style="margin-bottom:20px;">
+                        <div class="fdbgp-card-wrapper cool-formkit-card" style="margin-bottom:20px;">
                             <h2 class="fdbgp-card-title">
                                 <span class="fdbgp-icon">💎</span><?php esc_html_e('Cool Formkit', 'sb-elementor-contact-form-db'); ?>
                             </h2>
-                            <p><?php esc_html_e('Take your forms to the next level with pro features designed for high conversion.', 'sb-elementor-contact-form-db'); ?></p>
+                            <p><?php esc_html_e('Extend Elementor Forms and take them to the next level.', 'sb-elementor-contact-form-db'); ?></p>
                             <ul>
-                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Apply Conditional Logic', 'sb-elementor-contact-form-db'); ?></li>
-                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Advanced Form Builder for Elementor', 'sb-elementor-contact-form-db'); ?></li>
-                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Range Slider', 'sb-elementor-contact-form-db'); ?></li>
-                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Calculator & More Fields', 'sb-elementor-contact-form-db'); ?></li>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Add Conditional Fields to Form.', 'sb-elementor-contact-form-db'); ?></li>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Advanced Form Builder for Elementor.', 'sb-elementor-contact-form-db'); ?></li>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Spam Blocker & Advanced Actions After Submit.', 'sb-elementor-contact-form-db'); ?></li>
                             </ul>
                             <a href="https://coolformkit.com/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
                         </div>
                         <?php endif; ?>
 
                         <?php
-                        // Check if Conditional Fields plugin is active
+                        // Check if Conditional Fields plugin (free or pro) or extensions or cool-formkit is active
                         $cf_plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
-                        $is_cf_plugin_active = is_plugin_active( $cf_plugin_file );
+                        $cf_pro_plugin_file = 'conditional-fields-for-elementor-form-pro/class-conditional-fields-for-elementor-form-pro.php';
+                        $is_cf_plugin_active = is_plugin_active( $cf_plugin_file ) || is_plugin_active( $cf_pro_plugin_file );
                         
-                        if ( ! $is_cf_plugin_active ) :
+                        // Hide card if any related plugin is active
+                        if ( !$is_cf_plugin_active && !$is_extensions_active && !$is_cool_formkit_active ) :
                         ?>
                         <div class="fdbgp-card-wrapper">
                             <h2 class="fdbgp-card-title">
@@ -447,14 +449,23 @@ $input_form_mask_features = array(
                             <p><?php esc_html_e('You can now conditionally hide or show form fields using Conditional Fields for Elementor forms.', 'sb-elementor-contact-form-db'); ?></p>
                             <div class="button-groups">
                                 <?php
-                                $plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
-                                $plugin_slug = 'conditional-fields-for-elementor-form';
-                                
+                                // Check if pro plugin exists on site, prioritize pro over free
                                 $all_plugins = get_plugins();
-                                $is_cf_installed = isset($all_plugins[$plugin_file]);
-
-                                $action = $is_cf_installed ? 'activate' : 'install';
-                                $button_text = $is_cf_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
+                                $is_cf_pro_installed = isset($all_plugins[$cf_pro_plugin_file]);
+                                $is_cf_free_installed = isset($all_plugins[$cf_plugin_file]);
+                                
+                                // Use pro plugin if it exists, otherwise use free
+                                if ( $is_cf_pro_installed ) {
+                                    $plugin_file = $cf_pro_plugin_file;
+                                    $plugin_slug = 'conditional-fields-for-elementor-form-pro';
+                                    $action = 'activate';
+                                    $button_text = __('Activate Pro', 'sb-elementor-contact-form-db');
+                                } else {
+                                    $plugin_file = $cf_plugin_file;
+                                    $plugin_slug = 'conditional-fields-for-elementor-form';
+                                    $action = $is_cf_free_installed ? 'activate' : 'install';
+                                    $button_text = $is_cf_free_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
+                                }
                                 ?>
                                 <button class="button button-secondary fdbgp-install-active-btn" 
                                     style="width: 49%;" 
