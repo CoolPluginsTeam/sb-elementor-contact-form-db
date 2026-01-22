@@ -67,29 +67,58 @@ if(!class_exists('FDBGP_Admin')) {
             
             });
         
-        add_action('cpfm_after_opt_in_fdbgp', function($category) {
-            
-                if ($category === 'cool_forms') {
+            add_action('cpfm_after_opt_in_fdbgp', function($category) {
+                
+                    if ($category === 'cool_forms') {
 
-                    require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
+                        require_once FDBGP_PLUGIN_DIR . 'admin/feedback/cron/fdbgp-class-cron.php';
 
-                    // Set the usage share data option to 'on'
-                    update_option( 'cfef_usage_share_data', 'on' );
+                        // Set the usage share data option to 'on'
+                        update_option( 'cfef_usage_share_data', 'on' );
 
-                    // Send initial data for this plugin
-                    fdbgp_cronjob::fdbgp_send_data();
+                        // Send initial data for this plugin
+                        fdbgp_cronjob::fdbgp_send_data();
 
-                    // Schedule crons for all form plugins
-                    // Include the settings file where fdbgp_handle_unchecked_checkbox is defined
-                    if (!function_exists('fdbgp_handle_unchecked_checkbox')) {
-                        require_once FDBGP_PLUGIN_DIR . 'admin/views/settings.php';
-                    }
-                    
-                    // Call the function to schedule crons - now safe since settings.php no longer outputs HTML on include
-                    fdbgp_handle_unchecked_checkbox();
-                } 
-        });
+                        // Schedule crons for all form plugins
+                        // Include the settings file where fdbgp_handle_unchecked_checkbox is defined
+                        if (!function_exists('fdbgp_handle_unchecked_checkbox')) {
+                            require_once FDBGP_PLUGIN_DIR . 'admin/views/settings.php';
+                        }
+                        
+                        // Call the function to schedule crons - now safe since settings.php no longer outputs HTML on include
+                        fdbgp_handle_unchecked_checkbox();
+                    } 
+            });
+
+            add_action( 'wp_ajax_fdbgp_plugin_install', 'wp_ajax_install_plugin' );
+            add_action( 'wp_ajax_fdbgp_plugin_activate', array($this, 'fdbgp_plugin_activate') );
         }
+
+        public function fdbgp_plugin_activate(){
+            check_ajax_referer( 'fdbgp_plugin_nonce', 'security' );
+            if ( ! current_user_can( 'activate_plugins' ) ) {
+                wp_send_json_error( [ 'message' => 'Permission denied' ] );
+            }
+    
+            if ( empty( $_POST['init'] ) ) {
+                wp_send_json_error( [ 'message' => 'Plugin init file missing' ] );
+            }
+    
+            if ( ! function_exists( 'get_plugins' ) ) {
+                require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+    
+            $init_file = sanitize_text_field( wp_unslash($_POST['init']) );
+    
+            // Use silent activation to prevent redirection hooks from breaking AJAX response
+            $activate = activate_plugin( $init_file, '', false, true );
+    
+            if ( is_wp_error( $activate ) ) {
+                wp_send_json_error( [ 'message' => $activate->get_error_message() ] );
+            }
+    
+            wp_send_json_success( [ 'message' => 'Plugin activated successfully' ] );
+        } 
 
         /**
          * Create a new page and redirect to Elementor Editor
@@ -164,6 +193,10 @@ if(!class_exists('FDBGP_Admin')) {
             
             ?>
             <div class="fdbgp-wrapper">
+                <div id="fdbgp-loader" style="display: none;">
+                    <div class="fdbgp-loader-overlay"></div>
+                    <div class="fdbgp-loader-spinner"></div>
+                </div>
                 <div class="fdbgp-header">
                     <div class="fdbgp-header-logo">
                         <a href="?page=formsdb">
@@ -288,6 +321,12 @@ if(!class_exists('FDBGP_Admin')) {
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
                 
                 wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
+
+                wp_localize_script( 'fdbgp-admin-script', 'fdbgp_plugin_vars', [
+                    'nonce' => wp_create_nonce( 'fdbgp_plugin_nonce' ),
+                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
+                    'installNonce' => wp_create_nonce( 'updates' ),
+                ] );
             } elseif ( strpos( $current_page, 'cool-formkit' ) !== false ) {
                 wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
             }

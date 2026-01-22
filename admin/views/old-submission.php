@@ -31,16 +31,19 @@ class FDBGP_Old_Submission_View {
         ?>
         <div class='cfk-promo'>
             <div class="cfk-box cfk-left">
-                <div class="wrapper-header">
-                    <div class="cfkef-save-all">
-                        <div class="cfkef-title-desc">
-                            <h2><?php esc_html_e('Old Form Submissions', 'sb-elementor-contact-form-db'); ?></h2>
+                <div class="wrapper-container">
+                    <div class="wrapper-header">
+                        <div class="cfkef-save-all">
+                            <div class="cfkef-title-desc">
+                                <h2><?php esc_html_e('Old Form Submissions', 'sb-elementor-contact-form-db'); ?></h2>
+                            </div>
                         </div>
                     </div>
+                    <div class="wrapper-body">
+                        <?php $this->render_content($forms, $form_ids, $total_count); ?>
+                    </div>
                 </div>
-                <div class="wrapper-body">
-                    <?php $this->render_content($forms, $form_ids, $total_count); ?>
-                </div>
+                
             </div>
             <?php $this->render_sidebar(); ?>
         </div>
@@ -408,56 +411,48 @@ class FDBGP_Old_Submission_View {
 
     private function render_sidebar() {
         ?>
-        <div class="fdbgp-card cfk-left">
-            <h2 class="fdbgp-card-title">
-                <span class="fdbgp-icon">📁</span> <?php esc_html_e('About Old Submissions', 'sb-elementor-contact-form-db'); ?>
-            </h2>
-
-            <div class="fdbgp-steps">
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">ℹ️</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Legacy Submissions', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php esc_html_e('These are form submissions saved automatically by plugin version 1.8.1 or earlier.', 'sb-elementor-contact-form-db'); ?></p>
+        <div class="fdbgp-card cfk-right">
+            <div class="fdbgp-card-wrapper">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">📁</span> <?php esc_html_e('About Old Submissions', 'sb-elementor-contact-form-db'); ?>
+                </h2>
+    
+                <div class="fdbgp-steps">
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">ℹ️</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e('Legacy Submissions', 'sb-elementor-contact-form-db'); ?></h3>
+                            <p><?php esc_html_e('These are form submissions saved automatically by plugin version 1.8.1 or earlier.', 'sb-elementor-contact-form-db'); ?></p>
+                        </div>
+                    </div>
+    
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">ℹ️</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e('Continue Using Old Method', 'sb-elementor-contact-form-db'); ?></h3>
+                            <p><?php esc_html_e('If you don\'t want to edit many existing forms, you can keep using the old automatic saving method by keeping it enabled here.', 'sb-elementor-contact-form-db'); ?></p>
+                        </div>
+                    </div>
+    
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">ℹ️</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e('Enable New Submissions (Recommended)', 'sb-elementor-contact-form-db'); ?></h3>
+                            <p><?php _e('If you prefer the new method, disable legacy saving from this page. Then edit your form in Elementor and enable the Save Submission action.
+                            
+                            New entries will appear in <a href="admin.php?page=e-form-submissions" target="_blank">Elementor → Submissions</a>.', 'sb-elementor-contact-form-db'); ?></p>
+                        </div>
+                    </div>
+    
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">ℹ️</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e('Export Your Old Data', 'sb-elementor-contact-form-db'); ?></h3>
+                            <p><?php esc_html_e('You can export all legacy submissions to CSV format for backup or future use.', 'sb-elementor-contact-form-db'); ?></p>
+                        </div>
                     </div>
                 </div>
-
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">ℹ️</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Continue Using Old Method', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php esc_html_e('If you don\'t want to edit many existing forms, you can keep using the old automatic saving method by keeping it enabled here.', 'sb-elementor-contact-form-db'); ?></p>
-                    </div>
-                </div>
-
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">ℹ️</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Enable New Submissions (Recommended)', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php _e('If you prefer the new method, disable legacy saving from this page. Then edit your form in Elementor and enable the Save Submission action.
-                        
-                        New entries will appear in <a href="admin.php?page=e-form-submissions" target="_blank">Elementor → Submissions</a>.', 'sb-elementor-contact-form-db'); ?></p>
-                    </div>
-                </div>
-
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">ℹ️</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e('Export Your Old Data', 'sb-elementor-contact-form-db'); ?></h3>
-                        <p><?php esc_html_e('You can export all legacy submissions to CSV format for backup or future use.', 'sb-elementor-contact-form-db'); ?></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="fdbgp-help-box">
-                <h4><?php esc_html_e('NEED HELP & SETUP GUIDANCE?', 'sb-elementor-contact-form-db'); ?></h4>
-                <ul>
-                    <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothly within 24 hours.</span></li>
-                </ul>
-
-                <a href="https://coolplugins.net/hire-expert" class="button button-primary">
-                    Hire Expert Developer
-                </a>
+                
             </div>
         </div>
         <?php

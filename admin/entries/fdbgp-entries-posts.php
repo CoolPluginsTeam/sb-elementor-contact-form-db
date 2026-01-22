@@ -139,34 +139,37 @@ class FDBGP_Entries_Posts {
             ?>
             <div class='cfk-promo'>
                 <div class="cfk-box cfk-left">
-                    <div class="wrapper-header">
-                        <div class="cfkef-save-all">
-                            <div class="cfkef-title-desc">
-                                <h2><?php esc_html_e( 'Hello+ Form Entries', 'sb-elementor-contact-form-db' ); ?></h2>
+                    <div class="wrapper-container">
+                        <div class="wrapper-header">
+                            <div class="cfkef-save-all">
+                                <div class="cfkef-title-desc">
+                                    <h2><?php esc_html_e( 'Hello+ Form Entries', 'sb-elementor-contact-form-db' ); ?></h2>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="wrapper-body">
-                        <div class="cool-formkit-setting-table-con">
-                            <div class="cool-formkit-left-side-setting">
-                                <div id='cfkef-entries-list-wrapper'>
-                                    <?php
-                                    $list_table = FDBGP_List_Table::get_instance(self::$post_type);
-                                    $list_table->prepare_items();
-                                    $list_table->views();
-                                    ?>
-                                    <form method="get" action="<?php echo esc_url( admin_url( 'admin.php?page=cfkef-entries' ) ); ?>">
-                                        <input type="hidden" name="page" value="<?php echo esc_attr(self::$post_type); ?>">
-                                        <input type="hidden" name="view" value="<?php echo esc_attr(self::get_view()); ?>">
-                                        <?php 
-                                        $list_table->search_box( esc_html__( 'Search Forms', 'sb-elementor-contact-form-db' ), 'cfkef-entries-search' );
-                                        $list_table->display();
+                        <div class="wrapper-body">
+                            <div class="cool-formkit-setting-table-con">
+                                <div class="cool-formkit-left-side-setting">
+                                    <div id='cfkef-entries-list-wrapper'>
+                                        <?php
+                                        $list_table = FDBGP_List_Table::get_instance(self::$post_type);
+                                        $list_table->prepare_items();
+                                        $list_table->views();
                                         ?>
-                                    </form>
+                                        <form method="get" action="<?php echo esc_url( admin_url( 'admin.php?page=cfkef-entries' ) ); ?>">
+                                            <input type="hidden" name="page" value="<?php echo esc_attr(self::$post_type); ?>">
+                                            <input type="hidden" name="view" value="<?php echo esc_attr(self::get_view()); ?>">
+                                            <?php 
+                                            $list_table->search_box( esc_html__( 'Search Forms', 'sb-elementor-contact-form-db' ), 'cfkef-entries-search' );
+                                            $list_table->display();
+                                            ?>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <?php $this->render_review_request(); ?>
                 </div>
                 <?php $this->render_right_sidebar(); ?>
             </div>
@@ -174,62 +177,131 @@ class FDBGP_Entries_Posts {
         }
     }
 
+    public function render_review_request() {
+        ?>
+        <div class="cfkef-review-request">
+            <div class="cfkef-review-left">
+                <h3><?php esc_html_e('Enjoying FormsDB for Elementor Forms?', 'sb-elementor-contact-form-db'); ?></h3>
+                <p><?php esc_html_e('Please consider leaving us a review. It helps us a lot!', 'sb-elementor-contact-form-db'); ?></p>
+            </div>
+            <div class="cfkef-review-right">
+                <div class="cfkef-stars">
+                ★★★★★
+                </div>
+                <a href="https://coolplugins.net/reviews/submit-review/?utm_source=formsdb&utm_medium=inside&utm_campaign=review&utm_content=setting_page_footer" class="button button-primary" target="_blank"><?php esc_html_e('Leave a Review', 'sb-elementor-contact-form-db'); ?></a>
+            </div>
+        </div>
+        <?php
+    }
     /**
      * Render right sidebar
      */
     private function render_right_sidebar() {
         ?>
-        <div class="fdbgp-card cfk-left">
-            <h2 class="fdbgp-card-title">
-                <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'sb-elementor-contact-form-db' ); ?>
-            </h2>
-
-            <div class="fdbgp-steps">
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">1</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'Create Form', 'sb-elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'Create a page with Hello+ Form widget', 'sb-elementor-contact-form-db' ); ?></p>
+        <div class="fdbgp-card cfk-right">
+            <div class="fdbgp-card-wrapper">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'sb-elementor-contact-form-db' ); ?>
+                </h2>
+    
+                <div class="fdbgp-steps">
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">1</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e( 'Create Form', 'sb-elementor-contact-form-db' ); ?></h3>
+                            <p><?php esc_html_e( 'Create a page with Hello+ Form widget', 'sb-elementor-contact-form-db' ); ?></p>
+                        </div>
+                    </div>
+    
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">2</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e( 'Enable Action', 'sb-elementor-contact-form-db' ); ?></h3>
+                            <p><?php esc_html_e( 'Enable "Collect Submissions" action in form settings.', 'sb-elementor-contact-form-db' ); ?></p>
+                        </div>
+                    </div>
+    
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">3</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e( 'Submit Form', 'sb-elementor-contact-form-db' ); ?></h3>
+                            <p><?php esc_html_e( 'Submit your form from the frontend to save entries.', 'sb-elementor-contact-form-db' ); ?></p>
+                        </div>
+                    </div>
+    
+                    <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">4</div>
+                        <div class="fdbgp-step-content">
+                            <h3><?php esc_html_e( 'View Entries', 'sb-elementor-contact-form-db' ); ?></h3>
+                            <p><?php esc_html_e( 'All submissions will appear in this list.', 'sb-elementor-contact-form-db' ); ?></p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">2</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'Enable Action', 'sb-elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'Enable "Collect Submissions" action in form settings.', 'sb-elementor-contact-form-db' ); ?></p>
+                <hr>
+                <div class="fdbgp-help-box">
+                    <h4>NEED HELP & SETUP GUIDANCE?</h4>
+                    <div class="button-groups">
+                        <a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-primary" style="width: 49%;">Watch Video Tutorial</a>
+                        <a href="https://docs.coolplugins.net/doc/save-hello-plus-form-entries/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-secondary" style="width: 49%;">read the docs</a>
                     </div>
                 </div>
 
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">3</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'Submit Form', 'sb-elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'Submit your form from the frontend to save entries.', 'sb-elementor-contact-form-db' ); ?></p>
-                    </div>
-                </div>
-
-                <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">4</div>
-                    <div class="fdbgp-step-content">
-                        <h3><?php esc_html_e( 'View Entries', 'sb-elementor-contact-form-db' ); ?></h3>
-                        <p><?php esc_html_e( 'All submissions will appear in this list.', 'sb-elementor-contact-form-db' ); ?></p>
-                    </div>
-                </div>
             </div>
 
-            <div class="fdbgp-help-box">
-                <h4><?php esc_html_e( 'NEED HELP & SETUP GUIDANCE?', 'sb-elementor-contact-form-db' ); ?></h4>
+            <div class="fdbgp-card-wrapper">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">💎</span><?php esc_html_e('Cool Formkit', 'sb-elementor-contact-form-db'); ?>
+                </h2>
+                <p><?php esc_html_e('Take your forms to the next level with pro features designed for high conversion.', 'sb-elementor-contact-form-db'); ?></p>
                 <ul>
-                    <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">Watch Video Tutorial</a> or <a href="https://docs.coolplugins.net/doc/save-hello-plus-form-entries/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">read the docs</a></li>
-                    <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothly within 24 hours.</span></li>
+                    <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Apply Conditional Logic', 'sb-elementor-contact-form-db'); ?></li>
+                    <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Advanced Form Builder for Elementor', 'sb-elementor-contact-form-db'); ?></li>
+                    <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Range Slider', 'sb-elementor-contact-form-db'); ?></li>
+                    <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Calculator & More Fields', 'sb-elementor-contact-form-db'); ?></li>
                 </ul>
-
-                <a href="https://coolplugins.net/hire-expert" class="button button-primary" target="_blank">
-                    Hire Expert Developer
-                </a>
+                <a href="https://coolformkit.com/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
             </div>
 
+            <div class="fdbgp-card-wrapper">
+                <h2 class="fdbgp-card-title">
+                    <span class="fdbgp-icon">💡</span><?php esc_html_e('Did you know?', 'sb-elementor-contact-form-db'); ?>
+                </h2>
+                <p><?php esc_html_e('You can now conditionally hide or show form fields using Conditional Fields for Elementor forms.', 'sb-elementor-contact-form-db'); ?></p>
+                <div class="button-groups">
+                    <?php
+                    $plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
+                    $plugin_slug = 'conditional-fields-for-elementor-form';
+                        
+                    if ( ! function_exists( 'is_plugin_active' ) ) {
+                        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                    }
+                        
+                    $is_cf_active = is_plugin_active($plugin_file);
+                    $all_plugins = get_plugins();
+                    $is_cf_installed = isset($all_plugins[$plugin_file]);
+
+                    if ($is_cf_active) {
+                        ?>
+                        <button class="button button-secondary" style="width: 49%;" disabled><?php esc_html_e('Active', 'sb-elementor-contact-form-db'); ?></button>
+                        <?php
+                    } else {
+                        $action = $is_cf_installed ? 'activate' : 'install';
+                        $button_text = $is_cf_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
+                        ?>
+                        <button class="button button-secondary fdbgp-install-active-btn" 
+                            style="width: 49%;" 
+                            data-action="<?php echo esc_attr($action); ?>" 
+                            data-slug="<?php echo esc_attr($plugin_slug); ?>" 
+                            data-init="<?php echo esc_attr($plugin_file); ?>">
+                            <?php echo esc_html($button_text); ?>
+                        </button>
+                        <?php
+                    }
+                    ?>
+                    <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('View Docs', 'sb-elementor-contact-form-db'); ?></a>
+                </div>
+            </div>
             
         </div>
         <?php

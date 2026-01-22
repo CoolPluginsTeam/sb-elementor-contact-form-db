@@ -4,6 +4,9 @@ if (!defined('ABSPATH')) {
     die;
 }
 
+require_once 'settings.php';
+$settings_page = new FDBGP_Settings_Page();
+
 if (! function_exists('get_plugins')) {
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
 }
@@ -327,67 +330,69 @@ $input_form_mask_features = array(
 
             <div class="cfk-promo">
                 <div class="cfk-box cfk-left">
-
-                    <div class="wrapper-header">
-                        <div class="cfkef-save-all">
-                            <div class="cfkef-title-desc">
-                                <h2><?php esc_html_e('Unlock Advanced Form Fields & Features with Cool FormKit', 'sb-elementor-contact-form-db'); ?></h2>
-                            </div>
-
-                            <div class="cfkef-save-controls">
-
-                                <a target="_blank" href="https://coolformkit.com/pricing/?utm_source=<?php echo esc_attr($first_plugin) ?>&utm_medium=inside&utm_campaign=get_pro&utm_content=dashboard" class="button">Get Cool FormKit</a>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="wrapper-body">
-
-
-                        <p>Cool FormKit adds powerful fields and features to Elementor forms, helping you build smarter and more interactive forms.</p>
-
-
-                        <div class="cfkef-form-element-box">
-                            <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
-                            <?php foreach ($form_elements as $key => $element): ?>
-                                <div class="cfkef-form-element-card">
-                                    <div class="cfkef-form-element-info">
-                                        <img src="<?php echo esc_url($element['icon']) ?>" alt="Color Field">
-                                        <h4>
-                                            <?php echo esc_html($element['label']); ?>
-                                            <?php if (!empty($element['pro'])): ?>
-                                                <span class="cfkef-label-popular"><a href="<?php echo esc_url($element['how_to']) ?>" target="_blank"><?php esc_html_e('Pro', 'sb-elementor-contact-form-db'); ?></a></span>
-                                            <?php endif; ?>
-
-                                            
-                                        </h4>
-                                        <div>
-                                            <a href="<?php echo esc_url($element['demo']) ?>" title="Documentation" target="_blank" rel="noreferrer">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                                    <path fill="#000" d="M21 11V3h-8v2h4v2h-2v2h-2v2h-2v2H9v2h2v-2h2v-2h2V9h2V7h2v4zM11 5H3v16h16v-8h-2v6H5V7h6z" />
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <label class="cfkef-toggle-switch" style="opacity: 0.5; ">
-                                        <input type="checkbox" name="cfkef_enabled_elements[]" value="<?php echo esc_attr($key); ?>" <?php checked(in_array($key, $enabled_elements)); ?> class="cfkef-element-toggle"
-                                            <?php disabled(!empty($element['pro'])); ?>>
-                                        <?php if (!empty($element['pro'])): ?>
-                                            <a href="<?php echo esc_url($element['how_to']) ?>" target="_blank">
-                                                <span class="cfkef-slider round"></span>
-                                            </a>
-                                        <?php else: ?>
-                                            <span class="cfkef-slider round"></span>
-                                        <?php endif; ?>
-
-                                    </label>
+                    <div class="wrapper-container">
+                        <div class="wrapper-header">
+                            <div class="cfkef-save-all">
+                                <div class="cfkef-title-desc">
+                                    <h2><?php esc_html_e('Unlock Advanced Form Fields & Features with Cool FormKit', 'sb-elementor-contact-form-db'); ?></h2>
                                 </div>
-                            <?php endforeach; ?>
+    
+                                <div class="cfkef-save-controls">
+    
+                                    <a target="_blank" href="https://coolformkit.com/pricing/?utm_source=<?php echo esc_attr($first_plugin) ?>&utm_medium=inside&utm_campaign=get_pro&utm_content=dashboard" class="button">Get Cool FormKit</a>
+                                </div>
+    
+                            </div>
                         </div>
-
-
+    
+                        <div class="wrapper-body">
+    
+    
+                            <p>Cool FormKit adds powerful fields and features to Elementor forms, helping you build smarter and more interactive forms.</p>
+    
+    
+                            <div class="cfkef-form-element-box">
+                                <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
+                                <?php foreach ($form_elements as $key => $element): ?>
+                                    <div class="cfkef-form-element-card">
+                                        <div class="cfkef-form-element-info">
+                                            <img src="<?php echo esc_url($element['icon']) ?>" alt="Color Field">
+                                            <h4>
+                                                <?php echo esc_html($element['label']); ?>
+                                                <?php if (!empty($element['pro'])): ?>
+                                                    <span class="cfkef-label-popular"><a href="<?php echo esc_url($element['how_to']) ?>" target="_blank"><?php esc_html_e('Pro', 'sb-elementor-contact-form-db'); ?></a></span>
+                                                <?php endif; ?>
+    
+                                                
+                                            </h4>
+                                            <div>
+                                                <a href="<?php echo esc_url($element['demo']) ?>" title="Documentation" target="_blank" rel="noreferrer">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                        <path fill="#000" d="M21 11V3h-8v2h4v2h-2v2h-2v2h-2v2H9v2h2v-2h2v-2h2V9h2V7h2v4zM11 5H3v16h16v-8h-2v6H5V7h6z" />
+                                                    </svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <label class="cfkef-toggle-switch" style="opacity: 0.5; ">
+                                            <input type="checkbox" name="cfkef_enabled_elements[]" value="<?php echo esc_attr($key); ?>" <?php checked(in_array($key, $enabled_elements)); ?> class="cfkef-element-toggle"
+                                                <?php disabled(!empty($element['pro'])); ?>>
+                                            <?php if (!empty($element['pro'])): ?>
+                                                <a href="<?php echo esc_url($element['how_to']) ?>" target="_blank">
+                                                    <span class="cfkef-slider round"></span>
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="cfkef-slider round"></span>
+                                            <?php endif; ?>
+    
+                                        </label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+    
+    
+                        </div>
                     </div>
+                    <?php $settings_page->render_review_request(); ?>
                 </div>
 
                 <div class="cfk-right">
@@ -395,13 +400,71 @@ $input_form_mask_features = array(
                         Are you enjoying using our addon to upgrade features inside your Elementor form? Please submit your review as it boosts our energy to work on future updates.
                         <span>Submit Review ★★★★★</span>
                     </a>
-                    <div class="cfk-box">
-                        <h3>Important Links</h3>
-                        <div class="cfk-buttons">
-                            <a href="https://coolplugins.net/support/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar" class="button button-secondary" target="_blank">Contact Support</a>
-                            <a href="https://coolplugins.net/about-us/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=about_us&utm_content=setting_page_sidebar" class="button"  target="_blank">Meet Cool Plugins Developers</a>
-                            <a href="https://x.com/cool_plugins" class="button" target="_blank">Follow On X</a>
+                    <div class="fdbgp-card">
+                        <div class="fdbgp-card-wrapper">
+                            <h3>Important Links</h3>
+                            <div class="cfk-buttons">
+                                <a href="https://coolplugins.net/support/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar" class="button button-secondary" target="_blank">Contact Support</a>
+                                <a href="https://coolplugins.net/about-us/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=about_us&utm_content=setting_page_sidebar" class="button"  target="_blank">Meet Cool Plugins Developers</a>
+                                <a href="https://x.com/cool_plugins" class="button" target="_blank">Follow On X</a>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="fdbgp-card">
+                        <div class="fdbgp-card-wrapper">
+                            <h2 class="fdbgp-card-title">
+                                <span class="fdbgp-icon">💎</span><?php esc_html_e('Cool Formkit', 'sb-elementor-contact-form-db'); ?>
+                            </h2>
+                            <p><?php esc_html_e('Take your forms to the next level with pro features designed for high conversion.', 'sb-elementor-contact-form-db'); ?></p>
+                            <ul>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Apply Conditional Logic', 'sb-elementor-contact-form-db'); ?></li>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Advanced Form Builder for Elementor', 'sb-elementor-contact-form-db'); ?></li>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Range Slider', 'sb-elementor-contact-form-db'); ?></li>
+                                <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Calculator & More Fields', 'sb-elementor-contact-form-db'); ?></li>
+                            </ul>
+                            <a href="https://coolformkit.com/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
+                        </div>
+
+                        <div class="fdbgp-card-wrapper">
+                            <h2 class="fdbgp-card-title">
+                                <span class="fdbgp-icon">💡</span><?php esc_html_e('Did you know?', 'sb-elementor-contact-form-db'); ?>
+                            </h2>
+                            <p><?php esc_html_e('You can now conditionally hide or show form fields using Conditional Fields for Elementor forms.', 'sb-elementor-contact-form-db'); ?></p>
+                            <div class="button-groups">
+                                <?php
+                                $plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
+                                $plugin_slug = 'conditional-fields-for-elementor-form';
+                                
+                                if ( ! function_exists( 'is_plugin_active' ) ) {
+                                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                                }
+                                
+                                $is_cf_active = is_plugin_active($plugin_file);
+                                $all_plugins = get_plugins();
+                                $is_cf_installed = isset($all_plugins[$plugin_file]);
+
+                                if ($is_cf_active) {
+                                    ?>
+                                    <button class="button button-secondary" style="width: 49%;" disabled><?php esc_html_e('Active', 'sb-elementor-contact-form-db'); ?></button>
+                                    <?php
+                                } else {
+                                    $action = $is_cf_installed ? 'activate' : 'install';
+                                    $button_text = $is_cf_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
+                                    ?>
+                                    <button class="button button-secondary fdbgp-install-active-btn" 
+                                        style="width: 49%;" 
+                                        data-action="<?php echo esc_attr($action); ?>" 
+                                        data-slug="<?php echo esc_attr($plugin_slug); ?>" 
+                                        data-init="<?php echo esc_attr($plugin_file); ?>">
+                                        <?php echo esc_html($button_text); ?>
+                                    </button>
+                                    <?php
+                                }
+                                ?>
+                                <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('View Docs', 'sb-elementor-contact-form-db'); ?></a>
+                            </div>
+                        </div> 
                     </div>
                 </div>
             </div>
