@@ -10,6 +10,10 @@ class fdbgp_feedback {
 		private $plugin_version = FDBGP_PLUGIN_VERSION;
 		private $plugin_name    = 'FormsDB For Elementor Forms';
 		private $plugin_slug    = 'fdbgp';
+		private $installation_date_option = 'fdbgp-installDate';
+		private $review_option = 'fdbgp_elementor_notice_dismiss';
+		private $review_link = 'https://wordpress.org/support/plugin/sb-elementor-contact-form-db/reviews/#new-post';
+		private $has_old_submissions = false;
 
 	/*
 	|-----------------------------------------------------------------|
@@ -20,8 +24,68 @@ class fdbgp_feedback {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_feedback_scripts' ) );
 		add_action( 'admin_head', array( $this, 'show_deactivate_feedback_popup' ) );
 		add_action( 'wp_ajax_' . $this->plugin_slug . '_submit_deactivation_response', array( $this, 'submit_deactivation_response' ) );
+		add_action( 'admin_notices', array( $this, 'fdbgp_admin_notice_for_review' ) );
+		add_action( 'wp_ajax_' . $this->plugin_slug . '_dismiss_notice', array( $this, 'fdbgp_dismiss_review_notice' ) );
+
+		if (!class_exists('\FDBGP_Old_Submission')) {
+            require_once FDBGP_PLUGIN_DIR . 'includes/class-fdbgp-old-submission.php';
+        }
+        $this->has_old_submissions = \FDBGP_Old_Submission::has_old_submissions();
 	}
 
+	public function fdbgp_dismiss_review_notice(){
+		$rs = update_option( $this->review_option, 'yes' );
+		echo json_encode( array( 'success' => 'true' ) );
+		exit;
+	}
+
+	public function fdbgp_admin_notice_for_review(){
+		if ( ! current_user_can( 'update_plugins' ) ) {
+			return;
+		}
+
+		// get installation dates and rated settings
+		$installation_date = get_option( $this->installation_date_option );
+		$alreadyRated      = get_option( $this->review_option ) != false ? get_option( $this->review_option ) : 'no';
+
+
+		// check user already rated
+		if ( $alreadyRated == 'yes' ) {
+			return;
+		}
+
+		// grab plugin installation date and compare it with current date
+		$display_date = gmdate( 'Y-m-d h:i:s' );
+		$install_date = new \DateTime( $installation_date );
+		$current_date = new \DateTime( $display_date );
+		$difference   = $install_date->diff( $current_date );
+		$diff_days    = $difference->days;
+
+		// check if installation days is greator then week
+
+		if ( isset( $diff_days ) && $diff_days >= 3 && !$this->has_old_submissions) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
+			echo $this->fdbgp_create_notice_content();
+		}
+	}
+
+	function fdbgp_create_notice_content() {
+		$html = '
+		<div data-ajax-url="' . admin_url( 'admin-ajax.php' ) . '" data-ajax-callback="' . sanitize_text_field($this->plugin_slug). '_dismiss_notice" class="' . sanitize_text_field($this->plugin_slug) . '-review-notice-wrapper notice notice-info is-dismissible">
+			
+			<div class="message_container">
+				<p>Thanks for using <b>FormsDB for Elementor Forms</b> WordPress plugin. We hope it meets your expectations!<br/>Please give us a quick rating, it works as a boost for us to keep working on more <a href="https://coolplugins.net" target="_blank"><strong>Cool Plugins</strong></a>!</p>
+				<ul>
+					<li><a href="' . esc_url( $this->review_link ) . '" class="rate-it-btn button button-primary" target="_blank" title="Submit A Review...">Rate Now! ★★★★★</a></li>
+					<li><a href="javascript:void(0);" class="already-rated-btn button button-secondary ' . sanitize_text_field($this->plugin_slug) . '_dismiss_notice" title="Already Rated - Close This Notice!">Already Rated</a></li>
+					<li><a href="javascript:void(0);" class="already-rated-btn button button-secondary ' . sanitize_text_field($this->plugin_slug) . '_dismiss_notice" title="Not Interested - Close This Notice!">Not Interested</a></li>
+				</ul>
+			</div>
+		</div>
+		';
+
+		return $html;
+	}
 	/*
 	|-----------------------------------------------------------------|
 	|   Enqueue all scripts and styles to required page only          |
@@ -33,6 +97,10 @@ class fdbgp_feedback {
 		wp_enqueue_script( __NAMESPACE__ . 'feedback-script', $this->plugin_url . 'admin/feedback/js/admin-feedback.js', array( 'jquery' ), $this->plugin_version, true );
 			wp_enqueue_style( 'cool-plugins-feedback-css', $this->plugin_url . 'admin/feedback/css/admin-feedback.css', null, $this->plugin_version );
 		}
+
+		wp_enqueue_style( 'fdbgp-admin-review-notice-css', $this->plugin_url . 'admin/feedback/css/fdbgp-admin-review-notice.css', null, $this->plugin_version );
+
+		wp_enqueue_script( 'fdbgp-admin-review-notice-js', $this->plugin_url . 'admin/feedback/js/fdbgp-admin-review-notice.js', array( 'jquery' ), $this->plugin_version , false);
 	}
 
 	function fdbgp_get_user_info() {

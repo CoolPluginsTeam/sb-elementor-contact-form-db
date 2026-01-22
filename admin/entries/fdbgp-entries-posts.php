@@ -137,8 +137,12 @@ class FDBGP_Entries_Posts {
     public function output_entries_list(FDBGP_Dashboard $dashboard) {
         if($dashboard->current_screen(self::$post_type)){
             ?>
-            <div class='cfk-promo'>
-                <div class="cfk-box cfk-left">
+            <div id="fdbgp-loader" style="display: none;">
+                <div class="fdbgp-loader-overlay"></div>
+                <div class="fdbgp-loader-spinner"></div>
+            </div>
+            <div class='fdbgp-promo'>
+                <div class="fdbgp-box fdbgp-left">
                     <div class="wrapper-container">
                         <div class="wrapper-header">
                             <div class="cfkef-save-all">
@@ -198,7 +202,7 @@ class FDBGP_Entries_Posts {
      */
     private function render_right_sidebar() {
         ?>
-        <div class="fdbgp-card cfk-right">
+        <div class="fdbgp-card fdbgp-right">
             <div class="fdbgp-card-wrapper">
                 <h2 class="fdbgp-card-title">
                     <span class="fdbgp-icon">🎓</span> <?php esc_html_e( 'How to use', 'sb-elementor-contact-form-db' ); ?>
@@ -249,6 +253,15 @@ class FDBGP_Entries_Posts {
 
             </div>
 
+            <?php
+            // Check if Cool Formkit plugin is active
+            if ( ! function_exists( 'is_plugin_active' ) ) {
+                require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+            $is_cool_formkit_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+            
+            if ( ! $is_cool_formkit_active ) :
+            ?>
             <div class="fdbgp-card-wrapper">
                 <h2 class="fdbgp-card-title">
                     <span class="fdbgp-icon">💎</span><?php esc_html_e('Cool Formkit', 'sb-elementor-contact-form-db'); ?>
@@ -262,7 +275,15 @@ class FDBGP_Entries_Posts {
                 </ul>
                 <a href="https://coolformkit.com/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
             </div>
+            <?php endif; ?>
 
+            <?php
+            // Check if Conditional Fields plugin is active
+            $cf_plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
+            $is_cf_plugin_active = is_plugin_active( $cf_plugin_file );
+            
+            if ( ! $is_cf_plugin_active ) :
+            ?>
             <div class="fdbgp-card-wrapper">
                 <h2 class="fdbgp-card-title">
                     <span class="fdbgp-icon">💡</span><?php esc_html_e('Did you know?', 'sb-elementor-contact-form-db'); ?>
@@ -272,36 +293,24 @@ class FDBGP_Entries_Posts {
                     <?php
                     $plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
                     $plugin_slug = 'conditional-fields-for-elementor-form';
-                        
-                    if ( ! function_exists( 'is_plugin_active' ) ) {
-                        require_once ABSPATH . 'wp-admin/includes/plugin.php';
-                    }
-                        
-                    $is_cf_active = is_plugin_active($plugin_file);
+                    
                     $all_plugins = get_plugins();
                     $is_cf_installed = isset($all_plugins[$plugin_file]);
 
-                    if ($is_cf_active) {
-                        ?>
-                        <button class="button button-secondary" style="width: 49%;" disabled><?php esc_html_e('Active', 'sb-elementor-contact-form-db'); ?></button>
-                        <?php
-                    } else {
-                        $action = $is_cf_installed ? 'activate' : 'install';
-                        $button_text = $is_cf_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
-                        ?>
-                        <button class="button button-secondary fdbgp-install-active-btn" 
-                            style="width: 49%;" 
-                            data-action="<?php echo esc_attr($action); ?>" 
-                            data-slug="<?php echo esc_attr($plugin_slug); ?>" 
-                            data-init="<?php echo esc_attr($plugin_file); ?>">
-                            <?php echo esc_html($button_text); ?>
-                        </button>
-                        <?php
-                    }
+                    $action = $is_cf_installed ? 'activate' : 'install';
+                    $button_text = $is_cf_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
                     ?>
+                    <button class="button button-secondary fdbgp-install-active-btn" 
+                        style="width: 49%;" 
+                        data-action="<?php echo esc_attr($action); ?>" 
+                        data-slug="<?php echo esc_attr($plugin_slug); ?>" 
+                        data-init="<?php echo esc_attr($plugin_file); ?>">
+                        <?php echo esc_html($button_text); ?>
+                    </button>
                     <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('View Docs', 'sb-elementor-contact-form-db'); ?></a>
                 </div>
             </div>
+            <?php endif; ?>
             
         </div>
         <?php

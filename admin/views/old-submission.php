@@ -29,8 +29,8 @@ class FDBGP_Old_Submission_View {
         $form_ids = $this->helper->get_form_ids();
         $total_count = $this->helper->get_submission_count();
         ?>
-        <div class='cfk-promo'>
-            <div class="cfk-box cfk-left">
+        <div class='fdbgp-promo'>
+            <div class="fdbgp-box fdbgp-left">
                 <div class="wrapper-container">
                     <div class="wrapper-header">
                         <div class="cfkef-save-all">
@@ -411,7 +411,7 @@ class FDBGP_Old_Submission_View {
 
     private function render_sidebar() {
         ?>
-        <div class="fdbgp-card cfk-right">
+        <div class="fdbgp-card fdbgp-right">
             <div class="fdbgp-card-wrapper">
                 <h2 class="fdbgp-card-title">
                     <span class="fdbgp-icon">📁</span> <?php esc_html_e('About Old Submissions', 'sb-elementor-contact-form-db'); ?>
@@ -452,7 +452,7 @@ class FDBGP_Old_Submission_View {
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <?php
