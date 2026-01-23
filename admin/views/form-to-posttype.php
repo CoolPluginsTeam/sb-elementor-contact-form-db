@@ -202,14 +202,14 @@ class FDBGP_Form_To_Post_Settings {
                             $button_text = $is_cf_free_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
                         }
                         ?>
-                        <button class="button button-secondary fdbgp-install-active-btn" 
+                        <button class="button button-primary fdbgp-install-active-btn" 
                             style="width: 49%;" 
                             data-action="<?php echo esc_attr($action); ?>" 
                             data-slug="<?php echo esc_attr($plugin_slug); ?>" 
                             data-init="<?php echo esc_attr($plugin_file); ?>">
                             <?php echo esc_html($button_text); ?>
                         </button>
-                        <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('View Docs', 'sb-elementor-contact-form-db'); ?></a>
+                        <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-secondary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('Read Docs', 'sb-elementor-contact-form-db'); ?></a>
                     </div>
                 </div>
                 <?php endif; ?>

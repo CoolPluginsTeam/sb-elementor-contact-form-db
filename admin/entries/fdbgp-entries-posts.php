@@ -247,7 +247,7 @@ class FDBGP_Entries_Posts {
                     <h4>NEED HELP & SETUP GUIDANCE?</h4>
                     <div class="button-groups">
                         <a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-primary" style="width: 49%;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#f9f9f9ff" style="vertical-align: middle; margin-right: 4px;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Video Tutorial</a>
-                        <a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-secondary" style="width: 49%;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3f415e" style="vertical-align: middle; margin-right: 4px;"><path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM3 6h8v12H3V6zm10 12V6h8v12h-8z"/><path d="M14 8h6v2h-6zM14 11h6v2h-6zM14 14h4v2h-4z"/></svg> Read Docs</a>
+                        <a href="https://docs.coolplugins.net/doc/save-hello-plus-form-entries/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-secondary" style="width: 49%;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#3f415e" style="vertical-align: middle; margin-right: 4px;"><path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM3 6h8v12H3V6zm10 12V6h8v12h-8z"/><path d="M14 8h6v2h-6zM14 11h6v2h-6zM14 14h4v2h-4z"/></svg> Read Docs</a>
                     </div>
                 </div>
 
@@ -311,14 +311,14 @@ class FDBGP_Entries_Posts {
                         $button_text = $is_cf_free_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
                     }
                     ?>
-                    <button class="button button-secondary fdbgp-install-active-btn" 
+                    <button class="button button-primary fdbgp-install-active-btn" 
                         style="width: 49%;" 
                         data-action="<?php echo esc_attr($action); ?>" 
                         data-slug="<?php echo esc_attr($plugin_slug); ?>" 
                         data-init="<?php echo esc_attr($plugin_file); ?>">
                         <?php echo esc_html($button_text); ?>
                     </button>
-                    <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('View Docs', 'sb-elementor-contact-form-db'); ?></a>
+                    <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-secondary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('Read Docs', 'sb-elementor-contact-form-db'); ?></a>
                 </div>
             </div>
             <?php endif; ?>
