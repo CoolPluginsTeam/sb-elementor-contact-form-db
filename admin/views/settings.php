@@ -508,10 +508,15 @@ if (!class_exists('FDBGP_Settings_Page')) {
                         // Check if Conditional Fields plugin (free or pro) or extensions or cool-formkit is active
                         $cf_plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
                         $cf_pro_plugin_file = 'conditional-fields-for-elementor-form-pro/class-conditional-fields-for-elementor-form-pro.php';
+                        $extensions_plugin_file = 'extensions-for-elementor-form/extensions-for-elementor-form.php';
                         $is_cf_plugin_active = is_plugin_active( $cf_plugin_file ) || is_plugin_active( $cf_pro_plugin_file );
                         
-                        // Hide card if any related plugin is active
-                        if ( !$is_cf_plugin_active && !$is_extensions_active && !$is_cool_formkit_active ) :
+                        // Check if extensions plugin is installed (even if not active)
+                        $all_plugins = get_plugins();
+                        $is_extensions_installed = isset( $all_plugins[ $extensions_plugin_file ] );
+                        
+                        // Hide card if any related plugin is active OR if extensions is installed
+                        if ( !$is_cf_plugin_active && !$is_extensions_active && !$is_cool_formkit_active && !$is_extensions_installed ) :
                         ?>
                         <div class="fdbgp-card-wrapper">
                             <h2 class="fdbgp-card-title">
@@ -521,7 +526,6 @@ if (!class_exists('FDBGP_Settings_Page')) {
                             <div class="button-groups">
                                 <?php
                                 // Check if pro plugin exists on site, prioritize pro over free
-                                $all_plugins = get_plugins();
                                 $is_cf_pro_installed = isset($all_plugins[$cf_pro_plugin_file]);
                                 $is_cf_free_installed = isset($all_plugins[$cf_plugin_file]);
                                 

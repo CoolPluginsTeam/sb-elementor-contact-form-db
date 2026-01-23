@@ -397,20 +397,6 @@ $input_form_mask_features = array(
                 </div>
 
                 <div class="fdbgp-right">
-                    <a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db/reviews/#new-post" target="_blank" class="fdbgp-box review">
-                        Are you enjoying using our addon to upgrade features inside your Elementor form? Please submit your review as it boosts our energy to work on future updates.
-                        <span>Submit Review ★★★★★</span>
-                    </a>
-                    <div class="fdbgp-card">
-                        <div class="fdbgp-card-wrapper">
-                            <h3>Important Links</h3>
-                            <div class="fdbgp-buttons">
-                                <a href="https://coolplugins.net/support/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=support&utm_content=setting_page_sidebar" class="button button-secondary" target="_blank">Contact Support</a>
-                                <a href="https://coolplugins.net/about-us/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=about_us&utm_content=setting_page_sidebar" class="button"  target="_blank">Meet Cool Plugins Developers</a>
-                                <a href="https://x.com/cool_plugins" class="button" target="_blank">Follow On X</a>
-                            </div>
-                        </div>
-                    </div>
                     
                     <div class="fdbgp-card">
                         <?php
@@ -443,10 +429,18 @@ $input_form_mask_features = array(
                         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $cf_pro_plugin_file = 'conditional-fields-for-elementor-form-pro/class-conditional-fields-for-elementor-form-pro.php';
                         // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+                        $extensions_plugin_file = 'extensions-for-elementor-form/extensions-for-elementor-form.php';
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $is_cf_plugin_active = is_plugin_active( $cf_plugin_file ) || is_plugin_active( $cf_pro_plugin_file );
                         
-                        // Hide card if any related plugin is active
-                        if ( !$is_cf_plugin_active && !$is_extensions_active && !$is_cool_formkit_active ) :
+                        // Check if extensions plugin is installed (even if not active)
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+                        $all_plugins = get_plugins();
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+                        $is_extensions_installed = isset( $all_plugins[ $extensions_plugin_file ] );
+                        
+                        // Hide card if any related plugin is active OR if extensions is installed
+                        if ( !$is_cf_plugin_active && !$is_extensions_active && !$is_cool_formkit_active && !$is_extensions_installed ) :
                         ?>
                         <div class="fdbgp-card-wrapper">
                             <h2 class="fdbgp-card-title">
