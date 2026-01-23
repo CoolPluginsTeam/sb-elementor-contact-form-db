@@ -399,6 +399,10 @@ body.elementor_page_cfkef-entries {
   color: #222;
 }
 
+.fdbgp-wrapper .button-secondary:focus svg path {
+  fill: #fff !important;
+}
+
 /* Header Styles */
 .fdbgp-header {
   position: absolute;
