@@ -438,7 +438,7 @@ class FDBGP_Old_Submission_View {
                         <div class="fdbgp-step-number">ℹ️</div>
                         <div class="fdbgp-step-content">
                             <h3><?php esc_html_e('Enable New Submissions (Recommended)', 'sb-elementor-contact-form-db'); ?></h3>
-                            <p><?php _e('If you prefer the new method, disable legacy saving from this page. Then edit your form in Elementor and enable the Save Submission action.
+                            <p><?php esc_html_e('If you prefer the new method, disable legacy saving from this page. Then edit your form in Elementor and enable the Save Submission action.
                             
                             New entries will appear in <a href="admin.php?page=e-form-submissions" target="_blank">Elementor → Submissions</a>.', 'sb-elementor-contact-form-db'); ?></p>
                         </div>

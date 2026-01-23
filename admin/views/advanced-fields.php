@@ -5,6 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 require_once 'settings.php';
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
 $settings_page = new FDBGP_Settings_Page();
 
 if (! function_exists('get_plugins')) {
@@ -414,7 +415,9 @@ $input_form_mask_features = array(
                     <div class="fdbgp-card">
                         <?php
                         // Check if Cool Formkit plugin is active (only cool-formkit, not extensions)
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $is_cool_formkit_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' );
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $is_extensions_active = is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
                         
                         if ( ! $is_cool_formkit_active ) :
@@ -435,8 +438,11 @@ $input_form_mask_features = array(
 
                         <?php
                         // Check if Conditional Fields plugin (free or pro) or extensions or cool-formkit is active
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $cf_plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $cf_pro_plugin_file = 'conditional-fields-for-elementor-form-pro/class-conditional-fields-for-elementor-form-pro.php';
+                        // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                         $is_cf_plugin_active = is_plugin_active( $cf_plugin_file ) || is_plugin_active( $cf_pro_plugin_file );
                         
                         // Hide card if any related plugin is active
@@ -450,20 +456,31 @@ $input_form_mask_features = array(
                             <div class="button-groups">
                                 <?php
                                 // Check if pro plugin exists on site, prioritize pro over free
+                                // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                 $all_plugins = get_plugins();
+                                // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                 $is_cf_pro_installed = isset($all_plugins[$cf_pro_plugin_file]);
+                                // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                 $is_cf_free_installed = isset($all_plugins[$cf_plugin_file]);
                                 
                                 // Use pro plugin if it exists, otherwise use free
                                 if ( $is_cf_pro_installed ) {
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $plugin_file = $cf_pro_plugin_file;
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $plugin_slug = 'conditional-fields-for-elementor-form-pro';
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $action = 'activate';
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $button_text = __('Activate Pro', 'sb-elementor-contact-form-db');
                                 } else {
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $plugin_file = $cf_plugin_file;
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $plugin_slug = 'conditional-fields-for-elementor-form';
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $action = $is_cf_free_installed ? 'activate' : 'install';
+                                    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound	
                                     $button_text = $is_cf_free_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
                                 }
                                 ?>

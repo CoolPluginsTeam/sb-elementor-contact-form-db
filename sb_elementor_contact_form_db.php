@@ -76,6 +76,7 @@ if(!class_exists('FDBGP_Main')) {
 				$current_version = get_option( 'formsdb_initial_version' );
 
 				if ( $current_version && version_compare( $current_version, '1.8.1', '>' ) && ! get_option('formdb_initial_version_migration', false) ) {					
+					// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching		
 					$post_type_exists = $wpdb->get_var(
 						$wpdb->prepare(
 							"SELECT ID FROM {$wpdb->posts} WHERE post_type = %s LIMIT 1",
@@ -96,6 +97,7 @@ if(!class_exists('FDBGP_Main')) {
 		 */
 		public function fdbgp_plugin_redirection( $plugin ) {
 			if ( $plugin == FDBGP_PLUGIN_BASENAME ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	
 				exit( wp_safe_redirect( admin_url( 'admin.php?page=formsdb' ) ) );
 			}
 		}
