@@ -34,9 +34,9 @@ trait FDBGP_Ajax_Handlers {
             wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
         }
         
-        $spreadsheet_name = isset( $_POST['spreadsheet_name'] ) ? sanitize_text_field( $_POST['spreadsheet_name'] ) : '';
-        $sheet_name       = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
-        $headers          = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', $_POST['headers'] ) : array();
+        $spreadsheet_name = isset( $_POST['spreadsheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_name']) ) : '';
+        $sheet_name       = isset( $_POST['sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['sheet_name']) ) : '';
+        $headers          = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', wp_unslash($_POST['headers']) ) : array();
         
         // Validate input
         if ( empty( $spreadsheet_name ) ) {
@@ -103,7 +103,7 @@ trait FDBGP_Ajax_Handlers {
             wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
         }
         
-        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
+        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_id']) ) : '';
         
         if ( empty( $spreadsheet_id ) ) {
             wp_send_json_error( array( 'message' => 'Spreadsheet ID is required' ) );
@@ -120,7 +120,7 @@ trait FDBGP_Ajax_Handlers {
             $sheets   = array();
             
             // Add Create New Tab option
-            $sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
+            $sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'sb-elementor-contact-form-db' );
             
             foreach ( $response->getSheets() as $s ) {
                 $title = $s['properties']['title'];
@@ -144,10 +144,10 @@ trait FDBGP_Ajax_Handlers {
             wp_send_json_error( array( 'message' => 'Permission denied' ) );
         }
 
-        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
-        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
-        $new_sheet_name = isset( $_POST['new_sheet_name'] ) ? sanitize_text_field( $_POST['new_sheet_name'] ) : '';
-        $headers        = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', $_POST['headers'] ) : array();
+        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_id']) ) : '';
+        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['sheet_name']) ) : '';
+        $new_sheet_name = isset( $_POST['new_sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['new_sheet_name']) ) : '';
+        $headers        = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', wp_unslash($_POST['headers']) ) : array();
 
         if ( empty( $spreadsheet_id ) ) {
             wp_send_json_error( array( 'message' => 'Spreadsheet ID missing' ) );
@@ -228,8 +228,8 @@ trait FDBGP_Ajax_Handlers {
             wp_send_json_error( array( 'message' => 'Permission denied' ) );
         }
 
-        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
-        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
+        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_id']) ) : '';
+        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['sheet_name']) ) : '';
 
         if ( empty( $spreadsheet_id ) || empty( $sheet_name ) || 'create_new_tab' === $sheet_name ) {
             wp_send_json_success( array( 'has_content' => false ) );

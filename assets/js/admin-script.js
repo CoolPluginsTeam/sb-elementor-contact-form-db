@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    
+
     function handleTermLink() {
         const termsLinks = document.querySelectorAll('.fdbgp-ccpw-see-terms');
         const termsBox = document.getElementById('termsBox');
@@ -78,6 +78,70 @@ jQuery(document).ready(function ($) {
             $authBtn.show();
         } else {
             $authBtn.hide();
+        }
+    });
+
+    // Handle plugin install and activate button
+    jQuery('.fdbgp-install-active-btn').on('click', function (e) {
+        e.preventDefault();
+        var $button = jQuery(this);
+        var action = $button.data('action');
+        var slug = $button.data('slug');
+        var init = $button.data('init');
+        var $loader = jQuery('#fdbgp-loader');
+
+        $loader.show();
+
+        if (action === 'install') {
+            // Install and then activate 
+            jQuery.ajax({
+                type: 'POST',
+                url: fdbgp_plugin_vars.ajaxurl,
+                data: {
+                    action: 'fdbgp_plugin_install',
+                    slug: slug,
+                    _ajax_nonce: fdbgp_plugin_vars.installNonce
+                },
+                success: function (res) {
+                    if (res.success) {
+                        // Activate after install
+                        activatePlugin(init);
+                    } else {
+                        alert('Installation failed. Please try to install manually.');
+                        $loader.hide();
+                    }
+                },
+                error: function () {
+                    alert('Installation error. Please try to install manually.');
+                    $loader.hide();
+                }
+            });
+        } else if (action === 'activate') {
+            activatePlugin(init);
+        }
+
+        function activatePlugin(pluginInit) {
+            jQuery.ajax({
+                type: 'POST',
+                url: fdbgp_plugin_vars.ajaxurl,
+                data: {
+                    action: 'fdbgp_plugin_activate',
+                    init: pluginInit,
+                    security: fdbgp_plugin_vars.nonce
+                },
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Activation failed: ' + (res.data ? res.data.message : 'Unknown error'));
+                        $loader.hide();
+                    }
+                },
+                error: function () {
+                    alert('Activation error. Please try to activate manually.');
+                    $loader.hide();
+                }
+            });
         }
     });
 
