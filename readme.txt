@@ -5,7 +5,7 @@ Tags: elementor forms, google sheets, form submissions, contact form db, form en
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor tested up to: 3.34.0
@@ -216,6 +216,9 @@ https://youtu.be/CV3ZtcOVWzU
 👉 [FormsDB Video Tutorials](https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=readme&utm_campaign=docs&utm_content=installation)
 
 == Changelog ==
+
+= 2.1.4 (Jan 29, 2026) =
+* Improved code quality.
 
 = 2.1.3 (Jan 23, 2026) =
 * Improved plugin admin dashboard UI.

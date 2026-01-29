@@ -5,7 +5,7 @@
  * Plugin URI:  https://coolplugins.net/product/formsdb-connect-elementor-forms-google-sheets/?utm_source=formsdb&utm_medium=inside&utm_campaign=plugin_page&utm_content=plugins_list
  * Description: Connect Elementor forms with Google Sheets to sync form entries, or save frontend form submissions in any WordPress post type using Elementor Pro or Hello Plus forms.
  * Author:      Cool Plugins
- * Version:     2.1.3
+ * Version:     2.1.4
  * Author URI:  https://coolplugins.net/?utm_source=formsdb&utm_medium=inside&utm_campaign=author_page&utm_content=plugins_list
  * Text Domain: sb-elementor-contact-form-db
  * Requires Plugins: elementor
@@ -26,7 +26,7 @@ define( 'FDBGP_PLUGIN_FILE', __FILE__ );
 define( 'FDBGP_PLUGIN_BASENAME', plugin_basename( FDBGP_PLUGIN_FILE ) );
 define( 'FDBGP_PLUGIN_DIR', plugin_dir_path( FDBGP_PLUGIN_FILE ) );
 define( 'FDBGP_PLUGIN_URL', plugin_dir_url( FDBGP_PLUGIN_FILE ) );
-define( 'FDBGP_PLUGIN_VERSION', '2.1.3' );
+define( 'FDBGP_PLUGIN_VERSION', '2.1.4' );
 define('FDBGP_FEEDBACK_URL', 'https://feedback.coolplugins.net/');
 
 
@@ -65,7 +65,7 @@ if(!class_exists('FDBGP_Main')) {
 			}
 
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
-			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
+			add_action( 'admin_init', array( $this, 'setting_redirect' ));
 			add_filter( 'plugin_row_meta', array( $this, 'fdbgp_plugin_row_meta' ), 10, 2 );
 			add_action( 'activated_plugin', array( $this, 'fdbgp_plugin_redirection' ) );
 
@@ -119,7 +119,14 @@ if(!class_exists('FDBGP_Main')) {
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if(!isset($_GET['page'])){
+			if(!isset($_GET['page']) || 'formsdb' !== sanitize_text_field(wp_unslash($_GET['page']))){
+				return;
+			}
+
+			// Verify state (nonce) returned from Google
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$state = isset($_GET['state']) ? sanitize_text_field(wp_unslash($_GET['state'])) : '';
+			if ( empty($state) || ! wp_verify_nonce($state, 'fdbgp_google_oauth') ) {
 				return;
 			}
 

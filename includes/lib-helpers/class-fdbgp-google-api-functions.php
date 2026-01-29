@@ -170,6 +170,8 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		// Load previously authorized credentials from a database.
 		try {
 			if ( empty( $auth_token ) ) {
+				$state = wp_create_nonce( 'fdbgp_google_oauth' );
+				$client->setState( $state );
 				$auth_url = $client->createAuthUrl();
 				return $auth_url;
 			}
