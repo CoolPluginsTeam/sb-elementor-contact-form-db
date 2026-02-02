@@ -90,6 +90,10 @@ jQuery(document).ready(function ($) {
         var init = $button.data('init');
         var $loader = jQuery('#fdbgp-loader');
 
+        if(slug !== 'conditional-fields-for-elementor-form' && slug !== 'conditional-fields-for-elementor-form-pro'){
+            return;
+        }
+        
         $loader.show();
 
         if (action === 'install') {
