@@ -199,7 +199,7 @@
 
                 if(!customNotice) return;
 
-                const installBtns = this.el.querySelectorAll('button.fme-install-plugin');
+                const installBtns = this.el.querySelectorAll('button.fdbgp-install-plugin');
 
                 if(installBtns.length === 0) return;
 
@@ -221,11 +221,11 @@
 
         $(document).ready(function ($) {
 
-            const customNotice = $('.cool-form-wrp, .fme-tec-notice');
+            const customNotice = $('.cool-form-wrp, .fdbgp-tec-notice');
 
             if(customNotice.length === 0) return;
 
-            const installBtns = customNotice.find('button.fme-install-plugin, a.fme-install-plugin');
+            const installBtns = customNotice.find('button.fdbgp-install-plugin, a.fdbgp-install-plugin');
 
             if(installBtns.length === 0) return;  
             
