@@ -171,6 +171,7 @@ class FDBGP_Dashboard {
 
     private static function fdbgp_current_page($slug)
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only for current page detection, no data modification.
         $current_page = isset($_REQUEST['page']) ? sanitize_key($_REQUEST['page']) : (isset($_REQUEST['post_type']) ? sanitize_key($_REQUEST['post_type']) : '');
         $status=false;
 
@@ -209,14 +210,30 @@ class FDBGP_Dashboard {
                     </a>
                 </div>
 
-                <?php if(!is_plugin_active('cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php')) : ?>
-
                 <div class="fdbgp-header-buttons">
+
+                    <?php
+                        if (! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )) :
+                    ?>
+
                     <span>Unlock advanced fields and features for Elementor Forms.</span>
-                    <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-primary" target="_blank"><?php esc_html_e('Try Cool FormKit for Elementor', 'elementor-contact-form-db'); ?></a>
+                    <a href="https://coolformkit.com/features/?utm_source=formsdb&utm_medium=inside&utm_campaign=demo&utm_content=setting_page_header" class="button button-primary fdbgp-try-cool-form" target="_blank"><?php 
+                        esc_html_e('Try Cool FormKit for Elementor', 'sb-elementor-contact-form-db');
+                     ?></a>
+
+                    <?php else: ?>
+
+                    <span>Use advanced fields and features for Elementor Forms.</span>
+                    <a href="<?php echo esc_url( admin_url( 'admin.php?page=cool-formkit' ))?>" class="button button-primary fdbgp-try-cool-form" target="_blank"><?php 
+                        esc_html_e('use Cool FormKit for Elementor', 'sb-elementor-contact-form-db');
+                     ?></a>
+
+                    <?php endif; ?>
+
+                
+                    
                 </div>
 
-                <?php endif; ?>
             </div>
         <?php
 
@@ -242,6 +259,8 @@ class FDBGP_Dashboard {
     }
 
     public function fdbgp_get_tabs(){
+        $has_old_submissions = \FDBGP_Old_Submission::has_old_submissions();
+
         $default_tabs = array(
             array(
                 'title' => 'Forms To Sheet',
@@ -270,6 +289,14 @@ class FDBGP_Dashboard {
                 'title' => 'Hello+ Form Entries',
                 'position' => 3,
                 'slug' => 'cfkef-entries',
+            );
+        }
+
+        if($has_old_submissions){
+            $default_tabs[] = array(
+                'title' => 'Old Submissions',
+                'position' => 6,
+                'slug' => 'formsdb&tab=old-submission',
             );
         }
 

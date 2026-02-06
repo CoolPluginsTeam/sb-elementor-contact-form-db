@@ -4,12 +4,12 @@ Donate link: https://donate.stripe.com/5kQdR92iBevO75WbPm6c00i
 Tags: elementor forms, google sheets, form submissions, contact form db, form entries
 Requires at least: 5.0
 Tested up to: 6.9
-Requires PHP: 7.2
-Stable tag: 2.0.0
+Requires PHP: 7.4
+Stable tag: 2.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Elementor tested up to: 3.34.0
-Elementor Pro tested up to: 3.34.0
+Elementor tested up to: 3.35.3
+Elementor Pro tested up to: 3.35.0
 
 Connect Elementor forms with Google Sheets to sync form entries, or save form submissions in any post type using Elementor Pro or Hello Plus forms.
 
@@ -217,9 +217,32 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
-= 2.0.2 (Dec 31, 2025) =
-* Added other plugin recommendations for Elementor users.
-* Improved code.
+= 2.1.6 (Feb 06, 2026) =
+* Improved code quality.
+* Tested up to Elementor 3.35.3 and Elementor Pro 3.35.0.
+
+= 2.1.5 (Feb 02, 2026) =
+* Improved admin dashboard side functionality.
+
+= 2.1.4 (Jan 29, 2026) =
+* Improved code quality.
+
+= 2.1.3 (Jan 23, 2026) =
+* Improved plugin admin dashboard UI.
+* Added an dashboard notice for user feedback (shown politely, no force).
+* Minor fixes and code improvements.
+
+= 2.1.2 (Jan 20, 2026) =
+* Fixed Security issue related to Settings permission check.
+
+= 2.1.1 (Jan 07, 2026) =
+* Fixed Wrong initial version bug.
+* Minor UI improvements and text updates across FormsDB admin screens.
+
+= 2.1.0 (Jan 02, 2026) =
+* Added support for legacy users to continue using the old form submission saving method available in version 1.8.1 and earlier, based on user feedback.
+* Added an option to enable or disable the legacy saving method from the Old Submissions tab (visible only to users upgrading from older versions).
+* Minor UI improvements and text updates across FormsDB admin screens.
 
 = 2.0.1 (Dec 30, 2025) =
 * Fixed issues reported by "Plugin Check" plugin.
@@ -276,5 +299,5 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Upgrade Notice ==
 
-= 2.0.0 =
+= 2.0.1 =
 This is a major update where the plugin has been fully rebuilt and rebranded as **FormsDB** by **Cool Plugins**. The new version introduces Google Sheets sync, frontend post submission, and Hello Plus form entry support, as the old functionality is now available inside Elementor Pro. Users upgrading from older versions can export previous entries from **FormsDB → Old Submissions** after updating.

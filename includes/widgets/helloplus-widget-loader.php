@@ -91,12 +91,12 @@ class HelloPlus_Widget_Loader {
         $element->start_controls_section(
             'cool_formkit_conditional_actions_section',
             [
-                'label' => esc_html__( 'Cool Actions After Submit', 'cool-formkit' ),
+                'label' => esc_html__( 'Cool Actions After Submit', 'sb-elementor-contact-form-db' ),
             ]
         );
 
         $element->add_control( 'cool_formkit_submit_actions', [
-            'label'       => __( 'Actions After Submit', 'cool-formkit' ),
+            'label'       => __( 'Actions After Submit', 'sb-elementor-contact-form-db' ),
             'type'        => \Elementor\Controls_Manager::SELECT2,
             'multiple'    => true,
             'label_block' => true,

@@ -27,6 +27,7 @@ class FDBGP_Form_To_Post_Settings {
     }
 
     private function get_current_page() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- get the current page, no data modification.
         $paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
         return max( 1, $paged );
     }
@@ -40,30 +41,49 @@ class FDBGP_Form_To_Post_Settings {
      */
     private function render_page( array $forms, $total_items = 0, $current_page = 1 ) {
         ?>
-        <div class='cfk-promo'>
-            <div class="cfk-box cfk-left">
-                <div class="wrapper-header">
-                    <div class="cfkef-save-all">
-                        <div class="cfkef-title-desc">
-                            <h2><?php esc_html_e( 'Send Form Submissions to Post Types', 'elementor-contact-form-db' ); ?></h2>
+        <div class='fdbgp-promo'>
+            <div class="fdbgp-box fdbgp-left">
+                <div class="wrapper-container">
+                    <div class="wrapper-header">
+                        <div class="cfkef-save-all">
+                            <div class="cfkef-title-desc">
+                                <h2><?php esc_html_e( 'Send Form Submissions to Post Types', 'sb-elementor-contact-form-db' ); ?></h2>
+                            </div>
                         </div>
                     </div>
+                    <div class="wrapper-body">
+                        <?php
+                        if ( ! empty( $forms ) || $total_items > 0 ) {
+                            $this->render_forms_table( $forms, $total_items, $current_page );
+                        } else {
+                            $this->render_empty_state();
+                        }
+                        ?>
+                    </div>
                 </div>
-                <div class="wrapper-body">
-                    <?php
-                    if ( ! empty( $forms ) || $total_items > 0 ) {
-                        $this->render_forms_table( $forms, $total_items, $current_page );
-                    } else {
-                        $this->render_empty_state();
-                    }
-                    ?>
-                </div>
+                <?php $this->render_review_request(); ?>
             </div>
             <?php $this->render_right_sidebar(); ?>
         </div>
         <?php
     }
     
+    public function render_review_request() {
+        ?>
+        <div class="cfkef-review-request">
+            <div class="cfkef-review-left">
+                <h3><?php esc_html_e('Enjoying FormsDB for Elementor Forms?', 'sb-elementor-contact-form-db'); ?></h3>
+                <p><?php esc_html_e('Please consider leaving us a review. It helps us a lot!', 'sb-elementor-contact-form-db'); ?></p>
+            </div>
+            <div class="cfkef-review-right">
+                <div class="cfkef-stars">
+                ★★★★★
+                </div>
+                <a href="https://wordpress.org/support/plugin/sb-elementor-contact-form-db/reviews/#new-post" class="button button-primary" target="_blank"><?php esc_html_e('Leave a Review', 'sb-elementor-contact-form-db'); ?></a>
+            </div>
+        </div>
+        <?php
+    }
     /**
      * Render page
      *
@@ -75,56 +95,128 @@ class FDBGP_Form_To_Post_Settings {
         ?>
 
 
-            <div class="fdbgp-card cfk-left">
-                <h2 class="fdbgp-card-title">
-                    <span class="fdbgp-icon">🎓</span> How to use
-                </h2>
-
-                <div class="fdbgp-steps">
-                    <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">1</div>
-                    <div class="fdbgp-step-content">
-                        <h3>Create Page</h3>
-                        <p>Create a page with Elementor</p>
+            <div class="fdbgp-card fdbgp-right">
+                <div class="fdbgp-card-wrapper">
+                    <h2 class="fdbgp-card-title">
+                        <span class="fdbgp-icon">🎓</span> How to use
+                    </h2>
+    
+                    <div class="fdbgp-steps">
+                        <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">1</div>
+                        <div class="fdbgp-step-content">
+                            <h3>Create Page</h3>
+                            <p>Create a page with Elementor</p>
+                        </div>
+                        </div>
+    
+                        <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">2</div>
+                        <div class="fdbgp-step-content">
+                            <h3>Edit your Form</h3>
+                            <p>Open your page in Elementor and select your form widget.</p>
+                        </div>
+                        </div>
+    
+                        <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">3</div>
+                        <div class="fdbgp-step-content">
+                            <h3>Add Action</h3>
+                            <p>Under <strong>'Actions After Submit'</strong>, add <strong>Save Submissions In Post Type</strong>.</p>
+                        </div>
+                        </div>
+    
+                        <div class="fdbgp-step">
+                        <div class="fdbgp-step-number">4</div>
+                        <div class="fdbgp-step-content">
+                            <h3>Post Type</h3>
+                            <p>Select post type and post status in settings.</p>
+                        </div>
+                        </div>
                     </div>
-                    </div>
-
-                    <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">2</div>
-                    <div class="fdbgp-step-content">
-                        <h3>Edit your Form</h3>
-                        <p>Open your page in Elementor and select your form widget.</p>
-                    </div>
-                    </div>
-
-                    <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">3</div>
-                    <div class="fdbgp-step-content">
-                        <h3>Add Action</h3>
-                        <p>Under <strong>'Actions After Submit'</strong>, add <strong>Save Submissions In Post Type</strong>.</p>
-                    </div>
-                    </div>
-
-                    <div class="fdbgp-step">
-                    <div class="fdbgp-step-number">4</div>
-                    <div class="fdbgp-step-content">
-                        <h3>Post Type</h3>
-                        <p>Select post type and post status in settings.</p>
-                    </div>
+                    <hr>
+                    <div class="fdbgp-help-box">
+                        <h4>NEED HELP & SETUP GUIDANCE?</h4>
+                        <div class="button-groups">
+                            <a href="https://docs.coolplugins.net/doc/save-form-submissions-post-type/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-primary" style="width: 49%;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#f9f9f9ff" style="vertical-align: middle; margin-right: 4px;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg> Video Tutorial</a>
+                            <a href="https://docs.coolplugins.net/doc/save-form-submissions-post-type/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer" class="button button-secondary" style="width: 49%;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="#000" style="vertical-align: middle; margin-right: 4px;"><path d="M21 4H3a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h18a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zM3 6h8v12H3V6zm10 12V6h8v12h-8z"/><path d="M14 8h6v2h-6zM14 11h6v2h-6zM14 14h4v2h-4z"/></svg> Read Docs</a>
+                        </div>
                     </div>
                 </div>
 
-                <div class="fdbgp-help-box">
-                    <h4>NEED HELP & SETUP GUIDANCE?</h4>
+                <?php
+                // Check if Cool Formkit plugin is active (only cool-formkit, not extensions)
+                if ( ! function_exists( 'is_plugin_active' ) ) {
+                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                }
+                $is_cool_formkit_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' );
+                $is_extensions_active = is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+                
+                if ( ! $is_cool_formkit_active ) :
+                ?>
+                <div class="fdbgp-card-wrapper cool-formkit-card">
+                    <h2 class="fdbgp-card-title">
+                        <span class="fdbgp-icon">💎</span><?php esc_html_e('Cool Formkit', 'sb-elementor-contact-form-db'); ?>
+                    </h2>
+                    <p><?php esc_html_e('Extend Elementor Forms and take them to the next level.', 'sb-elementor-contact-form-db'); ?></p>
                     <ul>
-                        <li><a href="https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">Watch Video Tutorial</a> or <a href="https://docs.coolplugins.net/doc/save-form-submissions-post-type/?utm_source=formsdb&utm_medium=inside&utm_campaign=docs&utm_content=setting_page_sidebar" target="_blank" rel="noopener noreferrer">read the docs</a></li>
-                        <li><span class="hire-developer-text">You can also hire our expert developer to set up everything smoothy within 24 hours.</span></li>
+                        <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Add Conditional Fields to Form.', 'sb-elementor-contact-form-db'); ?></li>
+                        <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Advanced Form Builder for Elementor.', 'sb-elementor-contact-form-db'); ?></li>
+                        <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Spam Blocker & Advanced Actions After Submit.', 'sb-elementor-contact-form-db'); ?></li>
                     </ul>
-
-                    <a href="https://buy.stripe.com/5kQ9AT4qJgDW1LC6v26c00j" class="button button-primary" target="_blank">
-                        Hire Expert Developer
-                    </a>
+                    <a href="https://coolformkit.com/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
                 </div>
+                <?php endif; ?>
+
+                <?php
+                // Check if Conditional Fields plugin (free or pro) or extensions or cool-formkit is active
+                $cf_plugin_file = 'conditional-fields-for-elementor-form/class-conditional-fields-for-elementor-form.php';
+                $cf_pro_plugin_file = 'conditional-fields-for-elementor-form-pro/class-conditional-fields-for-elementor-form-pro.php';
+                $extensions_plugin_file = 'extensions-for-elementor-form/extensions-for-elementor-form.php';
+                $is_cf_plugin_active = is_plugin_active( $cf_plugin_file ) || is_plugin_active( $cf_pro_plugin_file );
+                
+                // Check if extensions plugin is installed (even if not active)
+                $all_plugins = get_plugins();
+                $is_extensions_installed = isset( $all_plugins[ $extensions_plugin_file ] );
+                
+                // Hide card if any related plugin is active OR if extensions is installed
+                if ( !$is_cf_plugin_active && !$is_extensions_active && !$is_cool_formkit_active && !$is_extensions_installed ) :
+                ?>
+                <div class="fdbgp-card-wrapper">
+                    <h2 class="fdbgp-card-title">
+                        <span class="fdbgp-icon">💡</span><?php esc_html_e('Did you know?', 'sb-elementor-contact-form-db'); ?>
+                    </h2>
+                    <p><?php esc_html_e('You can now conditionally hide or show form fields using Conditional Fields for Elementor forms.', 'sb-elementor-contact-form-db'); ?></p>
+                    <div class="button-groups">
+                        <?php
+                        // Check if pro plugin exists on site, prioritize pro over free
+                        $is_cf_pro_installed = isset($all_plugins[$cf_pro_plugin_file]);
+                        $is_cf_free_installed = isset($all_plugins[$cf_plugin_file]);
+                        
+                        // Use pro plugin if it exists, otherwise use free
+                        if ( $is_cf_pro_installed ) {
+                            $plugin_file = $cf_pro_plugin_file;
+                            $plugin_slug = 'conditional-fields-for-elementor-form-pro';
+                            $action = 'activate';
+                            $button_text = __('Activate Pro', 'sb-elementor-contact-form-db');
+                        } else {
+                            $plugin_file = $cf_plugin_file;
+                            $plugin_slug = 'conditional-fields-for-elementor-form';
+                            $action = $is_cf_free_installed ? 'activate' : 'install';
+                            $button_text = $is_cf_free_installed ? __('Activate Now', 'sb-elementor-contact-form-db') : __('Install Now', 'sb-elementor-contact-form-db');
+                        }
+                        ?>
+                        <button class="button button-primary fdbgp-install-active-btn" 
+                            style="width: 49%;" 
+                            data-action="<?php echo esc_attr($action); ?>" 
+                            data-slug="<?php echo esc_attr($plugin_slug); ?>" 
+                            data-init="<?php echo esc_attr($plugin_file); ?>">
+                            <?php echo esc_html($button_text); ?>
+                        </button>
+                        <a href="https://docs.coolplugins.net/plugin/conditional-fields-for-elementor-form/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-secondary" target="_blank" style="width: 49%;text-align: center;"><?php esc_html_e('Read Docs', 'sb-elementor-contact-form-db'); ?></a>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         <?php
     }
@@ -144,24 +236,24 @@ class FDBGP_Form_To_Post_Settings {
      */
     private function render_forms_table( array $forms, $total_items, $current_page ) {
         ?>
-        <p><?php esc_html_e( 'View all your Elementor forms here and connect them to WordPress posts, pages, or custom post types. Use form submissions to create content directly from the frontend.', 'elementor-contact-form-db' ); ?></p>
+        <p><?php esc_html_e( 'Connect Elementor forms with WordPress posts, pages, or custom post types. New form submissions can create content automatically from the frontend.', 'sb-elementor-contact-form-db' ); ?></p>
         <div class="cool-formkit-setting-table-con">
             <div class="cool-formkit-left-side-setting">
                 <?php
                 echo '<table class="widefat striped">';
                 echo '<thead>
                         <tr>
-                            <th>' . esc_html__( 'Form Name', 'elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Page Title', 'elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Status', 'elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Post Type', 'elementor-contact-form-db' ) . '</th>
-                            <th>' . esc_html__( 'Action', 'elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Form Name', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Used On Page', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Status', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Connected Post Type', 'sb-elementor-contact-form-db' ) . '</th>
+                            <th>' . esc_html__( 'Manage', 'sb-elementor-contact-form-db' ) . '</th>
                         </tr>
                     </thead><tbody>';
 
                 foreach ( $forms as $form ) {
                     $post_type_status = '<a href="' . esc_url( $form['edit_url'] ) . '" target="_blank" class="button button-secondary">
-                            <span>❌</span> ' . esc_html__( 'Connect Post Type', 'elementor-contact-form-db' ) . '
+                            <span>❌</span> ' . esc_html__( 'Connect Post Type', 'sb-elementor-contact-form-db' ) . '
                         </a>';
 
                     if ( ! empty( $form['post_type_url'] ) && ! empty( $form['post_type_label'] ) ) {
@@ -174,10 +266,10 @@ class FDBGP_Form_To_Post_Settings {
                             <td>' . esc_html( $form['form_name'] ) . '</td>
                             <td><a href="' . esc_url( $form['frontend_url'] ) . '" target="_blank">' . esc_html( $form['post_title'] ) . '</a></td>
                             <td>' . ( $form['status'] ? '<span style="color:green;">Enabled</span>' : '<span style="color:red;">Disabled</span>') . '</td>
-                            <td>' . $post_type_status . '</td>
+                            <td>' . wp_kses_post($post_type_status) . '</td>
                             <td>
-                                <a class="button button-primary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
-                                    ' . esc_html__( 'Edit Form', 'elementor-contact-form-db' ) . '
+                                <a class="button button-secondary" href="' . esc_url( $form['edit_url'] ) . '" target="_blank">
+                                    ' . esc_html__( 'Edit Form', 'sb-elementor-contact-form-db' ) . '
                                 </a>
                             </td>
                         </tr>';
@@ -205,19 +297,19 @@ class FDBGP_Form_To_Post_Settings {
 
                 <p><?php esc_html_e(
                     'No Elementor form is using the "Save Submissions In Post Type" action.',
-                    'elementor-contact-form-db'
+                    'sb-elementor-contact-form-db'
                 ); ?></p>
 
                 <p>
                     <a class="button button-primary" href="<?php echo esc_url( $create_form_url ); ?>"  target="_blank">
-                        <?php esc_html_e( 'Create New Form', 'elementor-contact-form-db' ); ?>
+                        <?php esc_html_e( 'Create New Form', 'sb-elementor-contact-form-db' ); ?>
                     </a>
                 </p>
 
                 <p class="description">
                     <?php esc_html_e(
                         'Create a new Elementor Form and enable the "Save Submissions In Post Type" action under Actions After Submit.',
-                        'elementor-contact-form-db'
+                        'sb-elementor-contact-form-db'
                     ); ?>
                 </p>
 
@@ -247,6 +339,7 @@ class FDBGP_Form_To_Post_Settings {
             'post_type'      => 'any',
             'post_status'    => 'any',
             'posts_per_page' => -1,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Necessary to find Elementor posts, results are cached with transients.
             'meta_key'       => '_elementor_data',
         ] );
 
@@ -319,7 +412,7 @@ class FDBGP_Form_To_Post_Settings {
                     'post_id'         => $post->ID,
                     'post_title'      => get_the_title( $post->ID ),
                     'frontend_url'    => get_permalink( $post->ID ),
-                    'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'elementor-contact-form-db' ),
+                    'form_name'       => $element['settings']['form_name'] ?? esc_html__( 'Unnamed Form', 'sb-elementor-contact-form-db' ),
                     'edit_url'        => admin_url( 'post.php?post=' . $post->ID . '&action=elementor' ),
                     'widget_type'     => strtoupper($element['widgetType']),
                     'post_type_label' => $post_type_label,
@@ -354,7 +447,7 @@ class FDBGP_Form_To_Post_Settings {
             ];
 
             echo '<div class="formsdb-tablenav bottom"><div class="tablenav-pages" style="margin: 1em 0;">';
-            echo paginate_links( $pagination_args );
+            echo wp_kses_post(paginate_links( $pagination_args ));
             echo '</div></div>';
         }
     }

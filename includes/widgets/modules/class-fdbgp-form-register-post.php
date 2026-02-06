@@ -63,7 +63,7 @@ class FDBGP_Register_Post extends Action_Base {
 		$widget->start_controls_section(
 			'eef-register-post-section',
 			[
-				'label' => \esc_html__( 'Save Submissions In Post Type', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Save Submissions In Post Type', 'sb-elementor-contact-form-db' ),
 				'condition' => [
 					'submit_actions' => $this->get_name(),
 				],
@@ -74,7 +74,7 @@ class FDBGP_Register_Post extends Action_Base {
 			'eef-register-post-info',
 			[
 				'type' => \Elementor\Controls_Manager::RAW_HTML,
-				'raw' => \esc_html__( 'Important: To save form fields as post data, you must map each field from the "Advanced" tab of the respective form field settings.', 'extensions-for-elementor-form' ),
+				'raw' => \esc_html__( 'Important: To save form fields as post data, you must map each field from the "Advanced" tab of the respective form field settings.', 'sb-elementor-contact-form-db' ),
 				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
 			]
 		);
@@ -88,7 +88,7 @@ class FDBGP_Register_Post extends Action_Base {
 		$widget->add_control(
 			'eef-register-post-post-type',
 			[
-				'label' => \esc_html__( 'Post Type', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Post Type', 'sb-elementor-contact-form-db' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => 'post',
 				'options' => $this->get_registered_post_types(),
@@ -98,13 +98,13 @@ class FDBGP_Register_Post extends Action_Base {
 		$widget->add_control(
 			'eef-register-post-post-status',
 			[
-				'label' => \esc_html__( 'Post Status', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Post Status', 'sb-elementor-contact-form-db' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => 'draft',
 				'options' => [
-					'draft'  => \esc_html__( 'Draft', 'extensions-for-elementor-form' ),
-					'publish' => \esc_html__( 'Publish', 'extensions-for-elementor-form' ),
-					'pending' => \esc_html__( 'Pending', 'extensions-for-elementor-form' ),
+					'draft'  => \esc_html__( 'Draft', 'sb-elementor-contact-form-db' ),
+					'publish' => \esc_html__( 'Publish', 'sb-elementor-contact-form-db' ),
+					'pending' => \esc_html__( 'Pending', 'sb-elementor-contact-form-db' ),
 				],
 			]
 		);
@@ -112,13 +112,13 @@ class FDBGP_Register_Post extends Action_Base {
 		$widget->add_control(
 			'eef-register-post-user-permission',
 			[
-				'label' => \esc_html__( 'Run only to logged in users?', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Run only to logged in users?', 'sb-elementor-contact-form-db' ),
 				'type' => \Elementor\Controls_Manager::SWITCHER,
-				'label_on' => \esc_html__( 'Yes', 'extensions-for-elementor-form' ),
-				'label_off' => \esc_html__( 'No', 'extensions-for-elementor-form' ),
+				'label_on' => \esc_html__( 'Yes', 'sb-elementor-contact-form-db' ),
+				'label_off' => \esc_html__( 'No', 'sb-elementor-contact-form-db' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
-				'description' => \esc_html__( 'Warning: Save data from not logged in users can be a security risk', 'extensions-for-elementor-form' ),
+				'description' => \esc_html__( 'Warning: Save data from not logged in users can be a security risk', 'sb-elementor-contact-form-db' ),
 			]
 		);
 
@@ -209,32 +209,32 @@ class FDBGP_Register_Post extends Action_Base {
 		}
 
 		$new_control = [
-			'label' => \esc_html__( 'Field to Register', 'extensions-for-elementor-form' ),
+			'label' => \esc_html__( 'Field to Register', 'sb-elementor-contact-form-db' ),
 			'type' => ElementorControls::SELECT,
 			'tab' => 'content',
 			'tabs_wrapper' => 'form_fields_tabs',
 			'inner_tab' => 'form_fields_advanced_tab',
 			'classes' => 'elementor-hidden-control',
-			'description' => \esc_html__( 'Use this input to define what post field will receive this data when post is registered', 'extensions-for-elementor-form' ),
+			'description' => \esc_html__( 'Use this input to define what post field will receive this data when post is registered', 'sb-elementor-contact-form-db' ),
 			'default' => 'select',
 			'options' => [
-				'select' => \esc_html__( 'Select', 'extensions-for-elementor-form' ),
-				'post_title' => \esc_html__( 'Post Title', 'extensions-for-elementor-form' ),
-				'post_content' => \esc_html__( 'Post Content', 'extensions-for-elementor-form' ),
-				'post_excerpt' => \esc_html__( 'Post Excerpt', 'extensions-for-elementor-form' ),
-				'post_author' => \esc_html__( 'Post Author', 'extensions-for-elementor-form' ),
-				'custom_field' => \esc_html__( 'Custom Field', 'extensions-for-elementor-form' ),
+				'select' => \esc_html__( 'Select', 'sb-elementor-contact-form-db' ),
+				'post_title' => \esc_html__( 'Post Title', 'sb-elementor-contact-form-db' ),
+				'post_content' => \esc_html__( 'Post Content', 'sb-elementor-contact-form-db' ),
+				'post_excerpt' => \esc_html__( 'Post Excerpt', 'sb-elementor-contact-form-db' ),
+				'post_author' => \esc_html__( 'Post Author', 'sb-elementor-contact-form-db' ),
+				'custom_field' => \esc_html__( 'Custom Field', 'sb-elementor-contact-form-db' ),
 			],
 		];
 
 		$new_control_2 = [
-			'label' => \esc_html__( 'Custom Field Name', 'extensions-for-elementor-form' ),
+			'label' => \esc_html__( 'Custom Field Name', 'sb-elementor-contact-form-db' ),
 			'type' => ElementorControls::TEXT,
-			'placeholder' => \esc_html__( 'custom_field_name', 'extensions-for-elementor-form' ),
+			'placeholder' => \esc_html__( 'custom_field_name', 'sb-elementor-contact-form-db' ),
 			'tab' => 'content',
 			'tabs_wrapper' => 'form_fields_tabs',
 			'inner_tab' => 'form_fields_advanced_tab',
-			'description' => \esc_html__( 'Add the Custom Field name here. You can use default fields or custom created with ACF or similars', 'extensions-for-elementor-form' ),
+			'description' => \esc_html__( 'Add the Custom Field name here. You can use default fields or custom created with ACF or similars', 'sb-elementor-contact-form-db' ),
 			'condition' => [
 					'eef-register-post-field' => 'custom_field',
 			],

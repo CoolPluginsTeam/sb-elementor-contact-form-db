@@ -170,6 +170,8 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		// Load previously authorized credentials from a database.
 		try {
 			if ( empty( $auth_token ) ) {
+				$state = wp_create_nonce( 'fdbgp_google_oauth' );
+				$client->setState( $state );
 				$auth_url = $client->createAuthUrl();
 				return $auth_url;
 			}
@@ -265,7 +267,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 			'fields' => 'nextPageToken, files(id, name, mimeType)',
 			'q'      => "mimeType='application/vnd.google-apps.spreadsheet' and trashed = false",
 		);
-		$sheetarray['new'] = esc_html__( 'Create New Spreadsheet', 'elementor-contact-form-db' );
+		$sheetarray['new'] = esc_html__( 'Create New Spreadsheet', 'sb-elementor-contact-form-db' );
 		$results = self::$instance_drive->files->listFiles( $optparams );
 		if ( count( $results->getFiles() ) > 0 ) {
 			foreach ( $results->getFiles() as $file ) {
