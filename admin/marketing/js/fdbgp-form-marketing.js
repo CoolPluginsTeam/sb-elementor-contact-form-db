@@ -188,47 +188,42 @@
     }
 
 
-    if(typeof elementor !== 'undefined' && elementor) {
-        const callbackfunction = elementor.modules.controls.BaseData.extend({
-            onRender: function(){
-                // Call parent onRender
-                elementor.modules.controls.BaseData.prototype.onRender.apply(this, arguments);
+    // Register Elementor control view on window load
+    $(window).on('load', function() {
+        if (typeof elementor !== 'undefined' && elementor.modules && elementor.modules.controls) {
+            const callbackfunction = elementor.modules.controls.BaseData.extend({
+                onRender: function(){
+                    // Call parent onRender
+                    elementor.modules.controls.BaseData.prototype.onRender.apply(this, arguments);
 
-                if(!this.el) return;
-                const customNotice = this.el.querySelector('.cool-form-wrp');
+                    if(!this.el) return;
+                    const customNotice = this.el.querySelector('.cool-form-wrp');
 
-                if(!customNotice) return;
+                    if(!customNotice) return;
 
-                const installBtns = this.el.querySelectorAll('button.fdbgp-install-plugin');
+                    const installBtns = this.el.querySelectorAll('button.fdbgp-install-plugin');
 
-                if(installBtns.length === 0) return;
+                    if(installBtns.length === 0) return;
 
-                installBtns.forEach(btn=>{
-                    const installSlug = btn.dataset.plugin;
-                    btn.addEventListener('click',()=>{
-                        installPlugin(jQuery(btn),installSlug)
+                    installBtns.forEach(btn=>{
+                        const installSlug = btn.dataset.plugin;
+                        btn.addEventListener('click',()=>{
+                            installPlugin(jQuery(btn),installSlug)
+                        });
                     });
-                });
-            },
-        });
+                },
+            });
 
-        // Initialize when Elementor is ready
-        $(window).on('elementor:init', function () { 
             elementor.addControlView('raw_html', callbackfunction);
-        });
-    }else{
-
-
-        $(document).ready(function ($) {
-
+        } else {
+            // Fallback for non-Elementor contexts (admin pages, etc.)
             const customNotice = $('.cool-form-wrp, .fdbgp-tec-notice');
 
             if(customNotice.length === 0) return;
 
             const installBtns = customNotice.find('button.fdbgp-install-plugin, a.fdbgp-install-plugin');
 
-            if(installBtns.length === 0) return;  
-            
+            if(installBtns.length === 0) return;
 
             installBtns.each(function(){
                 const btn = this;
@@ -240,7 +235,7 @@
                     }
                 });
             });
-        })
-    }
+        }
+    });
 
 })(jQuery);
