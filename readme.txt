@@ -218,8 +218,8 @@ https://youtu.be/CV3ZtcOVWzU
 == Changelog ==
 
 = 2.1.6 (Feb 06, 2026) =
-* Improved: Code improvements.
-* Tested up to: Elementor 3.35.3 and Elementor Pro 3.35.0.
+* Improved code quality.
+* Tested up to Elementor 3.35.3 and Elementor Pro 3.35.0.
 
 = 2.1.5 (Feb 02, 2026) =
 * Improved admin dashboard side functionality.
