@@ -37,15 +37,19 @@ if (!class_exists('CoolForm_Widget_Loader')) {
 
         public function register_new_form_actions($actions_registrar){
 
+            // Single file supports both Cool Form (extensions-for-elementor-form) and Cool FormKit Pro.
+            $cool_form_active = is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+            $cool_form_pro_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' );
 
-            if(is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' )){
+            if ( $cool_form_active || $cool_form_pro_active ) {
                 require_once FDBGP_PLUGIN_DIR . 'includes/widgets/coolform-modules/coolform-fdbgp-form-sheets-action.php';
-                $actions_registrar->register(new CoolForm_FDBGP_Form_Sheets_Action);
-            }
-            
-            if(is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' )){
-                require_once FDBGP_PLUGIN_DIR . 'includes/widgets/coolform-modules/coolformpro-fdbgp-form-sheets-action.php';
-                $actions_registrar->register(new CoolFormPro_FDBGP_Form_Sheets_Action);
+                require_once FDBGP_PLUGIN_DIR . 'includes/widgets/coolform-modules/coolform-fdbgp-form-register-post.php';
+                if ( class_exists( 'CoolForm_FDBGP_Form_Sheets_Action' ) ) {
+                    $actions_registrar->register( new CoolForm_FDBGP_Form_Sheets_Action() );
+                }
+                if ( class_exists( 'CoolForm_FDBGP_Register_Post' ) ) {
+                    $actions_registrar->register( new CoolForm_FDBGP_Register_Post() );
+                }
             }
         }
     }
