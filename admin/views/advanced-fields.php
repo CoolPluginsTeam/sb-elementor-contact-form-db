@@ -21,8 +21,29 @@ $popular_elements = array('range_slider');
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 $updated_elements = array('country_code');
 
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-$first_plugin = 'formsdb';
+
+$form_mask_installed_date = get_option('fme-installDate');
+$conditional_fields_installed_date = get_option('cfef-installDate');
+$conditional_fields_pro_installed_date = get_option('cfefp-installDate');
+$country_code_installed_date = get_option('ccfef-installDate');
+$formsdb_installed_date = get_option('formsdb-installDate');
+
+$plugins_dates = [
+    'fim_plugin'  => $form_mask_installed_date,
+    'cfef_plugin' => $conditional_fields_installed_date,
+    'cfefp_plugin' => $conditional_fields_pro_installed_date,
+    'ccfef_plugin' => $country_code_installed_date,
+    'formsdb' => $formsdb_installed_date,
+];
+
+$plugins_dates = array_filter($plugins_dates);
+
+if (!empty($plugins_dates)) {
+    asort($plugins_dates);
+    $first_plugin = key($plugins_dates);
+} else {
+    $first_plugin = 'formsdb';
+}
 
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
@@ -418,7 +439,7 @@ $input_form_mask_features = array(
                                 <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Advanced Form Builder for Elementor.', 'sb-elementor-contact-form-db'); ?></li>
                                 <li><span class="fdbgp-icon">✔️</span><?php esc_html_e('Spam Blocker & Advanced Actions After Submit.', 'sb-elementor-contact-form-db'); ?></li>
                             </ul>
-                            <a href="https://coolformkit.com/?utm_source=formsdb&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
+                            <a href="https://coolformkit.com/?utm_source=<?php echo esc_attr($first_plugin); ?>&utm_medium=inside&utm_campaign=upgrade&utm_content=setting_page_sidebar" class="button button-primary" target="_blank" style="width: 100%;text-align: center;padding:10px;"><?php esc_html_e('Get Cool Formkit', 'sb-elementor-contact-form-db'); ?></a>
                         </div>
                         <?php endif; ?>
 
