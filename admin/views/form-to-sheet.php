@@ -25,12 +25,15 @@ class FDBGP_Form_To_Sheet_Settings {
     }
 
     private function get_first_plugin_source(): string {
-        $form_mask_installed_date            = get_option( 'fme-installDate' );
-        $conditional_fields_installed_date   = get_option( 'cfef-installDate' );
+        $form_mask_installed_date              = get_option( 'fme-installDate' );
+        $conditional_fields_installed_date     = get_option( 'cfef-installDate' );
         $conditional_fields_pro_installed_date = get_option( 'cfefp-installDate' );
-        $country_code_installed_date         = get_option( 'ccfef-installDate' );
-        $formsdb_installed_date              = get_option( 'formsdb-installDate' );
-    
+        $country_code_installed_date           = get_option( 'ccfef-installDate' );
+        $formsdb_installed_date                = get_option( 'formsdb-installDate' );
+
+        // New: read stored oldest plugin (set once)
+        $stored_oldest_plugin = get_option( 'oldest_plugin' );
+
         $plugins_dates = [
             'fim_plugin'   => $form_mask_installed_date,
             'cfef_plugin'  => $conditional_fields_installed_date,
@@ -38,15 +41,28 @@ class FDBGP_Form_To_Sheet_Settings {
             'ccfef_plugin' => $country_code_installed_date,
             'formsdb'      => $formsdb_installed_date,
         ];
-    
+
         $plugins_dates = array_filter( $plugins_dates );
-    
-        if ( ! empty( $plugins_dates ) ) {
-            asort( $plugins_dates );
-            return key( $plugins_dates );
+
+        $install_by_plugin = get_option( 'formdb_install_by' );
+
+        if ( ! empty( $install_by_plugin ) ) {
+            $first_plugin = $install_by_plugin;
+        } elseif ( ! empty( $stored_oldest_plugin ) ) {
+            $first_plugin = $stored_oldest_plugin;
+        } else {
+            if ( ! empty( $plugins_dates ) ) {
+                asort( $plugins_dates );
+                $first_plugin = key( $plugins_dates );
+            } else {
+                $first_plugin = 'formsdb';
+            }
+
+            // Store it so it never changes on re-install
+            update_option( 'oldest_plugin', $first_plugin );
         }
-    
-        return 'formsdb';
+
+        return $first_plugin;
     }
 
     private function get_current_page() {
