@@ -370,6 +370,25 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 		}
 
 		/**
+		 * Set "install by" option for known plugins (so it persists even if activation redirects).
+		 *
+		 * @param string $plugin_slug Plugin slug.
+		 */
+		private function fdbgp_set_install_by_option( $plugin_slug ) {
+			if ( $plugin_slug === 'country-code-field-for-elementor-form' ) {
+				update_option( 'country_code_install_by', 'formsdb' );
+			} elseif ( $plugin_slug === 'form-masks-for-elementor' ) {
+				update_option( 'form_masks_install_by', 'formsdb' );
+			} elseif ( $plugin_slug === 'sb-elementor-contact-form-db' ) {
+				update_option( 'formdb_install_by', 'formsdb' );
+			} elseif ( $plugin_slug === 'extensions-for-elementor-form' ) {
+				update_option( 'cool_form_install_by', 'formsdb' );
+			} elseif ( $plugin_slug === 'conditional-fields-for-elementor-form' ) {
+				update_option( 'conditional_fields_install_by', 'formsdb' );
+			}
+		}
+
+		/**
 		 * ✅ AJAX: Install plugin
 		 * 
 		 * Handles the installation of a specified plugin via AJAX.
@@ -394,6 +413,24 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 
 			$plugin_slug = sanitize_key(wp_unslash($_POST['slug']));
 
+			// Only allow installation of known marketing plugins (ignore client-manipulated slugs).
+			$allowed_slugs = array(
+				'extensions-for-elementor-form',
+				'conditional-fields-for-elementor-form',
+				'country-code-field-for-elementor-form',
+				'loop-grid-extender-for-elementor-pro',
+				'events-widgets-for-elementor-and-the-events-calendar',
+				'conditional-fields-for-elementor-form-pro',
+				'sb-elementor-contact-form-db'
+			);
+			if ( ! in_array( $plugin_slug, $allowed_slugs, true ) ) {
+				wp_send_json_error( array(
+					'slug' => $plugin_slug,
+					'errorCode'=> 'plugin_not_allowed',
+					// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+					'errorMessage' => __( 'This plugin cannot be installed from here.', 'mfe' ),
+				));
+			}
 
 			$status = array(
 				'install' => 'plugin',
@@ -460,6 +497,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 
 						if (current_user_can('activate_plugin', $install_status['file'])) {
 
+							$this->fdbgp_set_install_by_option( $plugin_slug );
 							$network_wide = (is_multisite() && 'import' !== $pagenow);
 							$activation_result = activate_plugin($install_status['file'], '', $network_wide);
 							if (is_wp_error($activation_result)) {
@@ -500,6 +538,9 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 				$install_status = install_plugin_install_status($api);
 				$pagenow        = isset($_POST['pagenow']) ? sanitize_key($_POST['pagenow']) : '';
 
+				// Set install-by option before activation (some plugins redirect on activate and exit).
+				$this->fdbgp_set_install_by_option( $plugin_slug );
+
 				// 🔄 Auto-activate the plugin right after successful install
 				if (current_user_can('activate_plugin', $install_status['file']) && is_plugin_inactive($install_status['file'])) {
 
@@ -513,23 +554,6 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 					} else {
 						$status['activated'] = true;
 					}
-				}
-
-
-				if($plugin_slug == 'country-code-field-for-elementor-form') {
-					update_option( 'country_code_install_by', 'formsdb' );
-				}
-				else if($plugin_slug == 'form-masks-for-elementor') {
-					update_option( 'form_masks_install_by', 'formsdb' );
-				}
-				else if($plugin_slug == 'sb-elementor-contact-form-db') {
-					update_option( 'formdb_install_by', 'formsdb' );
-				}
-				else if($plugin_slug == 'extensions-for-elementor-form') {
-					update_option( 'cool_form_install_by', 'formsdb' );
-				}
-				else if($plugin_slug == 'conditional-fields-for-elementor-form') {
-					update_option( 'conditional_fields_install_by', 'formsdb' );
 				}
 
 				wp_send_json_success($status);
