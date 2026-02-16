@@ -41,7 +41,7 @@ $plugins_dates = [
 
 $plugins_dates = array_filter($plugins_dates);
 
-$install_by_plugin = get_option( 'formdb_install_by' );
+$install_by_plugin = get_option( 'sb-elementor-install-by' );
 
 if ( ! empty( $install_by_plugin ) ) {
     $first_plugin = $install_by_plugin;
