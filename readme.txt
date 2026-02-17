@@ -97,6 +97,8 @@ Translate WordPress plugins and themes automatically using AI with one-click str
 
 FormsDB is a fully open-source plugin. You can view the complete source code on GitHub - https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db
 
+**Use of 3rd Party Services:** This plugin connects to the Cool Plugins feedback server only for optional usage data sharing and voluntary feedback submission (for example, during plugin deactivation). Data is transmitted solely after explicit user consent. No hidden tracking is performed, and no frontend visitor or site user data is collected.  For more details, please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/).
+
 #### Third-Party Libraries
 
 This plugin uses the **Google APIs Client Library for PHP** for Google Sheets integration.
@@ -221,6 +223,16 @@ https://youtu.be/CV3ZtcOVWzU
 * Added support to save Cool FormKit Lite form submissions to Google Sheets and a post type.
 * Improved Other plugin recommendations for Elementor users.
 * Fixed issues reported by “Plugin Check” plugin.
+
+= 2.1.6 (Feb 06, 2026) =
+* Improved code quality.
+* Tested up to Elementor 3.35.3 and Elementor Pro 3.35.0.
+
+= 2.1.5 (Feb 02, 2026) =
+* Improved admin dashboard side functionality.
+
+= 2.1.4 (Jan 29, 2026) =
+* Improved code quality.
 
 = 2.1.3 (Jan 23, 2026) =
 * Improved plugin admin dashboard UI.

@@ -65,7 +65,7 @@ if(!class_exists('FDBGP_Main')) {
 			}
 
 			add_action( 'plugins_loaded', array( $this, 'FDBGP_plugins_loaded' ) );
-			add_action( 'plugins_loaded', array( $this, 'setting_redirect' ));
+			add_action( 'admin_init', array( $this, 'setting_redirect' ));
 			add_filter( 'plugin_row_meta', array( $this, 'fdbgp_plugin_row_meta' ), 10, 2 );
 			add_action( 'activated_plugin', array( $this, 'fdbgp_plugin_redirection' ) );
 
@@ -119,7 +119,14 @@ if(!class_exists('FDBGP_Main')) {
 			}
 
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if(!isset($_GET['page'])){
+			if(!isset($_GET['page']) || 'formsdb' !== sanitize_text_field(wp_unslash($_GET['page']))){
+				return;
+			}
+
+			// Verify state (nonce) returned from Google
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$state = isset($_GET['state']) ? sanitize_text_field(wp_unslash($_GET['state'])) : '';
+			if ( empty($state) || ! wp_verify_nonce($state, 'fdbgp_google_oauth') ) {
 				return;
 			}
 
