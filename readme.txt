@@ -5,7 +5,7 @@ Tags: elementor forms, google sheets, form submissions, contact form db, form en
 Requires at least: 5.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.1.4
+Stable tag: 2.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor tested up to: 3.35.4
@@ -217,7 +217,7 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
-= 2.1.4 (Feb 17, 2026) =
+= 2.1.7 (Feb 17, 2026) =
 * Added support to save Cool FormKit Lite form submissions to Google Sheets and a post type.
 * Improved Other plugin recommendations for Elementor users.
 * Fixed issues reported by “Plugin Check” plugin.
