@@ -1,5 +1,6 @@
 <?php
 // Ensure the file is being accessed through the WordPress admin area
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 if (!defined('ABSPATH')) {
     die;
 }

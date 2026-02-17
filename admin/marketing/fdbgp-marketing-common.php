@@ -420,7 +420,7 @@ if (! class_exists('FDBGP_Marketing_Controllers')) {
 					'slug' => $plugin_slug,
 					'errorCode'=> 'plugin_not_allowed',
 					// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-					'errorMessage' => __( 'This plugin cannot be installed from here.', 'mfe' ),
+					'errorMessage' => __( 'This plugin cannot be installed from here.', 'sb-elementor-contact-form-db' ),
 				));
 			}
 
