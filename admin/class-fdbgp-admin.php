@@ -38,7 +38,7 @@ if(!class_exists('FDBGP_Admin')) {
                 'client_token' => ''
             ));
             
-            add_action('admin_menu', array($this, 'add_plugin_admin_menu'), 999);
+            add_action('admin_menu', array($this, 'add_plugin_admin_menu'), 998);
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
             add_action('admin_action_fdbgp_create_elementor_page', array($this, 'redirect_to_elementor_builder'));
 
@@ -325,6 +325,9 @@ if(!class_exists('FDBGP_Admin')) {
         }
 
         public function enqueue_admin_styles() {
+
+            wp_enqueue_script('fdbgp-global-admin-script', FDBGP_PLUGIN_URL . 'assets/js/global-admin.js', array('jquery'), $this->version, true);
+
             $is_conflicting_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
             if(!$is_conflicting_active){
                 wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
