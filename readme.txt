@@ -3,7 +3,7 @@ Contributors: satindersingh, narinder-singh, coolplugins
 Donate link: https://donate.stripe.com/5kQdR92iBevO75WbPm6c00i
 Tags: elementor forms, google sheets, form submissions, contact form db, form entries
 Requires at least: 5.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
 Stable tag: 2.1.7
 License: GPLv2 or later
