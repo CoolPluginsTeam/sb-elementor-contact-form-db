@@ -242,7 +242,7 @@ class FDBGP_List_Table extends WP_List_Table {
 		$order    = isset( $_GET['order'] ) && sanitize_text_field( wp_unslash( $_GET['order'] ) ) === 'asc' ? 'ASC' : 'DESC';
         $search   = isset( $_GET['cfkef-entries-search'] ) ? sanitize_text_field( wp_unslash( $_GET['cfkef-entries-search'] ) ) : '';
 		$allowed_orderby = ['ID','post_title','post_date','post_modified','post_status'];
-        $orderby = isset($_GET['orderby']) ? sanitize_key($_GET['orderby']) : 'ID';
+        $orderby = isset($_GET['orderby']) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : 'ID';
         $orderby = in_array($orderby, $allowed_orderby, true) ? $orderby : 'ID';
         $per_page = $this->get_items_per_page( $this->get_per_page_option_name() , 20 );
         $date_filter = isset( $_GET['date_filter'] ) && isset( $_GET['m'] ) && ! empty( $_GET['m'] ) ? sanitize_text_field( wp_unslash( $_GET['m'] ) ) : '';

@@ -309,7 +309,11 @@ class fdbgp_feedback {
                 )
 			);
 
-			die( json_encode( array( 'response' => $response ) ) );
+			if ( is_wp_error( $response ) ) {
+				wp_send_json_error();
+			}
+
+			wp_send_json_success();
 		}
 
 	}
