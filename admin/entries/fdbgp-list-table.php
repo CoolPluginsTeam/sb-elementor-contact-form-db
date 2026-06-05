@@ -137,11 +137,11 @@ class FDBGP_List_Table extends WP_List_Table {
 
     public function column_id($item) {
         $entry_id = get_post_meta($item->ID, '_cfkef_form_entry_id', true);
-        return $entry_id;
+        return esc_html($entry_id);
     }
 
     public function column_submission_date($item) {
-        return $item->post_date;
+        return esc_html($item->post_date);
     }
 
     public function column_page_title($item) {
