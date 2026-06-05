@@ -362,11 +362,14 @@ class HelloPlus_FDBGP_Form_Sheets_Action extends Action_Base {
                 $fdbgp_value_data = array();
                 foreach ( $fdbgp_headers as $fdbgp_fieldvalue ) {
                     if ( array_key_exists( $fdbgp_fieldvalue, $fdbgp_fields ) ) {
-                        if ( is_array( $fdbgp_fields[ $fdbgp_fieldvalue ] ) ) {
-                            $fdbgp_value_data[] = implode( ',', $fdbgp_fields[ $fdbgp_fieldvalue ] );
-                        } else {
-                            $fdbgp_value_data[] = $fdbgp_fields[ $fdbgp_fieldvalue ];
+                        $cell_value = is_array( $fdbgp_fields[ $fdbgp_fieldvalue ] )
+                            ? implode( ',', $fdbgp_fields[ $fdbgp_fieldvalue ] )
+                            : $fdbgp_fields[ $fdbgp_fieldvalue ];
+                        $cell_value = is_scalar( $cell_value ) ? (string) $cell_value : '';
+                        if ( $cell_value !== '' && preg_match( '/^[=+\-@]/', $cell_value ) ) {
+                            $cell_value = "'" . $cell_value;
                         }
+                        $fdbgp_value_data[] = $cell_value;
                     } else {
                         $fdbgp_value_data[] = '';
                     }

@@ -144,7 +144,7 @@ class FDBGP_Post_Bulk_Actions {
 		}
 		
 		// Check the nonce.
-		if (! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'bulk-entries' )) {
+		if (! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'bulk-entries' )) {
 			return;
 		}
 

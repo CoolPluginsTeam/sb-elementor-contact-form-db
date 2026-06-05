@@ -58,7 +58,7 @@ class FDBGP_List_Table extends WP_List_Table {
         }
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- View filtering doesn't modify data.
-        $current_view = isset($_GET['view']) ? sanitize_key($_GET['view']) : 'all';
+        $current_view = isset($_GET['view']) ? sanitize_key( wp_unslash( $_GET['view'] ) ) : 'all';
 
         // Get counts for all and trash
         $post_counts = wp_count_posts($this->post_type);

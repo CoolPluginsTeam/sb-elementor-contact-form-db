@@ -156,8 +156,8 @@ class FDBGP_Old_Submission_View {
                                             <?php if ($status === 'publish'): ?>
                                                 <button type="button" class="button button-secondary fdbgp-view-submission" 
                                                     data-id="<?php echo esc_attr($post_id); ?>" 
-                                                    data-data="<?php echo esc_attr(json_encode($meta['data'])); ?>"
-                                                    data-extra="<?php echo esc_attr(json_encode(isset($meta['extra']) ? $meta['extra'] : array())); ?>"
+                                                    data-data="<?php echo esc_attr( wp_json_encode( $meta['data'] ) ); ?>"
+                                                    data-extra="<?php echo esc_attr( wp_json_encode( isset( $meta['extra'] ) ? $meta['extra'] : array() ) ); ?>"
                                                     data-date="<?php echo esc_attr(get_the_date('Y-m-d H:i:s')); ?>"
                                                     data-permalink="<?php echo esc_attr(get_permalink($meta['extra']['submitted_on_id'])); ?>"
                                                 >
@@ -325,6 +325,18 @@ class FDBGP_Old_Submission_View {
         </div>
 
         <script>
+            function fdbgpEscapeHtml(str) {
+                if (str === null || str === undefined) {
+                    return '';
+                }
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            }
+
             jQuery(document).ready(function($) {
                 $('.fdbgp-view-submission').on('click', function() {
                     var data = $(this).data('data');
@@ -336,15 +348,15 @@ class FDBGP_Old_Submission_View {
                     
                     // Add Meta Info
                     if (date) {
-                         html += '<tr><td><strong><?php esc_html_e('Date of Submission', 'sb-elementor-contact-form-db'); ?></strong></td><td>' + date + '</td></tr>';
+                         html += '<tr><td><strong><?php esc_html_e('Date of Submission', 'sb-elementor-contact-form-db'); ?></strong></td><td>' + fdbgpEscapeHtml(date) + '</td></tr>';
                     }
                     
                     if (typeof extra === 'object') {
                         if (extra.submitted_on) {
-                             html += '<tr><td><strong><?php esc_html_e('Submitted On', 'sb-elementor-contact-form-db'); ?></strong></td><td><a target="_blank" href="' + permalink + '">' + extra.submitted_on + '</a></td></tr>';
+                             html += '<tr><td><strong><?php esc_html_e('Submitted On', 'sb-elementor-contact-form-db'); ?></strong></td><td><a target="_blank" href="' + fdbgpEscapeHtml(permalink) + '">' + fdbgpEscapeHtml(extra.submitted_on) + '</a></td></tr>';
                         }
                         if (extra.submitted_by) {
-                             html += '<tr><td><strong><?php esc_html_e('Submitted By', 'sb-elementor-contact-form-db'); ?></strong></td><td>' + extra.submitted_by + '</td></tr>';
+                             html += '<tr><td><strong><?php esc_html_e('Submitted By', 'sb-elementor-contact-form-db'); ?></strong></td><td>' + fdbgpEscapeHtml(extra.submitted_by) + '</td></tr>';
                         }
                     }
 
@@ -353,7 +365,7 @@ class FDBGP_Old_Submission_View {
 
                     if (typeof data === 'object') {
                         $.each(data, function(key, field) {
-                             html += '<tr><td><strong>' + field.label + '</strong></td><td>' + field.value + '</td></tr>';
+                             html += '<tr><td><strong>' + fdbgpEscapeHtml(field.label) + '</strong></td><td>' + fdbgpEscapeHtml(field.value) + '</td></tr>';
                         });
                     }
                     

@@ -171,6 +171,8 @@ if(!class_exists('FDBGP_Admin')) {
                 wp_die( 'Insufficient permissions' );
             }
 
+            check_admin_referer( 'fdbgp_create_elementor_page' );
+
             $post_data = array(
                 'post_title'  => 'New Elementor Form',
                 'post_type'   => 'page',
@@ -345,10 +347,11 @@ if(!class_exists('FDBGP_Admin')) {
             if ( $screen && 'elementor_page_e-form-submissions' === $screen->id ) {
                 $button_text = __('Save To Google Sheet', 'sb-elementor-contact-form-db');
                 $button_url = esc_url(admin_url('admin.php?page=formsdb'));
-                
+                $button_html = '<a href="' . $button_url . '" target="_blank" class="button button-primary">' . $button_text . '</a>';
+
                 $custom_js = "
                     jQuery(document).ready(function($) {
-                        var button = '<a href=\"{$button_url}\" target=\"_blank\" class=\"button button-primary\">{$button_text}</a>';
+                        var button = " . wp_json_encode( $button_html ) . ";
                         $('#e-form-submissions .e-form-submissions-search').prepend(button);
                     });
                 ";

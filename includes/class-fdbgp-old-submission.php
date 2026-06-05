@@ -338,6 +338,22 @@ class FDBGP_Old_Submission {
     }
 
     /**
+     * Prefix spreadsheet-formula characters so CSV exports open as text in Excel/Sheets.
+     *
+     * @param mixed $value Cell value.
+     * @return string
+     */
+    private function neutralize_csv_cell( $value ) {
+        $value = is_scalar( $value ) ? (string) $value : '';
+
+        if ( $value !== '' && preg_match( '/^[=+\-@]/', $value ) ) {
+            return "'" . $value;
+        }
+
+        return $value;
+    }
+
+    /**
      * Get export rows by submitted page ID
      * 
      * @param int $submitted_id
@@ -383,7 +399,8 @@ class FDBGP_Old_Submission {
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $row .= '"' . addslashes($field['value']) . '",';
+                            $value = $this->neutralize_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
+                            $row .= '"' . addslashes( $value ) . '",';
                         }
                     }
 
@@ -441,7 +458,8 @@ class FDBGP_Old_Submission {
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $row .= '"' . addslashes($field['value']) . '",';
+                            $value = $this->neutralize_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
+                            $row .= '"' . addslashes( $value ) . '",';
                         }
                     }
 
