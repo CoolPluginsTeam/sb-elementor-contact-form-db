@@ -327,7 +327,28 @@ if(!class_exists('FDBGP_Admin')) {
         }
 
         public function enqueue_admin_styles() {
+            if ( ! function_exists( 'is_plugin_active' ) ) {
+                include_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+
             $is_conflicting_active = is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) || is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+            $show_entries          = is_plugin_active( 'hello-plus/hello-plus.php' ) &&
+                ! is_plugin_active( 'cool-formkit-for-elementor-forms/cool-formkit-for-elementor-forms.php' ) &&
+                ! is_plugin_active( 'extensions-for-elementor-form/extensions-for-elementor-form.php' );
+
+            wp_enqueue_script( 'fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array( 'jquery' ), $this->version, true );
+            wp_localize_script(
+                'fdbgp-admin-script',
+                'fdbgp_plugin_vars',
+                array(
+                    'nonce'            => wp_create_nonce( 'fdbgp_plugin_nonce' ),
+                    'ajaxurl'          => admin_url( 'admin-ajax.php' ),
+                    'installNonce'     => wp_create_nonce( 'updates' ),
+                    'showEntries'      => $show_entries,
+                    'formsdbMenuLabel' => $is_conflicting_active ? '↳ FormsDB' : 'FormsDB',
+                )
+            );
+
             if(!$is_conflicting_active){
                 wp_enqueue_style('fdbgp-admin-global-style', FDBGP_PLUGIN_URL . 'assets/css/global-admin-style.css', array(), $this->version, 'all');
             }else{
@@ -336,7 +357,6 @@ if(!class_exists('FDBGP_Admin')) {
                     li a[href="admin.php?page=formsdb"] {
                         padding-left: 10px;
                         font-style: italic;
-                        opacity: 0.85;
                     }
                 </style>
                 <?php
@@ -365,16 +385,6 @@ if(!class_exists('FDBGP_Admin')) {
                 wp_enqueue_style('dashicons');
 
                 wp_enqueue_style('fdbgp-admin-style', FDBGP_PLUGIN_URL . 'assets/css/admin-style.css', array(), $this->version, 'all');
-                
-                wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
-
-                wp_localize_script( 'fdbgp-admin-script', 'fdbgp_plugin_vars', [
-                    'nonce' => wp_create_nonce( 'fdbgp_plugin_nonce' ),
-                    'ajaxurl' => admin_url( 'admin-ajax.php' ),
-                    'installNonce' => wp_create_nonce( 'updates' ),
-                ] );
-            } elseif ( strpos( $current_page, 'cool-formkit' ) !== false ) {
-                wp_enqueue_script('fdbgp-admin-script', FDBGP_PLUGIN_URL . 'assets/js/admin-script.js', array('jquery'), $this->version, true); 
             }
         }
     }

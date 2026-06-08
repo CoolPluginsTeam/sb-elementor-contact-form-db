@@ -73,7 +73,7 @@ class FDBGP_Dashboard {
                 $callback,
                 $position
             );
-        }, 999);
+        }, 1000);
     }
 
 
