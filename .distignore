@@ -52,3 +52,7 @@ tsconfig.json
 assets/js/fdbgp-editor.js
 admin/assets/css/cfkef-entries-post.css.map
 admin/assets/css/cfkef-entries-post.scss
+.github/                export-ignore
+.claude/                export-ignore
+.codex/                 export-ignore
+.cursor/                export-ignore
