@@ -360,7 +360,11 @@ trait CoolForm_FDBGP_Form_Sheets_Action_Trait {
                 $instance_api->appendentry( $param );
 
             } catch ( \Exception $e ) {
-                $ajax_handler->add_admin_error_message( 'Error: ' . $e->getMessage() );
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                error_log( 'FormsDB Google Sheets error: ' . $e->getMessage() );
+                $ajax_handler->add_admin_error_message(
+                    esc_html__( 'Could not save submission to Google Sheet. Please contact the site admin.', 'sb-elementor-contact-form-db' )
+                );
             }
         }
     }
@@ -468,7 +472,7 @@ trait CoolForm_FDBGP_Form_Sheets_Action_Trait {
             } else {
                 $fdbgp_html = sprintf(
                     '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s</div>',
-                    'Error: ' . $fdbgp_error
+                    esc_html( 'Error: ' . $fdbgp_error )
                 );
             }
             $widget->start_controls_section(

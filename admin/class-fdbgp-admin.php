@@ -152,6 +152,11 @@ if(!class_exists('FDBGP_Admin')) {
             }
     
             $init_file = sanitize_text_field( wp_unslash($_POST['init']) );
+
+            $installed_plugins = array_keys( get_plugins() );
+            if ( ! in_array( $init_file, $installed_plugins, true ) ) {
+                wp_send_json_error( [ 'message' => 'Invalid plugin file.' ] );
+            }
     
             // Use silent activation to prevent redirection hooks from breaking AJAX response
             $activate = activate_plugin( $init_file, '', false, true );

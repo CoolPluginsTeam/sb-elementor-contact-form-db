@@ -121,8 +121,7 @@ class FDBGP_Old_Submission {
         );
 
         $post_data = array(
-            // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date	
-            'post_title' => $form_name . ' - ' . date('Y-m-d H:i:s'),
+            'post_title' => $form_name . ' - ' . current_time( 'mysql' ),
             'post_status' => 'publish',
             'post_type' => 'elementor_cf_db',
         );
@@ -347,6 +346,18 @@ class FDBGP_Old_Submission {
     }
 
     /**
+     * Escape a value for CSV output (RFC 4180 quoting).
+     *
+     * @param mixed $value Cell value.
+     * @return string
+     */
+    private function format_csv_cell( $value ) {
+        $value = $this->neutralize_csv_cell( $value );
+
+        return '"' . str_replace( '"', '""', (string) $value ) . '"';
+    }
+
+    /**
      * Get export rows by submitted page ID
      * 
      * @param int $submitted_id
@@ -392,8 +403,7 @@ class FDBGP_Old_Submission {
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $value = $this->neutralize_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
-                            $row .= '"' . addslashes( $value ) . '",';
+                            $row .= $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' ) . ',';
                         }
                     }
 
@@ -451,8 +461,7 @@ class FDBGP_Old_Submission {
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $value = $this->neutralize_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
-                            $row .= '"' . addslashes( $value ) . '",';
+                            $row .= $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' ) . ',';
                         }
                     }
 

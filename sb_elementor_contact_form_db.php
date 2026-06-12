@@ -97,8 +97,8 @@ if(!class_exists('FDBGP_Main')) {
 		 */
 		public function fdbgp_plugin_redirection( $plugin ) {
 			if ( $plugin == FDBGP_PLUGIN_BASENAME ) {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped	
-				exit( wp_safe_redirect( admin_url( 'admin.php?page=formsdb' ) ) );
+				wp_safe_redirect( admin_url( 'admin.php?page=formsdb' ) );
+				exit;
 			}
 		}
 
