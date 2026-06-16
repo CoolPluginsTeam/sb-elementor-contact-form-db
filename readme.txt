@@ -3,13 +3,13 @@ Contributors: satindersingh, narinder-singh, coolplugins
 Donate link: https://donate.stripe.com/5kQdR92iBevO75WbPm6c00i
 Tags: elementor forms, google sheets, form submissions, contact form db, form entries
 Requires at least: 5.0
-Tested up to: 6.9
-Requires PHP: 7.2
-Stable tag: 2.0.0
+Tested up to: 7.0
+Requires PHP: 7.4
+Stable tag: 2.1.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Elementor tested up to: 3.34.0
-Elementor Pro tested up to: 3.34.0
+Elementor tested up to: 4.1.3
+Elementor Pro tested up to: 4.1.1
 
 Connect Elementor forms with Google Sheets to sync form entries, or save form submissions in any post type using Elementor Pro or Hello Plus forms.
 
@@ -97,15 +97,8 @@ Translate WordPress plugins and themes automatically using AI with one-click str
 
 FormsDB is a fully open-source plugin. You can view the complete source code on GitHub - https://github.com/CoolPluginsTeam/sb-elementor-contact-form-db
 
-#### Third-Party Libraries
-
-This plugin uses the **Google APIs Client Library for PHP** for Google Sheets integration.
-
-* Library: Google APIs Client Library for PHP  
-* Source: https://github.com/googleapis/google-api-php-client  
-* License: Apache License 2.0  
-* License URL: https://www.apache.org/licenses/LICENSE-2.0
-
+**Use of 3rd Party Services:** This plugin connects to the Cool Plugins feedback server only for optional usage data sharing and voluntary feedback submission (for example, during plugin deactivation). Data is transmitted solely after explicit user consent. No hidden tracking is performed, and no frontend visitor or site user data is collected.  For more details, please review our [Data Usage Policy](https://my.coolplugins.net/terms/usage-tracking/), [TOS](https://my.coolplugins.net/terms/), and [Privacy Policy](https://my.coolplugins.net/terms/privacy-policy/) and this plugin also uses
+[**Google APIs Client Library for PHP**](https://github.com/googleapis/google-api-php-client) for Google Sheets integration, which is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 == Screenshots ==
 
@@ -217,9 +210,47 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Changelog ==
 
-= 2.0.2 (Dec 31, 2025) =
-* Added other plugin recommendations for Elementor users.
-* Improved code.
+= 2.1.10 (Jun 16, 2026) =
+* Improved Plugin code quality and security.
+
+= 2.1.9 (Jun 16, 2026) =
+* Fixed Bug fixes.
+
+= 2.1.8 (Jun 16, 2026) =
+* Improved Cleaned up the notice registration logic for better readability.
+* Tested up to Elementor 4.1.3 and Elementor Pro 4.1.1.
+
+= 2.1.7 (Feb 17, 2026) =
+* Added support to save Cool FormKit Lite form submissions to Google Sheets and a post type.
+* Improved Other plugin recommendations for Elementor users.
+* Fixed issues reported by “Plugin Check” plugin.
+
+= 2.1.6 (Feb 06, 2026) =
+* Improved code quality.
+* Tested up to Elementor 3.35.3 and Elementor Pro 3.35.0.
+
+= 2.1.5 (Feb 02, 2026) =
+* Improved admin dashboard side functionality.
+
+= 2.1.4 (Jan 29, 2026) =
+* Improved code quality.
+
+= 2.1.3 (Jan 23, 2026) =
+* Improved plugin admin dashboard UI.
+* Added an dashboard notice for user feedback (shown politely, no force).
+* Minor fixes and code improvements.
+
+= 2.1.2 (Jan 20, 2026) =
+* Fixed Security issue related to Settings permission check.
+
+= 2.1.1 (Jan 07, 2026) =
+* Fixed Wrong initial version bug.
+* Minor UI improvements and text updates across FormsDB admin screens.
+
+= 2.1.0 (Jan 02, 2026) =
+* Added support for legacy users to continue using the old form submission saving method available in version 1.8.1 and earlier, based on user feedback.
+* Added an option to enable or disable the legacy saving method from the Old Submissions tab (visible only to users upgrading from older versions).
+* Minor UI improvements and text updates across FormsDB admin screens.
 
 = 2.0.1 (Dec 30, 2025) =
 * Fixed issues reported by "Plugin Check" plugin.
@@ -276,5 +307,5 @@ https://youtu.be/CV3ZtcOVWzU
 
 == Upgrade Notice ==
 
-= 2.0.0 =
+= 2.0.1 =
 This is a major update where the plugin has been fully rebuilt and rebranded as **FormsDB** by **Cool Plugins**. The new version introduces Google Sheets sync, frontend post submission, and Hello Plus form entry support, as the old functionality is now available inside Elementor Pro. Users upgrading from older versions can export previous entries from **FormsDB → Old Submissions** after updating.

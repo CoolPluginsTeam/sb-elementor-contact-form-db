@@ -1,5 +1,69 @@
 jQuery(document).ready(function ($) {
-    
+
+    function getFormsDbInsertAnchor($submenu, $elementorEditorPage) {
+        const $coolFormkitEntries = $submenu.find('.cfkef-entries-page-list');
+        if ($coolFormkitEntries.length) {
+            return $coolFormkitEntries;
+        }
+
+        const $coolFormkit = $submenu.find('.cool-formkit-page-list');
+        if ($coolFormkit.length) {
+            return $coolFormkit;
+        }
+
+        return $elementorEditorPage;
+    }
+
+    function addFormsDbAdminPageToElementor() {
+        let $elementorEditorPage = jQuery('.wp-submenu a[href="admin.php?page=elementor"]').closest('li');
+        if (!$elementorEditorPage.length) {
+            return;
+        }
+
+        let $submenu = $elementorEditorPage.closest('ul.wp-submenu');
+        if (!$submenu.length) {
+            return;
+        }
+
+        $submenu.find('.formsdb-page-list').remove();
+        $submenu.find('.fdbgp-entries-page-list').remove();
+
+        const menuLabel = (typeof fdbgp_plugin_vars !== 'undefined' && fdbgp_plugin_vars.formsdbMenuLabel)
+            ? fdbgp_plugin_vars.formsdbMenuLabel
+            : 'FormsDB';
+        const showEntries = typeof fdbgp_plugin_vars !== 'undefined' && fdbgp_plugin_vars.showEntries;
+        const hasCoolFormkitEntries = $submenu.find('.cfkef-entries-page-list').length > 0;
+
+        let $formsDbItem = jQuery('<li class="formsdb-page-list"><a href="admin.php?page=formsdb">' + menuLabel + '</a></li>');
+        let $formsDbEntriesItem = jQuery('<li class="fdbgp-entries-page-list"><a href="admin.php?page=cfkef-entries">↳ Entries</a></li>');
+        const $anchor = getFormsDbInsertAnchor($submenu, $elementorEditorPage);
+
+        if ($submenu.find('a[href="admin.php?page=elementor-one-upgrade"]').length > 0) {
+            $anchor.after($formsDbItem);
+
+            if (showEntries && !hasCoolFormkitEntries) {
+                $formsDbItem.after($formsDbEntriesItem);
+            }
+        } else {
+            if ($anchor.is($elementorEditorPage)) {
+                $submenu.append($formsDbItem);
+            } else {
+                $anchor.after($formsDbItem);
+            }
+
+            if (showEntries && !hasCoolFormkitEntries) {
+                $formsDbItem.after($formsDbEntriesItem);
+            }
+        }
+    }
+
+    addFormsDbAdminPageToElementor();
+    setTimeout(addFormsDbAdminPageToElementor, 0);
+
+    document.addEventListener('cfkef_dashboard_toggle:settings:changed', function () {
+        addFormsDbAdminPageToElementor();
+    });
+
     function handleTermLink() {
         const termsLinks = document.querySelectorAll('.fdbgp-ccpw-see-terms');
         const termsBox = document.getElementById('termsBox');
@@ -78,6 +142,74 @@ jQuery(document).ready(function ($) {
             $authBtn.show();
         } else {
             $authBtn.hide();
+        }
+    });
+
+    // Handle plugin install and activate button
+    jQuery('.fdbgp-install-active-btn').on('click', function (e) {
+        e.preventDefault();
+        var $button = jQuery(this);
+        var action = $button.data('action');
+        var slug = $button.data('slug');
+        var init = $button.data('init');
+        var $loader = jQuery('#fdbgp-loader');
+
+        if(slug !== 'conditional-fields-for-elementor-form' && slug !== 'conditional-fields-for-elementor-form-pro'){
+            return;
+        }
+        
+        $loader.show();
+
+        if (action === 'install') {
+            // Install and then activate 
+            jQuery.ajax({
+                type: 'POST',
+                url: fdbgp_plugin_vars.ajaxurl,
+                data: {
+                    action: 'fdbgp_plugin_install',
+                    slug: slug,
+                    _ajax_nonce: fdbgp_plugin_vars.installNonce
+                },
+                success: function (res) {
+                    if (res.success) {
+                        // Activate after install
+                        activatePlugin(init);
+                    } else {
+                        alert('Installation failed. Please try to install manually.');
+                        $loader.hide();
+                    }
+                },
+                error: function () {
+                    alert('Installation error. Please try to install manually.');
+                    $loader.hide();
+                }
+            });
+        } else if (action === 'activate') {
+            activatePlugin(init);
+        }
+
+        function activatePlugin(pluginInit) {
+            jQuery.ajax({
+                type: 'POST',
+                url: fdbgp_plugin_vars.ajaxurl,
+                data: {
+                    action: 'fdbgp_plugin_activate',
+                    init: pluginInit,
+                    security: fdbgp_plugin_vars.nonce
+                },
+                success: function (res) {
+                    if (res.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Activation failed: ' + (res.data ? res.data.message : 'Unknown error'));
+                        $loader.hide();
+                    }
+                },
+                error: function () {
+                    alert('Activation error. Please try to activate manually.');
+                    $loader.hide();
+                }
+            });
         }
     });
 

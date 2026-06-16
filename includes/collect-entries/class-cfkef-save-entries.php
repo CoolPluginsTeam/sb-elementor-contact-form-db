@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 } 
 use Elementor\Core\Utils\Collection;
 
-
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound	
 class CFKEF_Save_Entries {
 
     private $last_entry_key = 'cfkef_last_entry_serial_no';
@@ -87,9 +87,13 @@ class CFKEF_Save_Entries {
                     $user_email = $field['value'];
                 }
 
-                $title=empty($field['title']) ? $key : $field['title'];
+                $title = empty( $field['title'] ) ? $key : $field['title'];
 
-                $form_data[$key] = ['value' => $field['value'], 'type' => $field['type'], 'title' => $title];
+                $form_data[ $key ] = array(
+                    'value' => $field['value'],
+                    'type'  => sanitize_text_field( $field['type'] ),
+                    'title' => sanitize_text_field( $title ),
+                );
             }
         }
 
