@@ -1,13 +1,12 @@
 # Folders to ignore on export
-.cursor/ export-ignore
 .git/ export-ignore
 node_modules/ export-ignore
-.github/ export-ignore
 .wordpress-org/ export-ignore
 
-.claude/                export-ignore
-.codex/                 export-ignore
-.cursor/                export-ignore
+.cursor/ export-ignore
+.github/ export-ignore
+.claude/ export-ignore
+.codex/ export-ignore
 
 # Files to ignore on export
 composer.json export-ignore
