@@ -11,8 +11,8 @@
  * Requires Plugins: elementor
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Elementor tested up to: 3.35.4
- * Elementor Pro tested up to: 3.35.0
+ * Elementor tested up to: 4.1.3
+ * Elementor Pro tested up to: 4.1.1
  */
 
 namespace Formsdb_Elementor_Forms;
