@@ -207,36 +207,21 @@ if(!class_exists('FDBGP_Main')) {
 			if ( 0 !== strpos( $class_name, __NAMESPACE__ ) ) {
 				return;
 			}
-			$has_class_alias = isset( $this->classes_aliases[ $class_name ] );
 
-			// Backward Compatibility: Save old class name for set an alias after the new class is loaded
-			if ( $has_class_alias ) {
-				$class_alias_name = $this->classes_aliases[ $class_name ];
-				$class_to_load = $class_alias_name;
-			} else {
-				$class_to_load = $class_name;
-			}
-			
-			if ( ! class_exists( $class_to_load ) ) {
+			if ( ! class_exists( $class_name ) ) {
 				$filename = strtolower(
 					preg_replace(
 						[ '/^' . __NAMESPACE__ . '\\\/', '/([a-z])([A-Z])/', '/_/', '/\\\/' ],
 						[ '', '$1-$2', '-', DIRECTORY_SEPARATOR ],
-						$class_to_load
+						$class_name
 					)
 				);
 
-
 				$filename = trailingslashit( FDBGP_PLUGIN_DIR ) . $filename . '.php';
-
 
 				if ( is_readable( $filename ) ) {
 					include $filename;
 				}
-			}
-
-			if ( $has_class_alias ) {
-				class_alias( $class_alias_name, $class_name );
 			}
 		}
 
