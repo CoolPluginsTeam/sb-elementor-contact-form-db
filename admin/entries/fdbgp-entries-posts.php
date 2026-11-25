@@ -139,12 +139,26 @@ class FDBGP_Entries_Posts {
             'filter_items_list'     => esc_html__( 'Filter from entry list', 'sb-elementor-contact-form-db' ),
         );
 
+        $capability = apply_filters( 'fdbgp_entries_capability', 'manage_options' );
+
         $args = array(
             'label'                 => esc_html__( 'Form Entries', 'sb-elementor-contact-form-db' ),
             'description'           => esc_html__( 'cool-formkit-entry', 'sb-elementor-contact-form-db' ),
             'labels'                => $labels,
             'supports'              => false,
-            'capabilities'          => ['create_posts' => 'do_not_allow'],
+            'capabilities'          => array(
+                'create_posts'           => 'do_not_allow',
+                'edit_posts'             => $capability,
+                'edit_others_posts'      => $capability,
+                'edit_published_posts'   => $capability,
+                'edit_private_posts'     => $capability,
+                'publish_posts'          => $capability,
+                'read_private_posts'     => $capability,
+                'delete_posts'           => $capability,
+                'delete_others_posts'    => $capability,
+                'delete_published_posts' => $capability,
+                'delete_private_posts'   => $capability,
+            ),
             'map_meta_cap'          => true,
             'hierarchical'          => false,
             'public'                => false,
@@ -158,7 +172,7 @@ class FDBGP_Entries_Posts {
             'rewrite'               => false,
             'query_var'             => true,
             'exclude_from_search'   => true,
-            'show_in_rest'          => true,
+            'show_in_rest'          => false,
         );
 
         register_post_type( self::$post_type, $args );

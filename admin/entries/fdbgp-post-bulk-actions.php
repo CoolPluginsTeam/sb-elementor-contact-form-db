@@ -218,8 +218,8 @@ class FDBGP_Post_Bulk_Actions {
 	 * @return bool
 	 */
 	private function process_action_trash( $id ) {
-		if ( ! current_user_can( 'delete_post', $id ) ) {
-			return false; // User does not have permission to move this post to trash
+		if ( ! current_user_can( 'delete_post', $id ) || get_post_type( $id ) !== 'cfkef-entries' ) {
+			return false; // User does not have permission to move this post to trash or invalid post type
 		}
 
 		// Check if the post exists
@@ -243,8 +243,8 @@ class FDBGP_Post_Bulk_Actions {
 	 */
 	private function process_action_restore( $id ) {
 
-		if ( ! current_user_can( 'edit_post', $id ) ) {
-			return false; // User does not have permission to restore this post
+		if ( ! current_user_can( 'edit_post', $id ) || get_post_type( $id ) !== 'cfkef-entries' ) {
+			return false; // User does not have permission to restore this post or invalid post type
 		}
 
 		// Check if the post exists and is in trash
@@ -270,8 +270,8 @@ class FDBGP_Post_Bulk_Actions {
 	 * @return bool
 	 */
 	private function process_action_delete( $id ) {
-		if ( ! current_user_can( 'delete_post', $id ) ) {
-			return false; // User does not have permission to delete the post
+		if ( ! current_user_can( 'delete_post', $id ) || get_post_type( $id ) !== 'cfkef-entries' ) {
+			return false; // User does not have permission to delete the post or invalid post type
 		}
 
 		// Check if the post exists

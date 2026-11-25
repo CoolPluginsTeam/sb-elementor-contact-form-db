@@ -272,7 +272,7 @@ class FDBGP_Old_Submission {
     }
 
     /**
-     * Prefix spreadsheet-formula characters so CSV exports open as text in Excel/Sheets.
+     * Prefix spreadsheet-formula characters (including fullwidth Unicode variants) so CSV exports open as text.
      *
      * @param mixed $value Cell value.
      * @return string
@@ -280,8 +280,32 @@ class FDBGP_Old_Submission {
     private function neutralize_csv_cell( $value ) {
         $value = is_scalar( $value ) ? (string) $value : '';
 
-        if ( $value !== '' && preg_match( '/^[=+\-@]/', $value ) ) {
-            return "'" . $value;
+        if ( '' !== $value ) {
+            if ( 1 === preg_match( '/^[\t\r]/', $value ) ) {
+                return "'" . $value;
+            }
+
+            $check_value = $value;
+            if ( class_exists( 'Normalizer' ) && method_exists( 'Normalizer', 'normalize' ) ) {
+                $normalized = Normalizer::normalize( $check_value, Normalizer::FORM_KC );
+                if ( is_string( $normalized ) && '' !== $normalized ) {
+                    $check_value = $normalized;
+                }
+            }
+
+            $trimmed = preg_replace( '/^[\s\p{Z}\p{Cf}\x{FEFF}]+/u', '', $check_value );
+            if ( ! is_string( $trimmed ) ) {
+                $trimmed = ltrim( $check_value );
+            }
+
+            $formula_pattern = '/^(?:[=+\-@]|\x{FF1D}|\x{FF0B}|\x{FF0D}|\x{FF20}|\x{FE62}|\x{FE63}|\x{FE66}|\x{2212})/u';
+            if ( '' !== $trimmed && 1 === preg_match( $formula_pattern, $trimmed ) ) {
+                return "'" . $value;
+            }
+
+            if ( 1 === preg_match( '/^[=+\-@\t\r]/', ltrim( $value ) ) ) {
+                return "'" . $value;
+            }
         }
 
         return $value;
@@ -322,34 +346,43 @@ class FDBGP_Old_Submission {
 
         if ($posts) {
             $first_post = current($posts);
-            $row = '"Date","Submitted On","Form ID","Submitted By",';
+            $header_cells = array(
+                $this->format_csv_cell( 'Date' ),
+                $this->format_csv_cell( 'Submitted On' ),
+                $this->format_csv_cell( 'Form ID' ),
+                $this->format_csv_cell( 'Submitted By' ),
+            );
 
             $data = $this->get_submission_meta($first_post->ID);
             if ($data && isset($data['data'])) {
                 foreach ($data['data'] as $field) {
-                    $row .= '"' . esc_attr($field['label']) . '",';
+                    $header_cells[] = $this->format_csv_cell( isset( $field['label'] ) ? $field['label'] : '' );
                 }
             }
 
-            $rows[] = rtrim($row, ',');
+            $rows[] = implode( ',', $header_cells );
 
             foreach ($posts as $post) {
                 $data = $this->get_submission_meta($post->ID);
                 if ($data) {
-                    $row = '';
                     $form_id = get_post_meta($post->ID, 'sb_elem_cfd_form_id', true);
                     $submitted_on = isset($data['extra']['submitted_on']) ? sanitize_text_field($data['extra']['submitted_on']) : '';
                     $submitted_by = isset($data['extra']['submitted_by']) ? sanitize_text_field($data['extra']['submitted_by']) : '';
 
-                    $row .= '"' . esc_attr($post->post_date) . '","' . esc_attr($submitted_on) . '","' . esc_attr($form_id) . '","' . esc_attr($submitted_by) . '",';
+                    $row_cells = array(
+                        $this->format_csv_cell( $post->post_date ),
+                        $this->format_csv_cell( $submitted_on ),
+                        $this->format_csv_cell( $form_id ),
+                        $this->format_csv_cell( $submitted_by ),
+                    );
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $row .= $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' ) . ',';
+                            $row_cells[] = $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
                         }
                     }
 
-                    $rows[] = rtrim($row, ',');
+                    $rows[] = implode( ',', $row_cells );
                 }
             }
         }
@@ -379,35 +412,44 @@ class FDBGP_Old_Submission {
         $posts = get_posts($args);
 
         if ($posts) {
-            $row = '"Date","Submitted On","Form ID","Submitted By",';
-
             $first_post = current($posts);
+            $header_cells = array(
+                $this->format_csv_cell( 'Date' ),
+                $this->format_csv_cell( 'Submitted On' ),
+                $this->format_csv_cell( 'Form ID' ),
+                $this->format_csv_cell( 'Submitted By' ),
+            );
+
             $data = $this->get_submission_meta($first_post->ID);
 
             if ($data && isset($data['data'])) {
                 foreach ($data['data'] as $field) {
-                    $row .= '"' . esc_attr($field['label']) . '",';
+                    $header_cells[] = $this->format_csv_cell( isset( $field['label'] ) ? $field['label'] : '' );
                 }
             }
 
-            $rows[] = rtrim($row, ',');
+            $rows[] = implode( ',', $header_cells );
 
             foreach ($posts as $post) {
                 $data = $this->get_submission_meta($post->ID);
                 if ($data) {
-                    $row = '';
                     $submitted_on = isset($data['extra']['submitted_on']) ? sanitize_text_field($data['extra']['submitted_on']) : '';
                     $submitted_by = isset($data['extra']['submitted_by']) ? sanitize_text_field($data['extra']['submitted_by']) : '';
 
-                    $row .= '"' . esc_attr($post->post_date) . '","' . esc_attr($submitted_on) . '","' . esc_attr($form_id) . '","' . esc_attr($submitted_by) . '",';
+                    $row_cells = array(
+                        $this->format_csv_cell( $post->post_date ),
+                        $this->format_csv_cell( $submitted_on ),
+                        $this->format_csv_cell( $form_id ),
+                        $this->format_csv_cell( $submitted_by ),
+                    );
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $row .= $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' ) . ',';
+                            $row_cells[] = $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
                         }
                     }
 
-                    $rows[] = rtrim($row, ',');
+                    $rows[] = implode( ',', $row_cells );
                 }
             }
         }

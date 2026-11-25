@@ -435,6 +435,33 @@ trait CoolForm_FDBGP_Form_Sheets_Action_Trait {
             $fdbgp_sheetheaders = array();
         }
 
+        if ( ! $this->can_manage_google_sheets() ) {
+            $fdbgp_html = sprintf(
+                '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-warning">%1$s</div>',
+                esc_html__( 'Google Sheets settings can only be managed by administrators.', 'sb-elementor-contact-form-db' )
+            );
+            $widget->start_controls_section(
+                $this->add_prefix( 'section_google_sheets' ),
+                array(
+                    'label'     => esc_html__( 'Save Submissions in Google Sheet', 'sb-elementor-contact-form-db' ),
+                    'tab'       => 'connect_google_sheets_tab',
+                    'condition' => array(
+                        'submit_actions' => $this->get_name(),
+                    ),
+                )
+            );
+
+            $widget->add_control(
+                $this->add_prefix( 'permission_notice' ),
+                array(
+                    'type' => Controls_Manager::RAW_HTML,
+                    'raw'  => $fdbgp_html,
+                )
+            );
+            $widget->end_controls_section();
+            return;
+        }
+
         if ( empty( $fdbgp_google_settings['client_token'] ) ) {
             $fdbgp_html = sprintf(
                 '<div class="elementor-control-raw-html elementor-panel-alert elementor-panel-alert-danger">%1$s<a href="admin.php?page=formsdb&tab=settings"> <strong>%2$s</strong></a>.</div>',
