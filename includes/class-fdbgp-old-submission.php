@@ -272,7 +272,7 @@ class FDBGP_Old_Submission {
     }
 
     /**
-     * Prefix spreadsheet-formula characters so CSV exports open as text in Excel/Sheets.
+     * Prefix spreadsheet-formula characters (including fullwidth Unicode variants) so CSV exports open as text.
      *
      * @param mixed $value Cell value.
      * @return string
@@ -280,9 +280,30 @@ class FDBGP_Old_Submission {
     private function neutralize_csv_cell( $value ) {
         $value = is_scalar( $value ) ? (string) $value : '';
 
-        if ( $value !== '' ) {
-            $trimmed = ltrim( $value );
-            if ( $trimmed !== '' && preg_match( '/^[=+\-@\t\r]/', $trimmed ) ) {
+        if ( '' !== $value ) {
+            if ( 1 === preg_match( '/^[\t\r]/', $value ) ) {
+                return "'" . $value;
+            }
+
+            $check_value = $value;
+            if ( class_exists( 'Normalizer' ) && method_exists( 'Normalizer', 'normalize' ) ) {
+                $normalized = Normalizer::normalize( $check_value, Normalizer::FORM_KC );
+                if ( is_string( $normalized ) && '' !== $normalized ) {
+                    $check_value = $normalized;
+                }
+            }
+
+            $trimmed = preg_replace( '/^[\s\p{Z}\p{Cf}\x{FEFF}]+/u', '', $check_value );
+            if ( ! is_string( $trimmed ) ) {
+                $trimmed = ltrim( $check_value );
+            }
+
+            $formula_pattern = '/^(?:[=+\-@]|\x{FF1D}|\x{FF0B}|\x{FF0D}|\x{FF20}|\x{FE62}|\x{FE63}|\x{FE66}|\x{2212})/u';
+            if ( '' !== $trimmed && 1 === preg_match( $formula_pattern, $trimmed ) ) {
+                return "'" . $value;
+            }
+
+            if ( 1 === preg_match( '/^[=+\-@\t\r]/', ltrim( $value ) ) ) {
                 return "'" . $value;
             }
         }
