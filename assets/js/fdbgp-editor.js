@@ -3,7 +3,6 @@
 
     class FDBGP_Editor {
         constructor() {
-            this.widgetState = {};
             this.isRestoring = false;
             this.init();
         }
@@ -184,7 +183,6 @@
                                 });
 
                                 $sheetSelect.val(data.sheet_name).trigger('change');
-                                this.saveWidgetState(data.sheet_name);
 
                                 try {
                                     const currentView = elementor.getPanelView()?.getCurrentPageView?.();
@@ -353,7 +351,6 @@
                 }
             } catch (e) { /* silent fail */ }
 
-            this.saveWidgetState(sheetValue);
             this.checkSheetContent($select);
         }
 
@@ -372,7 +369,6 @@
                 }
             } catch (e) { }
 
-            this.clearWidgetState();
             this.loadSheets($select);
             this.checkSheetContent($select);
         }
@@ -401,15 +397,13 @@
                 const autoSelect = $sheetSelect.data('auto-select');
                 if (autoSelect) {
                     $sheetSelect.val(autoSelect).removeData('auto-select');
-                    this.saveWidgetState(autoSelect);
                 } else {
                     // Check Elementor model for saved sheet
                     try {
                         const model = elementor.getPanelView()?.getCurrentPageView?.().model;
                         const savedSheet = model?.getSetting('fdbgp_sheet_list');
-                        if (savedSheet && savedSheet !== 'create_new_tab') {
+                        if (savedSheet && savedSheet !== 'create_new_tab' && response.data.sheets && Object.prototype.hasOwnProperty.call(response.data.sheets, savedSheet)) {
                             $sheetSelect.val(savedSheet);
-                            this.saveWidgetState(savedSheet);
                         }
                     } catch (e) { }
                 }
@@ -494,17 +488,6 @@
             }
         }
 
-        saveWidgetState(sheet) {
-            try {
-                const id = elementor.getPanelView().getCurrentPageView().model.get('id');
-                this.widgetState[id] = sheet;
-            } catch (e) { }
-        }
-
-        clearWidgetState() {
-            this.widgetState = {};
-        }
-
         registerElementorHooks() {
             elementor.hooks.addAction('panel/open_editor/widget', (panel) => {
                 setTimeout(() => {
@@ -545,7 +528,7 @@
                                     $spreadsheet.val(data.id).trigger('change');
                                 }
                             } catch (e) {
-                                console.log('FDBGP: Error restoring from cache:', e);
+                                // Ignore cache restore failures.
                             }
                         } else {
                         }
@@ -648,13 +631,10 @@
                 localStorage.removeItem(cacheKey);
             };
 
-            if (typeof $e !== 'undefined' && $e.commands) {
-                $e.commands.on('run:after', (component, command) => {
-                    if (command?.startsWith('document/save/')) clearCache();
-                });
-            } else if (elementor.channels?.editor) {
-                elementor.channels.editor.on('saved', clearCache);
-            }
+            window.addEventListener('beforeunload', () => {
+                clearCache();
+            });
+
         }
 
         startPollingFallback() {

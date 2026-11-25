@@ -14,6 +14,16 @@ use Exception;
 trait FDBGP_Ajax_Handlers {
 
     /**
+     * Check if the current user can manage Google Sheets integrations.
+     *
+     * @since 1.4.0
+     * @return bool
+     */
+    public function can_manage_google_sheets() {
+        return current_user_can( apply_filters( 'fdbgp_google_sheets_capability', 'manage_options' ) );
+    }
+
+    /**
      * Register All AJAX Actions
      */
     public function register_ajax_events() {
@@ -30,13 +40,13 @@ trait FDBGP_Ajax_Handlers {
 
         check_ajax_referer( 'elementor_ajax', '_nonce' );
         
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+        if ( ! $this->can_manage_google_sheets() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions', 'sb-elementor-contact-form-db' ) ) );
         }
         
-        $spreadsheet_name = isset( $_POST['spreadsheet_name'] ) ? sanitize_text_field( $_POST['spreadsheet_name'] ) : '';
-        $sheet_name       = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
-        $headers          = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', $_POST['headers'] ) : array();
+        $spreadsheet_name = isset( $_POST['spreadsheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_name']) ) : '';
+        $sheet_name       = isset( $_POST['sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['sheet_name']) ) : '';
+        $headers          = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', wp_unslash($_POST['headers']) ) : array();
         
         // Validate input
         if ( empty( $spreadsheet_name ) ) {
@@ -99,28 +109,33 @@ trait FDBGP_Ajax_Handlers {
 
         check_ajax_referer( 'elementor_ajax', '_nonce' );
         
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+        if ( ! $this->can_manage_google_sheets() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions', 'sb-elementor-contact-form-db' ) ) );
         }
         
-        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
+        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_id']) ) : '';
         
-        if ( empty( $spreadsheet_id ) ) {
-            wp_send_json_error( array( 'message' => 'Spreadsheet ID is required' ) );
+        if ( empty( $spreadsheet_id ) || 'new' === $spreadsheet_id ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Spreadsheet ID is required', 'sb-elementor-contact-form-db' ) ) );
         }
         
         try {
             $instance_api = new FDBGP_Google_API_Functions();
             
             if ( ! $instance_api->checkcredenatials() ) {
-                wp_send_json_error( array( 'message' => 'Google API credentials not configured' ) );
+                wp_send_json_error( array( 'message' => esc_html__( 'Google API credentials not configured', 'sb-elementor-contact-form-db' ) ) );
+            }
+
+            $spreadsheets = $instance_api->get_spreadsheet_listing();
+            if ( ! is_array( $spreadsheets ) || ! array_key_exists( $spreadsheet_id, $spreadsheets ) ) {
+                wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized or invalid spreadsheet ID', 'sb-elementor-contact-form-db' ) ) );
             }
             
             $response = $instance_api->get_sheet_listing( $spreadsheet_id );
             $sheets   = array();
             
             // Add Create New Tab option
-            $sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'elementor-contact-form-db' );
+            $sheets['create_new_tab'] = esc_html__( 'Create New Tab', 'sb-elementor-contact-form-db' );
             
             foreach ( $response->getSheets() as $s ) {
                 $title = $s['properties']['title'];
@@ -140,23 +155,28 @@ trait FDBGP_Ajax_Handlers {
     public function ajax_update_sheet_headers() {
 
         check_ajax_referer( 'elementor_ajax', '_nonce' );
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( array( 'message' => 'Permission denied' ) );
+        if ( ! $this->can_manage_google_sheets() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions', 'sb-elementor-contact-form-db' ) ) );
         }
 
-        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
-        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
-        $new_sheet_name = isset( $_POST['new_sheet_name'] ) ? sanitize_text_field( $_POST['new_sheet_name'] ) : '';
-        $headers        = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', $_POST['headers'] ) : array();
+        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_id']) ) : '';
+        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['sheet_name']) ) : '';
+        $new_sheet_name = isset( $_POST['new_sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['new_sheet_name']) ) : '';
+        $headers        = isset( $_POST['headers'] ) && is_array( $_POST['headers'] ) ? array_map( 'sanitize_text_field', wp_unslash($_POST['headers']) ) : array();
 
-        if ( empty( $spreadsheet_id ) ) {
-            wp_send_json_error( array( 'message' => 'Spreadsheet ID missing' ) );
+        if ( empty( $spreadsheet_id ) || 'new' === $spreadsheet_id ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Spreadsheet ID missing', 'sb-elementor-contact-form-db' ) ) );
         }
 
         try {
             $api = new FDBGP_Google_API_Functions();
             if ( ! $api->checkcredenatials() ) {
-                wp_send_json_error( array( 'message' => 'API Error' ) );
+                wp_send_json_error( array( 'message' => esc_html__( 'API Error', 'sb-elementor-contact-form-db' ) ) );
+            }
+
+            $spreadsheets = $api->get_spreadsheet_listing();
+            if ( ! is_array( $spreadsheets ) || ! array_key_exists( $spreadsheet_id, $spreadsheets ) ) {
+                wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized or invalid spreadsheet ID', 'sb-elementor-contact-form-db' ) ) );
             }
 
             $target_sheet_name = $sheet_name;
@@ -224,14 +244,14 @@ trait FDBGP_Ajax_Handlers {
 
         check_ajax_referer( 'elementor_ajax', '_nonce' );
 
-        if ( ! current_user_can( 'edit_posts' ) ) {
-            wp_send_json_error( array( 'message' => 'Permission denied' ) );
+        if ( ! $this->can_manage_google_sheets() ) {
+            wp_send_json_error( array( 'message' => esc_html__( 'Insufficient permissions', 'sb-elementor-contact-form-db' ) ) );
         }
 
-        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( $_POST['spreadsheet_id'] ) : '';
-        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( $_POST['sheet_name'] ) : '';
+        $spreadsheet_id = isset( $_POST['spreadsheet_id'] ) ? sanitize_text_field( wp_unslash($_POST['spreadsheet_id']) ) : '';
+        $sheet_name     = isset( $_POST['sheet_name'] ) ? sanitize_text_field( wp_unslash($_POST['sheet_name']) ) : '';
 
-        if ( empty( $spreadsheet_id ) || empty( $sheet_name ) || 'create_new_tab' === $sheet_name ) {
+        if ( empty( $spreadsheet_id ) || empty( $sheet_name ) || 'create_new_tab' === $sheet_name || 'new' === $spreadsheet_id ) {
             wp_send_json_success( array( 'has_content' => false ) );
             return;
         }
@@ -239,7 +259,12 @@ trait FDBGP_Ajax_Handlers {
         try {
             $api = new FDBGP_Google_API_Functions();
             if ( ! $api->checkcredenatials() ) {
-                wp_send_json_error( array( 'message' => 'API Error' ) );
+                wp_send_json_error( array( 'message' => esc_html__( 'API Error', 'sb-elementor-contact-form-db' ) ) );
+            }
+
+            $spreadsheets = $api->get_spreadsheet_listing();
+            if ( ! is_array( $spreadsheets ) || ! array_key_exists( $spreadsheet_id, $spreadsheets ) ) {
+                wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized or invalid spreadsheet ID', 'sb-elementor-contact-form-db' ) ) );
             }
 
             // Check if sheet has data beyond just headers (check first few rows across all columns)

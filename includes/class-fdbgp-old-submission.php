@@ -29,8 +29,137 @@ class FDBGP_Old_Submission {
      */
     private function __construct() {
         add_action('admin_init', array($this, 'handle_csv_download'));
+        add_action('admin_init', array($this, 'handle_actions'));
+        add_action('elementor_pro/forms/new_record', array($this, 'save_legacy_record'), 10, 2);
     }
 
+    /**
+     * Save record in legacy format
+     * 
+     * @param \ElementorPro\Modules\Forms\Classes\Record $record
+     * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $handler
+     */
+    public function save_legacy_record($record, $handler) {
+        // Check if legacy saving is enabled
+        if (!$this->is_legacy_save_enabled()) {
+            return;
+        }
+
+        $form_name = $record->get_form_settings('form_name');
+        $form_id = $record->get_form_settings('form_id');
+        $raw_fields = $record->get('fields');
+
+        // Prepare data matching old plugin structure
+        $fields = array();
+        foreach ($raw_fields as $id => $field) {
+            $fields[$id] = array(
+                'label' => $field['title'],
+                'value' => $field['value']
+            );
+        }
+
+        $meta = array(
+            'form_id' => $form_name,
+            'data' => $fields,
+            'extra' => array(
+                'submitted_on' => get_the_title(),
+                'submitted_on_id' => get_the_ID(),
+                'submitted_by' => is_user_logged_in() ? wp_get_current_user()->display_name : 'Guest',
+                'submitted_by_id' => is_user_logged_in() ? get_current_user_id() : 0,
+            )
+        );
+
+        $post_data = array(
+            'post_title' => $form_name . ' - ' . current_time( 'mysql' ),
+            'post_status' => 'publish',
+            'post_type' => 'elementor_cf_db',
+        );
+
+        $post_id = wp_insert_post($post_data);
+
+        if ($post_id && !is_wp_error($post_id)) {
+            update_post_meta($post_id, 'sb_elem_cfd', $meta);
+            update_post_meta($post_id, 'sb_elem_cfd_form_id', $form_name);
+            update_post_meta($post_id, 'sb_elem_cfd_submitted_on_id', get_the_ID());
+            update_post_meta($post_id, 'sb_elem_cfd_read', 0); // 0 means unread
+        }
+    }
+
+    /**
+     * Handle actions (toggle legacy mode, delete submission)
+     */
+    public function handle_actions() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        // Toggle Legacy Mode
+        if (isset($_POST['fdbgp_toggle_legacy_save']) && check_admin_referer('fdbgp_legacy_action', 'fdbgp_legacy_nonce')) {
+            $enable = isset($_POST['enable_legacy_save']) ? '1' : '0';
+            update_option('fdbgp_legacy_save_enabled', $enable);
+            wp_safe_redirect(remove_query_arg(array('fdbgp_toggle_legacy_save', 'enable_legacy_save')));
+            exit;
+        }
+
+        // Trash Submission
+        if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_trash_submission' && isset($_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_trash_submission_' . sanitize_text_field(wp_unslash($_GET['post_id'])))) {
+                $post_id = intval($_GET['post_id']);
+                wp_trash_post($post_id);
+                wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
+                exit;
+            }
+        }
+
+        // Restore Submission
+        if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_restore_submission' && isset($_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_restore_submission_' . sanitize_text_field(wp_unslash($_GET['post_id'])))) {
+                $post_id = intval($_GET['post_id']);
+                wp_untrash_post($post_id);
+                wp_update_post(array(
+                    'ID'          => $post_id,
+                    'post_status' => 'publish',
+                ));
+                wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
+                exit;
+            }
+        }
+
+        // Permanent Delete Submission
+        if (isset($_GET['action']) && $_GET['action'] === 'fdbgp_delete_submission' && isset($_GET['post_id'])) {
+            if (check_admin_referer('fdbgp_delete_submission_' . sanitize_text_field(wp_unslash($_GET['post_id'])))) {
+                $post_id = intval($_GET['post_id']);
+                wp_delete_post($post_id, true);
+                wp_safe_redirect(remove_query_arg(array('action', 'post_id', '_wpnonce')));
+                exit;
+            }
+        }
+    }
+
+    /**
+     * Get legacy save status
+     */
+    public function is_legacy_save_enabled() {
+        $default = self::has_old_submissions() ? '1' : '0';
+        return get_option( 'fdbgp_legacy_save_enabled', $default ) === '1';
+    }
+
+    /**
+     * Get all submissions with pagination
+     */
+    public function get_all_submissions($per_page = 20, $page = 1, $status = 'publish') {
+        $args = array(
+            'post_type' => 'elementor_cf_db',
+            'post_status' => $status,
+            'posts_per_page' => $per_page,
+            'paged' => $page,
+            'orderby' => 'date',
+            'order' => 'DESC'
+        );
+
+        return new WP_Query($args);
+    }
+    
     /**
      * Check if old submissions exist in the database
      * 
@@ -40,12 +169,13 @@ class FDBGP_Old_Submission {
         $posts = get_posts(array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => 1,
-            'post_status' => 'publish',
+            'post_status' => array('publish', 'trash'), // Check trash too
             'fields' => 'ids'
         ));
         
         return !empty($posts);
     }
+    
 
     /**
      * Get all unique form IDs from old submissions
@@ -69,7 +199,8 @@ class FDBGP_Old_Submission {
                 'sb_elem_cfd_form_id'
             );
 
-        $results = $wpdb->get_results($sql);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above with $wpdb->prepare().        
+        $results = $wpdb->get_results( $sql );
         $form_ids = array();
 
         if ($results) {
@@ -101,7 +232,8 @@ class FDBGP_Old_Submission {
                     p.post_type = 'elementor_cf_db'
                     AND p.post_status = 'publish'";
 
-        $results = $wpdb->get_results($sql);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query uses hardcoded safe values, no user input.
+        $results = $wpdb->get_results( $sql );
         $pages = array();
 
         if ($results) {
@@ -129,13 +261,66 @@ class FDBGP_Old_Submission {
             $post_id
         );
 
-        $meta = $wpdb->get_var($sql);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Query is prepared above with $wpdb->prepare().
+        $meta = $wpdb->get_var( $sql );
         
         if ($meta) {
             return maybe_unserialize($meta);
         }
 
         return false;
+    }
+
+    /**
+     * Prefix spreadsheet-formula characters (including fullwidth Unicode variants) so CSV exports open as text.
+     *
+     * @param mixed $value Cell value.
+     * @return string
+     */
+    private function neutralize_csv_cell( $value ) {
+        $value = is_scalar( $value ) ? (string) $value : '';
+
+        if ( '' !== $value ) {
+            if ( 1 === preg_match( '/^[\t\r]/', $value ) ) {
+                return "'" . $value;
+            }
+
+            $check_value = $value;
+            if ( class_exists( 'Normalizer' ) && method_exists( 'Normalizer', 'normalize' ) ) {
+                $normalized = Normalizer::normalize( $check_value, Normalizer::FORM_KC );
+                if ( is_string( $normalized ) && '' !== $normalized ) {
+                    $check_value = $normalized;
+                }
+            }
+
+            $trimmed = preg_replace( '/^[\s\p{Z}\p{Cf}\x{FEFF}]+/u', '', $check_value );
+            if ( ! is_string( $trimmed ) ) {
+                $trimmed = ltrim( $check_value );
+            }
+
+            $formula_pattern = '/^(?:[=+\-@]|\x{FF1D}|\x{FF0B}|\x{FF0D}|\x{FF20}|\x{FE62}|\x{FE63}|\x{FE66}|\x{2212})/u';
+            if ( '' !== $trimmed && 1 === preg_match( $formula_pattern, $trimmed ) ) {
+                return "'" . $value;
+            }
+
+            if ( 1 === preg_match( '/^[=+\-@\t\r]/', ltrim( $value ) ) ) {
+                return "'" . $value;
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * Escape a value for CSV output (RFC 4180 quoting).
+     *
+     * @param mixed $value Cell value.
+     * @return string
+     */
+    private function format_csv_cell( $value ) {
+        $value = $this->neutralize_csv_cell( $value );
+
+        return '"' . str_replace( '"', '""', (string) $value ) . '"';
     }
 
     /**
@@ -149,8 +334,10 @@ class FDBGP_Old_Submission {
         $rows = array();
         $args = array(
             'post_type' => 'elementor_cf_db',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
             'meta_key' => 'sb_elem_cfd_submitted_on_id',
             'posts_per_page' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_value' => $submitted_id,
             'post_status' => 'publish'
         );
@@ -159,34 +346,43 @@ class FDBGP_Old_Submission {
 
         if ($posts) {
             $first_post = current($posts);
-            $row = '"Date","Submitted On","Form ID","Submitted By",';
+            $header_cells = array(
+                $this->format_csv_cell( 'Date' ),
+                $this->format_csv_cell( 'Submitted On' ),
+                $this->format_csv_cell( 'Form ID' ),
+                $this->format_csv_cell( 'Submitted By' ),
+            );
 
             $data = $this->get_submission_meta($first_post->ID);
             if ($data && isset($data['data'])) {
                 foreach ($data['data'] as $field) {
-                    $row .= '"' . esc_attr($field['label']) . '",';
+                    $header_cells[] = $this->format_csv_cell( isset( $field['label'] ) ? $field['label'] : '' );
                 }
             }
 
-            $rows[] = rtrim($row, ',');
+            $rows[] = implode( ',', $header_cells );
 
             foreach ($posts as $post) {
                 $data = $this->get_submission_meta($post->ID);
                 if ($data) {
-                    $row = '';
                     $form_id = get_post_meta($post->ID, 'sb_elem_cfd_form_id', true);
                     $submitted_on = isset($data['extra']['submitted_on']) ? sanitize_text_field($data['extra']['submitted_on']) : '';
                     $submitted_by = isset($data['extra']['submitted_by']) ? sanitize_text_field($data['extra']['submitted_by']) : '';
 
-                    $row .= '"' . esc_attr($post->post_date) . '","' . esc_attr($submitted_on) . '","' . esc_attr($form_id) . '","' . esc_attr($submitted_by) . '",';
+                    $row_cells = array(
+                        $this->format_csv_cell( $post->post_date ),
+                        $this->format_csv_cell( $submitted_on ),
+                        $this->format_csv_cell( $form_id ),
+                        $this->format_csv_cell( $submitted_by ),
+                    );
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $row .= '"' . addslashes($field['value']) . '",';
+                            $row_cells[] = $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
                         }
                     }
 
-                    $rows[] = rtrim($row, ',');
+                    $rows[] = implode( ',', $row_cells );
                 }
             }
         }
@@ -206,7 +402,9 @@ class FDBGP_Old_Submission {
         $args = array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => $limit,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
             'meta_key' => 'sb_elem_cfd_form_id',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
             'meta_value' => $form_id,
             'post_status' => 'publish'
         );
@@ -214,35 +412,44 @@ class FDBGP_Old_Submission {
         $posts = get_posts($args);
 
         if ($posts) {
-            $row = '"Date","Submitted On","Form ID","Submitted By",';
-
             $first_post = current($posts);
+            $header_cells = array(
+                $this->format_csv_cell( 'Date' ),
+                $this->format_csv_cell( 'Submitted On' ),
+                $this->format_csv_cell( 'Form ID' ),
+                $this->format_csv_cell( 'Submitted By' ),
+            );
+
             $data = $this->get_submission_meta($first_post->ID);
 
             if ($data && isset($data['data'])) {
                 foreach ($data['data'] as $field) {
-                    $row .= '"' . esc_attr($field['label']) . '",';
+                    $header_cells[] = $this->format_csv_cell( isset( $field['label'] ) ? $field['label'] : '' );
                 }
             }
 
-            $rows[] = rtrim($row, ',');
+            $rows[] = implode( ',', $header_cells );
 
             foreach ($posts as $post) {
                 $data = $this->get_submission_meta($post->ID);
                 if ($data) {
-                    $row = '';
                     $submitted_on = isset($data['extra']['submitted_on']) ? sanitize_text_field($data['extra']['submitted_on']) : '';
                     $submitted_by = isset($data['extra']['submitted_by']) ? sanitize_text_field($data['extra']['submitted_by']) : '';
 
-                    $row .= '"' . esc_attr($post->post_date) . '","' . esc_attr($submitted_on) . '","' . esc_attr($form_id) . '","' . esc_attr($submitted_by) . '",';
+                    $row_cells = array(
+                        $this->format_csv_cell( $post->post_date ),
+                        $this->format_csv_cell( $submitted_on ),
+                        $this->format_csv_cell( $form_id ),
+                        $this->format_csv_cell( $submitted_by ),
+                    );
 
                     if (isset($data['data'])) {
                         foreach ($data['data'] as $field) {
-                            $row .= '"' . addslashes($field['value']) . '",';
+                            $row_cells[] = $this->format_csv_cell( isset( $field['value'] ) ? $field['value'] : '' );
                         }
                     }
 
-                    $rows[] = rtrim($row, ',');
+                    $rows[] = implode( ',', $row_cells );
                 }
             }
         }
@@ -258,31 +465,33 @@ class FDBGP_Old_Submission {
             return;
         }
 
-        if (empty($_POST['fdbgp_old_export_nonce']) || !wp_verify_nonce($_POST['fdbgp_old_export_nonce'], 'fdbgp_old_export')) {
+        $nonce = isset( $_POST['fdbgp_old_export_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['fdbgp_old_export_nonce'] ) ) : '';
+        if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'fdbgp_old_export' ) ) {
             return;
         }
 
-        if (!current_user_can('manage_options')) {
+        if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
 
         $rows = array();
         $filename = 'old-submissions';
 
-        if (isset($_REQUEST['form_name']) && !empty($_REQUEST['form_name'])) {
-            $form_name = sanitize_text_field($_REQUEST['form_name']);
-            $rows = $this->get_export_rows_by_page($form_name);
-            $filename = sanitize_title($form_name);
-        } elseif (isset($_REQUEST['form_id']) && !empty($_REQUEST['form_id'])) {
-            $form_id = sanitize_text_field($_REQUEST['form_id']);
-            $rows = $this->get_export_rows_by_form_id($form_id);
-            $filename = sanitize_title($form_id);
+        if ( isset( $_REQUEST['form_name'] ) && ! empty( $_REQUEST['form_name'] ) ) {
+            $form_name = sanitize_text_field( wp_unslash( $_REQUEST['form_name'] ) );
+            $rows = $this->get_export_rows_by_page( $form_name );
+            $filename = sanitize_title( $form_name );
+        } elseif ( isset( $_REQUEST['form_id'] ) && ! empty( $_REQUEST['form_id'] ) ) {
+            $form_id = sanitize_text_field( wp_unslash( $_REQUEST['form_id'] ) );
+            $rows = $this->get_export_rows_by_form_id( $form_id );
+            $filename = sanitize_title( $form_id );
         }
 
         if (!empty($rows)) {
             header('Content-Type: application/csv');
             header('Content-Disposition: attachment; filename=' . $filename . '.csv');
             header('Pragma: no-cache');
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped 
             echo implode("\n", $rows);
             exit;
         }
@@ -291,13 +500,14 @@ class FDBGP_Old_Submission {
     /**
      * Get total submission count
      * 
+     * @param string $status
      * @return int
      */
-    public function get_submission_count() {
+    public function get_submission_count($status = 'publish') {
         $posts = get_posts(array(
             'post_type' => 'elementor_cf_db',
             'posts_per_page' => -1,
-            'post_status' => 'publish',
+            'post_status' => $status,
             'fields' => 'ids'
         ));
         

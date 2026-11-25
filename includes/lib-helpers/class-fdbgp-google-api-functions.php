@@ -170,6 +170,8 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 		// Load previously authorized credentials from a database.
 		try {
 			if ( empty( $auth_token ) ) {
+				$state = wp_create_nonce( 'fdbgp_google_oauth' );
+				$client->setState( $state );
 				$auth_url = $client->createAuthUrl();
 				return $auth_url;
 			}
@@ -265,7 +267,7 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 			'fields' => 'nextPageToken, files(id, name, mimeType)',
 			'q'      => "mimeType='application/vnd.google-apps.spreadsheet' and trashed = false",
 		);
-		$sheetarray['new'] = esc_html__( 'Create New Spreadsheet', 'elementor-contact-form-db' );
+		$sheetarray['new'] = esc_html__( 'Create New Spreadsheet', 'sb-elementor-contact-form-db' );
 		$results = self::$instance_drive->files->listFiles( $optparams );
 		if ( count( $results->getFiles() ) > 0 ) {
 			foreach ( $results->getFiles() as $file ) {
@@ -435,18 +437,6 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	}
 
 	/**
-	 * Create Google_Service_Sheets_ClearValuesRequest Object
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return object.
-	 */
-	public function clearobject() {
-		$requestbody = new \Google\Service\Sheets\ClearValuesRequest();
-		return $requestbody;
-	}
-
-	/**
 	 * Format google sheet.
 	 *
 	 * @param array $param contains spreadsheetid, requestbody, params.
@@ -492,17 +482,5 @@ class FDBGP_Google_API_Functions extends FDBGP_Google_API {
 	 */
 	public function createspreadsheet( $requestbody = array() ) {
 		return parent::create_spreadsheet( self::$instance_service, $requestbody );
-	}
-
-	/**
-	 * Clear Google Sheet.
-	 *
-	 * @param array $param contains spreadsheetid, range, requestbody, params.
-	 * @since 1.0.0
-	 *
-	 * @return object.
-	 */
-	public function clear( $param = array() ) {
-		return parent::clearsheet( self::$instance_service, $param );
 	}
 }

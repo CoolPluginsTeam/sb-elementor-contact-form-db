@@ -15,6 +15,7 @@ use HelloPlus\Includes\Utils;
 /**
  * Register post after form submit.
  */
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound
 class HelloPlus_FDBGP_Register_Post extends Action_Base {
 
 	private static $registered_actions = [];
@@ -75,7 +76,7 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 		$widget->start_controls_section(
 			'eef-register-post-section',
 			[
-				'label' => \esc_html__( 'Save Submissions In Post Type', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Save Submissions In Post Type', 'sb-elementor-contact-form-db' ),
 				'condition' => [
 					'cool_formkit_submit_actions' => $this->get_name(),
 				],
@@ -86,7 +87,7 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 			'eef-register-post-info',
 			[
 				'type' => \Elementor\Controls_Manager::RAW_HTML,
-				'raw' => \esc_html__( 'Important: To save form fields as post data, you must map each field from the "Advanced" tab of the respective form field settings.', 'extensions-for-elementor-form' ),
+				'raw' => \esc_html__( 'Important: To save form fields as post data, you must map each field from the "Advanced" tab of the respective form field settings.', 'sb-elementor-contact-form-db' ),
 				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
 			]
 		);
@@ -101,7 +102,7 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 		$widget->add_control(
 			'eef-register-post-post-type',
 			[
-				'label' => \esc_html__( 'Post Type', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Post Type', 'sb-elementor-contact-form-db' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => 'post',
 				'options' => $this->get_registered_post_types(),
@@ -111,13 +112,13 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 		$widget->add_control(
 			'eef-register-post-post-status',
 			[
-				'label' => \esc_html__( 'Post Status', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Post Status', 'sb-elementor-contact-form-db' ),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'default' => 'draft',
 				'options' => [
-					'draft'  => \esc_html__( 'Draft', 'extensions-for-elementor-form' ),
-					'publish' => \esc_html__( 'Publish', 'extensions-for-elementor-form' ),
-					'pending' => \esc_html__( 'Pending', 'extensions-for-elementor-form' ),
+					'draft'  => \esc_html__( 'Draft', 'sb-elementor-contact-form-db' ),
+					'publish' => \esc_html__( 'Publish', 'sb-elementor-contact-form-db' ),
+					'pending' => \esc_html__( 'Pending', 'sb-elementor-contact-form-db' ),
 				],
 			]
 		);
@@ -125,13 +126,13 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 		$widget->add_control(
 			'eef-register-post-user-permission',
 			[
-				'label' => \esc_html__( 'Run only to logged in users?', 'extensions-for-elementor-form' ),
+				'label' => \esc_html__( 'Run only to logged in users?', 'sb-elementor-contact-form-db' ),
 				'type' => \Elementor\Controls_Manager::SWITCHER,
-				'label_on' => \esc_html__( 'Yes', 'extensions-for-elementor-form' ),
-				'label_off' => \esc_html__( 'No', 'extensions-for-elementor-form' ),
+				'label_on' => \esc_html__( 'Yes', 'sb-elementor-contact-form-db' ),
+				'label_off' => \esc_html__( 'No', 'sb-elementor-contact-form-db' ),
 				'return_value' => 'yes',
 				'default' => 'yes',
-				'description' => \esc_html__( 'Warning: Save data from not logged in users can be a security risk', 'extensions-for-elementor-form' ),
+				'description' => \esc_html__( 'Warning: Save data from not logged in users can be a security risk', 'sb-elementor-contact-form-db' ),
 			]
 		);
 
@@ -161,46 +162,141 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 	 * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler
 	 */
 	public function run( $record, $ajax_handler ) {
-		$new_post_data = array(
-			'post_type' => $record->get_form_settings( 'eef-register-post-post-type' ),
-			'post_status' => $record->get_form_settings( 'eef-register-post-post-status' ),
-			'post_title' => $record->get_form_settings( 'form_name' ),
-			'post_content' => $record->get_form_settings( 'form_name' ),
-		);
-
-		$form_fields = $record->get( 'fields' );
-		$fields_settings = $record->get_form_settings( 'form_fields' );
-		$formated_fields = array();
-		foreach ( $fields_settings as $key => $field ) {
-			$formated_fields[ $key ] = $form_fields[ $field['custom_id'] ];
-			$formated_fields[ $key ]['field-to-register'] = $field['eef-register-post-field'];
-			$formated_fields[ $key ]['custom-field-to-register'] = $field['eef-register-post-custom-field'];
+		// 1. Resolve form document ID and verify form owner
+		$doc_id = (int) $record->get_form_settings( 'form_post_id' );
+		if ( ! $doc_id && isset( $_POST['form_post_id'] ) ) {
+			$doc_id = absint( $_POST['form_post_id'] );
+		}
+		if ( ! $doc_id && isset( $_POST['post_id'] ) ) {
+			$doc_id = absint( $_POST['post_id'] );
+		}
+		if ( ! $doc_id ) {
+			$doc_id = (int) get_the_ID();
 		}
 
+		$owner = $doc_id ? (int) get_post_field( 'post_author', $doc_id ) : 0;
+		// Backward compatibility & migration filter for custom setups or imported templates
+		$owner = apply_filters( 'fdbgp_register_post_owner', $owner, $doc_id, $record );
+
+		// If post has no author (e.g. imported page) and submitter is admin, allow admin as owner
+		if ( ! $owner && current_user_can( 'manage_options' ) ) {
+			$owner = get_current_user_id();
+		}
+
+		if ( ! $owner ) {
+			return;
+		}
+
+		$raw_type   = (string) $record->get_form_settings( 'eef-register-post-post-type' );
+		$raw_status = (string) $record->get_form_settings( 'eef-register-post-post-status' );
+
+		$type   = ! empty( $raw_type ) ? sanitize_key( $raw_type ) : 'post';
+		$status = ! empty( $raw_status ) ? sanitize_key( $raw_status ) : 'draft';
+
+		$allowed_post_types = get_post_types( array( 'public' => true ), 'names' );
+		$allowed_statuses   = array( 'publish', 'pending', 'draft', 'private' );
+		$pto                = get_post_type_object( $type );
+
+		if ( ! $pto || ! in_array( $type, $allowed_post_types, true ) || ! in_array( $status, $allowed_statuses, true ) ) {
+			return;
+		}
+
+		// 2. Privilege Check: Verify form owner has permissions for this post type and status
+		if ( ! user_can( $owner, $pto->cap->edit_posts ) ) {
+			return;
+		}
+		if ( 'publish' === $status && ! user_can( $owner, $pto->cap->publish_posts ) ) {
+			return;
+		}
+
+		$form_name = sanitize_text_field( $record->get_form_settings( 'form_name' ) );
+
+		$new_post_data = array(
+			'post_type'    => $type,
+			'post_status'  => $status,
+			'post_title'   => ! empty( $form_name ) ? $form_name : __( 'Form Submission', 'sb-elementor-contact-form-db' ),
+			'post_content' => ! empty( $form_name ) ? $form_name : '',
+			'post_author'  => $owner,
+		);
+
+		$form_fields     = $record->get( 'fields' );
+		$fields_settings = $record->get_form_settings( 'form_fields' );
+		$formated_fields = array();
+
+		if ( is_array( $fields_settings ) && is_array( $form_fields ) ) {
+			foreach ( $fields_settings as $key => $field ) {
+				if ( isset( $field['custom_id'], $form_fields[ $field['custom_id'] ] ) ) {
+					$formated_fields[ $key ] = $form_fields[ $field['custom_id'] ];
+					$formated_fields[ $key ]['field-to-register']        = isset( $field['eef-register-post-field'] ) ? $field['eef-register-post-field'] : '';
+					$formated_fields[ $key ]['custom-field-to-register'] = isset( $field['eef-register-post-custom-field'] ) ? $field['eef-register-post-custom-field'] : '';
+				}
+			}
+		}
+
+		// 3. Strict allowlist to prevent mass assignment (drops ID, post_status override, etc.)
+		$allowed_targets           = array( 'post_title', 'post_content', 'post_excerpt', 'post_author' );
 		$custom_fields_to_register = array();
+
 		foreach ( $formated_fields as $field ) {
-			if ( $field['field-to-register'] !== 'custom_field' ) {
-				$new_post_data[ $field['field-to-register'] ] = $field['value'];
-			} else {
-				$custom_fields_to_register[ $field['custom-field-to-register'] ] = $field['value'];
+			$target  = isset( $field['field-to-register'] ) ? $field['field-to-register'] : '';
+			$raw_val = isset( $field['value'] ) ? $field['value'] : '';
+
+			if ( 'custom_field' === $target ) {
+				$meta_key = isset( $field['custom-field-to-register'] ) ? sanitize_key( $field['custom-field-to-register'] ) : '';
+				if ( ! empty( $meta_key ) ) {
+					// Disallow protected meta unless form owner has manage_options
+					if ( is_protected_meta( $meta_key, 'post' ) ) {
+						$allow_protected = apply_filters( 'fdbgp_allow_protected_meta_mapping', user_can( $owner, 'manage_options' ), $meta_key, $owner );
+						if ( ! $allow_protected ) {
+							continue;
+						}
+					}
+
+					// Handle arrays (checkboxes/multiselect) as well as scalar values
+					if ( is_array( $raw_val ) ) {
+						$custom_fields_to_register[ $meta_key ] = array_map( 'sanitize_text_field', $raw_val );
+					} else {
+						$custom_fields_to_register[ $meta_key ] = is_scalar( $raw_val ) ? sanitize_text_field( (string) $raw_val ) : '';
+					}
+				}
+			} elseif ( in_array( $target, $allowed_targets, true ) ) {
+				// Normalize arrays to comma-separated string for core post fields
+				$string_val = is_array( $raw_val ) ? implode( ', ', array_map( 'sanitize_text_field', $raw_val ) ) : (string) $raw_val;
+
+				if ( 'post_title' === $target ) {
+					$new_post_data['post_title'] = sanitize_text_field( $string_val );
+				} elseif ( 'post_content' === $target ) {
+					$new_post_data['post_content'] = wp_kses_post( $string_val );
+				} elseif ( 'post_excerpt' === $target ) {
+					$new_post_data['post_excerpt'] = sanitize_textarea_field( $string_val );
+				} elseif ( 'post_author' === $target ) {
+					$requested_author = absint( $string_val );
+					if ( $requested_author && user_can( $owner, $pto->cap->edit_others_posts ) ) {
+						$new_post_data['post_author'] = $requested_author;
+					} elseif ( is_user_logged_in() && $requested_author === get_current_user_id() ) {
+						$new_post_data['post_author'] = $requested_author;
+					} else {
+						$new_post_data['post_author'] = $owner;
+					}
+				}
 			}
 		}
 
 		$is_restrict_to_loggedin_users = $record->get_form_settings( 'eef-register-post-user-permission' );
-		if ( $is_restrict_to_loggedin_users !== 'yes' ) {
-			$post_id = wp_insert_post( $new_post_data, true );
-			if ( ! is_wp_error( $post_id ) ) {
-				foreach ( $custom_fields_to_register as $meta_key => $meta_value ) {
-					add_post_meta( $post_id, $meta_key, $meta_value );
-				}
-			}
+		if ( 'yes' === $is_restrict_to_loggedin_users && ! is_user_logged_in() ) {
 			return;
 		}
 
-		if ( is_user_logged_in() ) {
-			$post_id = wp_insert_post( $new_post_data, true );
-			if ( ! is_wp_error( $post_id ) ) {
-				foreach ( $custom_fields_to_register as $meta_key => $meta_value ) {
+		// 4. Create post and assign sanitized custom fields
+		$post_id = wp_insert_post( $new_post_data, true );
+		if ( ! is_wp_error( $post_id ) && $post_id ) {
+			foreach ( $custom_fields_to_register as $meta_key => $meta_value ) {
+				if ( is_array( $meta_value ) ) {
+					delete_post_meta( $post_id, $meta_key );
+					foreach ( $meta_value as $sub_val ) {
+						add_post_meta( $post_id, $meta_key, $sub_val );
+					}
+				} else {
 					add_post_meta( $post_id, $meta_key, $meta_value );
 				}
 			}
@@ -227,32 +323,32 @@ class HelloPlus_FDBGP_Register_Post extends Action_Base {
 		}
 
 		$new_control = [
-			'label' => \esc_html__( 'Field to Register', 'extensions-for-elementor-form' ),
+			'label' => \esc_html__( 'Field to Register', 'sb-elementor-contact-form-db' ),
 			'type' => ElementorControls::SELECT,
 			'tab' => 'content',
 			'tabs_wrapper' => 'form_fields_tabs',
 			'inner_tab' => 'form_fields_advanced_tab',
 			'classes' => 'elementor-hidden-control',
-			'description' => \esc_html__( 'Use this input to define what post field will receive this data when post is registered', 'extensions-for-elementor-form' ),
+			'description' => \esc_html__( 'Use this input to define what post field will receive this data when post is registered', 'sb-elementor-contact-form-db' ),
 			'default' => 'select',
 			'options' => [
-				'select' => \esc_html__( 'Select', 'extensions-for-elementor-form' ),
-				'post_title' => \esc_html__( 'Post Title', 'extensions-for-elementor-form' ),
-				'post_content' => \esc_html__( 'Post Content', 'extensions-for-elementor-form' ),
-				'post_excerpt' => \esc_html__( 'Post Excerpt', 'extensions-for-elementor-form' ),
-				'post_author' => \esc_html__( 'Post Author', 'extensions-for-elementor-form' ),
-				'custom_field' => \esc_html__( 'Custom Field', 'extensions-for-elementor-form' ),
+				'select' => \esc_html__( 'Select', 'sb-elementor-contact-form-db' ),
+				'post_title' => \esc_html__( 'Post Title', 'sb-elementor-contact-form-db' ),
+				'post_content' => \esc_html__( 'Post Content', 'sb-elementor-contact-form-db' ),
+				'post_excerpt' => \esc_html__( 'Post Excerpt', 'sb-elementor-contact-form-db' ),
+				'post_author' => \esc_html__( 'Post Author', 'sb-elementor-contact-form-db' ),
+				'custom_field' => \esc_html__( 'Custom Field', 'sb-elementor-contact-form-db' ),
 			],
 		];
 
 		$new_control_2 = [
-			'label' => \esc_html__( 'Custom Field Name', 'extensions-for-elementor-form' ),
+			'label' => \esc_html__( 'Custom Field Name', 'sb-elementor-contact-form-db' ),
 			'type' => ElementorControls::TEXT,
-			'placeholder' => \esc_html__( 'custom_field_name', 'extensions-for-elementor-form' ),
+			'placeholder' => \esc_html__( 'custom_field_name', 'sb-elementor-contact-form-db' ),
 			'tab' => 'content',
 			'tabs_wrapper' => 'form_fields_tabs',
 			'inner_tab' => 'form_fields_advanced_tab',
-			'description' => \esc_html__( 'Add the Custom Field name here. You can use default fields or custom created with ACF or similars', 'extensions-for-elementor-form' ),
+			'description' => \esc_html__( 'Add the Custom Field name here. You can use default fields or custom created with ACF or similars', 'sb-elementor-contact-form-db' ),
 			'condition' => [
 					'eef-register-post-field' => 'custom_field',
 			],

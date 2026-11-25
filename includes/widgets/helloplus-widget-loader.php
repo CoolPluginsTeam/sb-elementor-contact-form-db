@@ -19,15 +19,6 @@ class HelloPlus_Widget_Loader {
      */
     protected $version;
 
-    /**
-     * The loader instance.
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      HelloPlus_Widget_Loader    $instance    The loader instance.
-     */
-    private static $instance = null;
-
     public function __construct() {
         $this->version = FDBGP_PLUGIN_VERSION;
 
@@ -91,12 +82,12 @@ class HelloPlus_Widget_Loader {
         $element->start_controls_section(
             'cool_formkit_conditional_actions_section',
             [
-                'label' => esc_html__( 'Cool Actions After Submit', 'cool-formkit' ),
+                'label' => esc_html__( 'Cool Actions After Submit', 'sb-elementor-contact-form-db' ),
             ]
         );
 
         $element->add_control( 'cool_formkit_submit_actions', [
-            'label'       => __( 'Actions After Submit', 'cool-formkit' ),
+            'label'       => __( 'Actions After Submit', 'sb-elementor-contact-form-db' ),
             'type'        => \Elementor\Controls_Manager::SELECT2,
             'multiple'    => true,
             'label_block' => true,
@@ -162,19 +153,6 @@ class HelloPlus_Widget_Loader {
                 $instance->register_settings_section( $element );
             }
         }
-    }
-
-    /**
-     * Get the instance of this class.
-     *
-     * @since    1.0.0
-     * @return   CFKEF_Loader    The instance of this class.
-     */
-    public static function get_instance() {
-        if (null == self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 
     /**
