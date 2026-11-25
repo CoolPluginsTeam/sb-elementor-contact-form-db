@@ -5,7 +5,7 @@ Tags: elementor forms, google sheets, form submissions, contact form db, form en
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.1.12
+Stable tag: 2.1.13
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Elementor tested up to: 4.2.1
@@ -209,6 +209,10 @@ https://youtu.be/CV3ZtcOVWzU
 👉 [FormsDB Video Tutorials](https://docs.coolplugins.net/doc/formsdb-video-tutorials/?utm_source=formsdb&utm_medium=readme&utm_campaign=docs&utm_content=installation)
 
 == Changelog ==
+
+= 2.1.13 (Nov 25, 2026) =
+* Improved: Permission checks and validation across form entries, Google Sheets actions, and post submissions.
+* Improved: CSV export formatting and formula handling.
 
 = 2.1.12 (Jul 31, 2026) =
 * Tested up to Elementor 4.2.1 and Elementor Pro 4.2.1.
